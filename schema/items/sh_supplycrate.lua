@@ -51,7 +51,7 @@ ITEM.items = {
     {
         name = "Pistol",
         itemClass = "usp",
-        rarity = 25, -- Lower rarity
+        rarity = 20, -- Lower rarity
     },
 
     {
@@ -64,12 +64,6 @@ ITEM.items = {
         name = "Axe",
         itemClass = "axe",
         rarity = 75, -- Lower rarity
-    },
-
-    {
-        name = "Rusty Pipe",
-        itemClass = "rustypipe",
-        rarity = 85, -- Lower rarity
     },
 
     {
@@ -88,6 +82,36 @@ ITEM.items = {
         name = "Blue Resistance Shirt with Vest",
         itemClass = "brebelshirt1",
         rarity = 40, -- Lower rarity
+    },
+
+    {
+        name = "Green Resistance Shirt with Vest",
+        itemClass = "grebelshirt1",
+        rarity = 40, -- Lower rarity
+    },
+
+    {
+        name = "Nade",
+        itemClass = "grenade",
+        rarity = 75, -- Lower rarity
+    },
+
+    {
+        name = "katana",
+        itemClass = "katana",
+        rarity = 5, -- Lower rarity
+    },
+
+    {
+        name = "pickaxe",
+        itemClass = "pickaxe",
+        rarity = 68, -- Lower rarity
+    },
+
+    {
+        name = "stunstick",
+        itemClass = "stunstick",
+        rarity = 55, -- Lower rarity
     },
 
 }
