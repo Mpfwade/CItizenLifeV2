@@ -36,3 +36,5 @@ function PLUGIN:CalcView(ply, pos, ang, fov, nearZ, farZ)
 
     return view
 end
+
+-- gay ppl
