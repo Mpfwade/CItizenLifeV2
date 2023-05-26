@@ -8,7 +8,6 @@ function ENT:Initialize()
     self:SetHullSizeNormal()
     self:SetSolid(SOLID_BBOX)
     self:SetUseType(SIMPLE_USE)
-    self:DropToFloor()
 end
 
 function ENT:OnTakeDamage()
