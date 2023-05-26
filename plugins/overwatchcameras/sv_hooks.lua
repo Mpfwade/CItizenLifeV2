@@ -1,6 +1,7 @@
 
 local PLUGIN = PLUGIN
 
+
 function PLUGIN:Think()
 	local curTime = CurTime()
 
@@ -8,9 +9,7 @@ function PLUGIN:Think()
 		for camera, _ in pairs(self.cameras) do
 			if (IsValid(camera)) then
 				for _, client in pairs(player.GetAll()) do
-					if not client:Team() == TEAM_CONNECTING then
-					camera:AddEntityRelationship(client, self:GetCameraRelationship(client), 98)
-					end
+					camera:AddEntityRelationship(client, D_HT, 98)
 				end
 			end
 		end

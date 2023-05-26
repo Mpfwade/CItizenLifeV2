@@ -135,6 +135,8 @@ if (CLIENT) then
                         if entity:Team() == FACTION_CCA then name = "Civil Protection Officer" end
                         if entity:Team() == FACTION_OTA then name = "Overwatch Soldier" end
                         if entity:Team() == FACTION_VORTIGAUNT then name = "Vortigaunt" end
+                        if entity:Team() == FACTION_CITIZEN and entity.ixBandanaEquipped and not entity:IsFemale() then name = "Masked Male" end
+                        if entity:Team() == FACTION_CITIZEN and entity.ixBandanaEquipped and entity:IsFemale() then name = "Masked Female" end
 
 
                         ix.util.DrawText(name or "", x, y-(genericHeight/2), ColorAlpha(team.GetColor(entity:Team()), v.alpha*255), 1, 1)
