@@ -1,6 +1,6 @@
 ITEM.name = "Arctic Jacket"
 ITEM.description = "A light blue jacket, used to protect you against cold weathers."
-ITEM.model = "models/willardnetworks/clothingitems/torso_alyxcoat2.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Shirts"
 ITEM.noResetBodyGroups = true
 

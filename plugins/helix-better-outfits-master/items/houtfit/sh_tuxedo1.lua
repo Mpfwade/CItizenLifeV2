@@ -1,6 +1,6 @@
 ITEM.name = "Black Tuxedo"
 ITEM.description = "A fancy, black tuxedo."
-ITEM.model = "models/willardnetworks/clothingitems/torso_ca_2.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Shirts"
 ITEM.noResetBodyGroups = true
 

@@ -1,6 +1,6 @@
 ITEM.name = "Military Boots"
 ITEM.description = "A pair of tactical shoes, probably used by old-world military forces."
-ITEM.model = "models/willardnetworks/clothingitems/shoes_military.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Shoes"
 ITEM.noResetBodyGroups = true
 

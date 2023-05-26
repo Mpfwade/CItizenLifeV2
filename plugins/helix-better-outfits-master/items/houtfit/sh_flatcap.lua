@@ -1,6 +1,6 @@
 ITEM.name = "Flat Cap"
 ITEM.description = "An old but fashionable hat.. Used to be popular back then."
-ITEM.model = "models/willardnetworks/clothingitems/head_hat2.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Hats"
 ITEM.noResetBodyGroups = true
 

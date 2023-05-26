@@ -1,6 +1,6 @@
 ITEM.name = "Formal Shoes"
 ITEM.description = "A pair of fancy shoes, commonly worn by loyalists and City Administrators."
-ITEM.model = "models/willardnetworks/clothingitems/shoes_formal.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Shoes"
 ITEM.noResetBodyGroups = true
 

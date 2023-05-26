@@ -1,6 +1,6 @@
 ITEM.name = "Boonie"
 ITEM.description = "A green boonie, normally used in jungles, not your everyday hat."
-ITEM.model = "models/willardnetworks/clothingitems/head_boonie.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Hats"
 ITEM.noResetBodyGroups = true
 

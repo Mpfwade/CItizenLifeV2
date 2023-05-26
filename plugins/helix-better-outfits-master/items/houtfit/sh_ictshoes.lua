@@ -1,6 +1,6 @@
 ITEM.name = "Hazard Boots"
 ITEM.description = "A pair of black and yellow boots, used by Infestation Control Teams."
-ITEM.model = "models/willardnetworks/clothingitems/shoes_booties.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Shoes"
 ITEM.noResetBodyGroups = true
 

@@ -1,6 +1,6 @@
 ITEM.name = "Black Jeans"
 ITEM.description = "A pair of black jeans."
-ITEM.model = "models/willardnetworks/clothingitems/legs_citizen4.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Pants"
 ITEM.noResetBodyGroups = true
 

@@ -1,6 +1,6 @@
 ITEM.name = "Loyalist Jacket"
 ITEM.description = "A fancy, brown jacket, worn by Loyalists."
-ITEM.model = "models/willardnetworks/clothingitems/torso_loyalist.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Shirts"
 ITEM.noResetBodyGroups = true
 

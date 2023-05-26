@@ -1,6 +1,6 @@
 ITEM.name = "Brown Jacket"
 ITEM.description = "A brown jacket, with lots of pockets."
-ITEM.model = "models/willardnetworks/clothingitems/torso_alyxcoat8.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Shirts"
 ITEM.noResetBodyGroups = true
 

@@ -1,6 +1,6 @@
 ITEM.name = "Blue Cap"
 ITEM.description = "A blue hat.. Commonly used to protect your face from the sun."
-ITEM.model = "models/willardnetworks/clothingitems/head_hat.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Hats"
 ITEM.noResetBodyGroups = true
 

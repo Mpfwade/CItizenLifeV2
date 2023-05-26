@@ -1,6 +1,6 @@
 ITEM.name = "Blue Beanie"
 ITEM.description = "A beanie, but blue."
-ITEM.model = "models/willardnetworks/clothingitems/head_beanie_blue.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Hats"
 ITEM.noResetBodyGroups = true
 

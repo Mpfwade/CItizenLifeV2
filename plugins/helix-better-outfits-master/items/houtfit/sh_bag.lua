@@ -1,6 +1,6 @@
 ITEM.name = "Black Bag"
 ITEM.description = "A Universal Union-branded bag."
-ITEM.model = "models/willardnetworks/clothingitems/backpack.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Misc"
 ITEM.noResetBodyGroups = true
 

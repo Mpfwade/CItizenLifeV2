@@ -1,6 +1,6 @@
 ITEM.name = "Yellow Worker Jacket"
 ITEM.description = "A black and yellow jacket, worn by workers."
-ITEM.model = "models/willardnetworks/clothingitems/torso_worker1.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Shirts"
 ITEM.noResetBodyGroups = true
 

@@ -1,6 +1,6 @@
 ITEM.name = "Glasses"
 ITEM.description = "A plastic frame with optical lenses."
-ITEM.model = "models/willardnetworks/clothingitems/glasses.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Glasses"
 ITEM.noResetBodyGroups = true
 

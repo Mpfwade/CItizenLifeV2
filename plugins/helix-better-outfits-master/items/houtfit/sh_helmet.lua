@@ -1,6 +1,6 @@
 ITEM.name = "Helmet"
 ITEM.description = "An old soviet helmet, probably won't stop anything.. Nice cosmetic though?"
-ITEM.model = "models/willardnetworks/clothingitems/head_helmet.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Hats"
 ITEM.noResetBodyGroups = true
 

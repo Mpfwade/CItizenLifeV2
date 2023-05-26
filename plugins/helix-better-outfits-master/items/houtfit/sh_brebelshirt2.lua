@@ -1,6 +1,6 @@
 ITEM.name = "Blue Resistance Shirt"
 ITEM.description = "A blue, long-sleeved shirt with a belt."
-ITEM.model = "models/willardnetworks/clothingitems/torso_rebel01.mdl"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Shirts"
 ITEM.noResetBodyGroups = true
 
