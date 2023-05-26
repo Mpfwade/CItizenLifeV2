@@ -1,0 +1,68 @@
+local PLUGIN = PLUGIN
+
+function PLUGIN:PlayerInteractItem(client, action, item)
+    local dropAnim = "ThrowItem"
+
+    if action == "drop" and not client:IsWepRaised() then
+        client:ForceSequence(dropAnim, nil, 1, true)
+    end
+
+    local itemEntity = item.entity
+
+    if itemEntity then
+        local trace = util.TraceLine({
+            start = client:EyePos(),
+            endpos = client:EyePos() + client:EyeAngles():Forward() * 100,
+            filter = {client, itemEntity}
+        })
+
+        local pickupAnim = "Pickup"
+
+        if action == "take" then
+            if trace.HitWorld and not client:IsWepRaised() then
+                client:ForceSequence(pickupAnim, nil, 1, true)
+                ix.chat.Send(client, "me", "bends over to pick up an item.")
+            elseif not trace.HitWorld then
+                ix.chat.Send(client, "me", "reaches out their arm to pick up an item.")
+            end
+        end
+    end
+end
+
+function PLUGIN:Equip(client, bNoSelect, bNoSound)
+    local strapAnim = "gunrack"
+
+    if itemTable:GetData("equip") then
+        client:ForceSequence(strapAnim, nil, 1, true)
+    end
+end
+
+local doorLockedNotified = {} -- Table to track door locked notifications
+
+-- Register the hook on the server-side
+hook.Add("PlayerUse", "DoorOpenCheck", function(client, entity)
+    -- Check if the entity being used is a door
+    if IsValid(entity) and entity:IsDoor() then
+        if entity:IsLocked() then
+            -- Check if the door locked notification has already been sent to the player
+            if not doorLockedNotified[entity] then
+                client:ChatNotifyLocalized("This door is locked")
+                doorLockedNotified[entity] = true -- Set the notification flag for this door
+
+                -- Start a timer to reset the flag after 5 seconds
+                timer.Simple(5, function()
+                    doorLockedNotified[entity] = false -- Reset the notification flag for this door
+                end)
+            end
+        else
+            if not client:IsWepRaised() then
+                client:ForceSequence("Open_door_towards_right", nil, 0.5, true)
+
+                timer.Simple(0.6, function()
+                    client:LeaveSequence()
+                end)
+            end
+        end
+    end
+end)
+                                                                                                                                                    
