@@ -31,7 +31,7 @@ function PLUGIN:GetCameraRelationship(client)
     if IsValid(weapon) then
         local weaponClass = weapon:GetClass()
 
-        if hatedWeapons[weaponClass] then
+        if hatedWeapons[weaponClass] and not client.ixBandanaEquipped == true then
             giveBOL = true
             shouldDispatchAnon = true
             weaponlp = true
@@ -40,7 +40,7 @@ function PLUGIN:GetCameraRelationship(client)
         end
     end
 
-    if client:Team() == FACTION_CITIZEN then
+    if client:Team() == FACTION_CITIZEN and not client.ixBandanaEquipped == true then
         if area == "Intake-Hub 1" then
             giveBOL = false
             shouldDispatchAnon = false
@@ -67,30 +67,7 @@ end
 function PLUGIN:OnFoundPlayer(entity, client)
     local relationship, notice, color = self:GetCameraRelationship(client)
 
-    if client:GetNWBool("ixActiveBOL", true) then
-        local name = entity:GetName() ~= "" and entity:GetName() or "DISP"
-        entity:Fire("SetAngry")
-        entity:Fire("SetIdle", "", 15)
-        entity:SetNWBool("Alert", true)
-
-        local sounds = {"buttons/blip1.wav"}
-
-        for k, v in ipairs(player.GetAll()) do
-            if v:IsCombine() then
-                ix.util.EmitQueuedSounds(v, sounds, 0, 0.2, 100)
-            end
-        end
-
-        if Schema.AddCombineDisplayMessage and notice then
-            Schema:AddCombineDisplayMessage("DISP, Reports possible miscount", color or Color(255, 0, 0), 30, name)
-        end
-
-        if Schema.AddWaypoint and notice then
-            Schema:AddWaypoint(client:GetPos(), notice, color or Color(255, 0, 0), 30, nil, name)
-        end
-    end
-
-    if (relationship == D_HT and (client.ixCooldown or 0) < CurTime()) and not client:GetNWBool("ixActiveBOL", true) then
+    if (relationship == D_HT and (client.ixCooldown or 0) < CurTime()) then
         local name = entity:GetName() ~= "" and entity:GetName() or "DISP"
         entity:Fire("SetAngry")
         entity:Fire("SetIdle", "", 15)
@@ -103,7 +80,7 @@ function PLUGIN:OnFoundPlayer(entity, client)
             end
         end)
 
-        if giveBOL == true then
+        if giveBOL == true and client:GetNWBool("ixActiveBOL", false) then
             client:SetNWBool("ixActiveBOL", true)
         end
 
@@ -115,7 +92,7 @@ function PLUGIN:OnFoundPlayer(entity, client)
             client:SetLP(-2 + client:GetNWInt("ixLP"))
         end
 
-        if DispatchAnontimer == false and shouldDispatchAnon == true then
+        if DispatchAnontimer == false and shouldDispatchAnon == true and client:GetNWBool("ixActiveBOL", false) then
             PlayTimedEventSound(5, "npc/overwatch/cityvoice/f_anticivilevidence_3_spkr.wav")
             DispatchAnontimer = true
 
