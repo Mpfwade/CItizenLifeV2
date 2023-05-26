@@ -1,3 +1,5 @@
+-- Made by silas
+
 ITEM.name = "Supply crate"
 ITEM.description = "A crate that holds multiple loadouts."
 -- Item Configuration
