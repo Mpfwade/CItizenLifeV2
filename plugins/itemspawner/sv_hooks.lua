@@ -6,13 +6,11 @@ PLUGIN.items = PLUGIN.items or {}
 PLUGIN.spawner.positions = PLUGIN.spawner.positions or {}
 
 PLUGIN.items.common = {
-	"usp",
-	"mp7"
+	"supplycrate",
 }
 
 PLUGIN.items.rare = {
-	"cmb_12g",
-	"357"
+	"supplycrate",
 }
 
 util.AddNetworkString("ixItemSpawnerManager")
