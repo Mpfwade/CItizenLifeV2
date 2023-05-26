@@ -1,5 +1,5 @@
 -- Item Statistics
-
+-- lol mp7
 ITEM.name = "SMG"
 ITEM.description = "A compact, fully automatic sub-machine gun. (Uses SMG Ammo)"
 ITEM.category = "Weapons"
