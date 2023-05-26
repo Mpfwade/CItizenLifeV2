@@ -11,7 +11,7 @@ ITEM.bodyGroups = {
 ITEM.height = 1
 ITEM.width = 1
 ITEM.category = "Clothes/Outfits"
-ITEM.maxArmor = 40
+ITEM.fitArmor = 15
 
 ITEM.allowedModels = {
 	"models/humans/pandafishizens/female_01.mdl",

@@ -6,7 +6,9 @@ ITEM.height = 1
 ITEM.isGrenade = true
 
 ITEM.functions.use = {
-    name = "Grab",
+    name = "Equip",
+    tip = "equipTip",
+    icon = "icon16/tick.png",
     OnRun = function(itemTable)
         local ply = itemTable.player
 

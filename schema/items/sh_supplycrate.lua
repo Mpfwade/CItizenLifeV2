@@ -1,7 +1,7 @@
--- Made by silas
+-- Made by silas AND KRAFTY
 
 ITEM.name = "Supply crate"
-ITEM.description = "A crate that holds multiple loadouts."
+ITEM.description = "A crate that holds goodies."
 -- Item Configuration
 ITEM.model = "models/Items/item_item_crate.mdl"
 ITEM.skin = 0
@@ -17,18 +17,81 @@ ITEM.iconCam = {
     fov = 6.82
 }
 
-ITEM.loadouts = {
+ITEM.items = {
     {
-        name = "SMG Loadout",
-        weapons = { "mp7", "smg1ammo" },
-        rarity = 50, -- Higher rarity
+        name = "pistol ammo",
+        itemClass = "pistolammo",
+        rarity = 65, -- Lower rarity
     },
+
     {
-        name = "Pistol Loadout",
-        weapons = { "usp", "pistolammo" },
+        name = "smg ammo",
+        itemClass = "smg1ammo",
+        rarity = 40, -- Lower rarity
+    },
+
+    {
+        name = "shotgunammo",
+        itemClass = "shotgunammo",
+        rarity = 25, -- Lower rarity
+    },
+
+    {
+        name = "357",
+        itemClass = "357ammo",
+        rarity = 10, -- Lower rarity
+    },
+
+    {
+        name = "SMG",
+        itemClass = "mp7",
+        rarity = 15, -- Higher rarity
+    },
+    
+    {
+        name = "Pistol",
+        itemClass = "usp",
+        rarity = 25, -- Lower rarity
+    },
+
+    {
+        name = "Shotgun",
+        itemClass = "spas12",
+        rarity = 10, -- Lower rarity
+    },
+
+    {
+        name = "Axe",
+        itemClass = "axe",
+        rarity = 75, -- Lower rarity
+    },
+
+    {
+        name = "Rusty Pipe",
+        itemClass = "rustypipe",
+        rarity = 85, -- Lower rarity
+    },
+
+    {
+        name = "Molotov",
+        itemClass = "molotov",
+        rarity = 60, -- Lower rarity
+    },
+
+    {
+        name = "EMP",
+        itemClass = "emp",
         rarity = 1, -- Lower rarity
     },
+
+    {
+        name = "Blue Resistance Shirt with Vest",
+        itemClass = "brebelshirt1",
+        rarity = 40, -- Lower rarity
+    },
+
 }
+
 
 ITEM.functions.Open = {
     icon = "icon16/box.png",
@@ -37,33 +100,53 @@ ITEM.functions.Open = {
 
         -- Calculate total rarity points
         local totalRarity = 0
-        for _, loadout in ipairs(itemTable.loadouts) do
-            totalRarity = totalRarity + loadout.rarity
+        for _, item in ipairs(itemTable.items) do
+            totalRarity = totalRarity + item.rarity
         end
 
-        -- Generate a random number between 1 and totalRarity
-        local randomValue = math.random(totalRarity)
+        local selectedItems = {}
 
-        -- Select a loadout based on the random value and rarity
-        local selectedLoadout
-        local cumulativeRarity = 0
-        for _, loadout in ipairs(itemTable.loadouts) do
-            cumulativeRarity = cumulativeRarity + loadout.rarity
-            if randomValue <= cumulativeRarity then
-                selectedLoadout = loadout
-                break
+        for i = 1, 3 do
+            -- Generate a random number between 1 and totalRarity
+            local randomValue = math.random(totalRarity)
+
+            -- Select an item based on the random value and rarity
+            local selectedItem
+            local cumulativeRarity = 0
+            for _, item in ipairs(itemTable.items) do
+                cumulativeRarity = cumulativeRarity + item.rarity
+                if randomValue <= cumulativeRarity then
+                    selectedItem = item
+                    break
+                end
+            end
+
+            if selectedItem then
+                -- Check if the selected item is already in the list of selected items
+                local isDuplicate = false
+                for _, existingItem in ipairs(selectedItems) do
+                    if existingItem.itemClass == selectedItem.itemClass then
+                        isDuplicate = true
+                        break
+                    end
+                end
+
+                if not isDuplicate then
+                    table.insert(selectedItems, selectedItem)
+                    totalRarity = totalRarity - selectedItem.rarity
+                end
             end
         end
 
-        if not selectedLoadout then
-            return false -- No loadout was selected, return false to indicate failure
+        if #selectedItems == 0 then
+            return false -- No items were selected, return false to indicate failure
         end
 
-        -- Give the player the loadout's weapons
+        -- Give the player the selected items
         local character = ply:GetCharacter()
         local inventory = character:GetInventory()
-        for _, weapon in ipairs(selectedLoadout.weapons) do
-            inventory:Add(weapon, 1)
+        for _, item in ipairs(selectedItems) do
+            inventory:Add(item.itemClass, 1)
         end
 
         return true -- Return true to indicate successful execution of the function

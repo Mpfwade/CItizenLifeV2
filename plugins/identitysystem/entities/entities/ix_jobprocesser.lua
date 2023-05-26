@@ -31,7 +31,6 @@ if SERVER then
         self:StopSound("ambient/levels/labs/equipment_beep_loop1.wav")
     end
 
-    -- Disable taking damage
     if SERVER then
         util.AddNetworkString("ProcessorActionConfirmation")
 
@@ -50,8 +49,8 @@ if SERVER then
                         local confirmed = net.ReadBool()
 
                         if confirmed then
-                            user.JobAccpectedMusicPatch = CreateSound(user, "music/hl2_song25_teleporter.mp3")
-                            user.JobAccpectedMusicPatch:PlayEx(75, 100)
+                            net.Start("PlayJobAcceptedSound") -- Send a network message to play the sound on the client
+                            net.Send(user)
 
                             timer.Simple(23.5, function()
                                 user:Freeze(false)
@@ -61,11 +60,13 @@ if SERVER then
                                 user:SetWhitelisted(FACTION_CCA, true)
                                 hook.Run("PlayerLoadout", user)
                                 user:ResetBodygroups()
+
                                 for k, v in pairs(char:GetInventory():GetItems()) do
                                     v:Remove()
                                 end
 
-                                user.JobAccpectedMusicPatch:FadeOut(1)
+                                net.Start("StopJobAcceptedSound") -- Send a network message to stop the sound on the client
+                                net.Send(user)
 
                                 timer.Simple(0.30, function()
                                     user:Spawn()
@@ -73,7 +74,7 @@ if SERVER then
                                 end)
                             end)
                         else
-                            user:ChatPrint("Processing, canceled.")
+                            user:ChatPrint("Processing canceled.")
                             user:SelectWeapon("ix_hands")
                             user:Freeze(false)
                             user:SetAction()
@@ -121,4 +122,20 @@ else
 
         cam.End3D2D()
     end
+end
+
+if CLIENT then
+    net.Receive("PlayJobAcceptedSound", function()
+        local user = LocalPlayer()
+        user.JobAcceptedMusicPatch = CreateSound(user, "music/hl2_song25_teleporter.mp3")
+        user.JobAcceptedMusicPatch:PlayEx(75, 100)
+    end)
+
+    net.Receive("StopJobAcceptedSound", function()
+        local user = LocalPlayer()
+
+        if user.JobAcceptedMusicPatch then
+            user.JobAcceptedMusicPatch:FadeOut(1)
+        end
+    end)
 end

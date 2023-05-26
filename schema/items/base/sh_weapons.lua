@@ -107,7 +107,7 @@ ITEM.functions.Equip = {
     OnCanRun = function(item)
         local client = item.player
 
-        if client:Team() == FACTION_VORTIGAUNT then
+        if client:Team() == FACTION_VORTIGAUNT or item.name == "Molotov" then
             return false
         else
             return not IsValid(item.entity) and IsValid(client) and item:GetData("equip") ~= true and hook.Run("CanPlayerEquipItem", client, item) ~= false

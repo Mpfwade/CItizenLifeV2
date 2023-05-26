@@ -8,7 +8,7 @@ ITEM.bDropOnDeath = true
 
 -- Item Configuration
 
-ITEM.model = "models/willardnetworks/clothingitems/head_facewrap.mdl"
+ITEM.model = "models/props_lab/box01a.mdl"
 ITEM.skin = 0
 
 -- Item Inventory Size Configuration
@@ -31,12 +31,8 @@ if ( SERVER ) then
 			local ply = self.player
 			net.Start("ixBandanaEquip") net.Send(ply)
 			ply.ixBandanaEquipped = true
-			ply:EmitSound("npc/combine_soldier/zipline_clothing"..math.random(1,2)..".wav", 60)
-			ply:SetBodygroup(9, 1)
-			ply:SetAction("Equipping Bandana..", 2, function()
-				ply:EmitSound("npc/combine_soldier/zipline_clothing"..math.random(1,2)..".wav", 60)
-				ply:SetBodygroup(9, 1)
-			end)
+			ply:SetBodygroup(8, 6)
+			ply:ForceSequence("photo_react_startle", nil, 0.85, true)
 		end
 	end
 
@@ -45,12 +41,8 @@ if ( SERVER ) then
 			local ply = self.player
 			net.Start("ixBandanaUnEquip") net.Send(ply)
 			ply.ixBandanaEquipped = nil
-			ply:EmitSound("npc/combine_soldier/zipline_clothing"..math.random(1,2)..".wav", 60)
-			ply:SetBodygroup(9, 0)
-			ply:SetAction("Unequipping your Bandana..", 2, function()
-				ply:EmitSound("npc/combine_soldier/zipline_clothing"..math.random(1,2)..".wav", 60)
-				ply:SetBodygroup(9, 0)
-			end)
+			ply:SetBodygroup(8, 0)
+			ply:ForceSequence("photo_react_startle", nil, 0.85, true)
 		end
 	end
 else
