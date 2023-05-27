@@ -194,7 +194,7 @@ function SWEP:PrimaryAttack()
 
                 entity:ViewPunch(Angle(-20, math.random(-15, 15), math.random(-10, 10)))
 
-                if self:GetActivated() and entity.ixStuns > 5 then
+                if self:GetActivated() and entity.ixStuns > 1 then
                     entity:ShouldSetRagdolled(true)
                     entity:SetNWBool("Ragdolled", true)
                     ix.chat.Send(entity, "me", "'s body crumbles to the ground.")
