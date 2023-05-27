@@ -19,3 +19,5 @@ ix.command.Add("draw", {
 		ix.chat.Send(client, "me", msg)
 	end
 })
+
+--nigger--
