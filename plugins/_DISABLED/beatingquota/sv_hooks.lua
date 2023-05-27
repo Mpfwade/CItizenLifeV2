@@ -28,18 +28,17 @@ function PLUGIN:EntityTakeDamage(target, dmginfo)
         attacker:SetData("quota", quotaamount + 1)
 
         if quotaamount + 1 >= quotamax then
+            attacker:ChatPrint("You have completed your beating quota.")
             local character = attacker:GetCharacter()
             character:SetData("quota", 0)
             character:SetData("quotamax", 3)
-            character:GiveMoney(5)
-            attacker:ChatNotify("Your beating quota has been completed. You've been rewarded one rank point.")
-             local timerqou = math.random(70, 480)
-            timer.Create("ResetQuotaTimer", timerqou, 1, function()
+
+            timer.Create("ResetQuotaTimer", 60, 1, function()
                 attacker:SetData("quota", 0)
                 attacker:ChatPrint("You've recived a new beating quota.")
             end)
         else
-            attacker:Notify("You have gained a point on your beating quota.")
+            attacker:ChatPrint("You have gained a point on your beating quota")
         end
     end
 end
