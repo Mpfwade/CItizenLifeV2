@@ -28,19 +28,17 @@ function PLUGIN:EntityTakeDamage(target, dmginfo)
         attacker:SetData("quota", quotaamount + 1)
 
         if quotaamount + 1 >= quotamax then
-            attacker:Notify("You have completed your Beating Quota!")
+            attacker:ChatPrint("You have completed your beating quota.")
             local character = attacker:GetCharacter()
             character:SetData("quota", 0)
             character:SetData("quotamax", 3)
-            character:GiveMoney(5)
-            attacker:Notify("Your Beating Quota has been reset. You have been rewarded $5.")
 
             timer.Create("ResetQuotaTimer", 60, 1, function()
                 attacker:SetData("quota", 0)
-                attacker:Notify("Your Beating Quota has been reset due to inactivity.")
+                attacker:ChatPrint("You've recived a new beating quota.")
             end)
         else
-            attacker:Notify("You have gained a point on your Beating Quota, you are now at (" .. (quotaamount + 1) .. "/" .. quotamax .. ")")
+            attacker:ChatPrint("You have gained a point on your beating quota")
         end
     end
 end
@@ -50,15 +48,3 @@ local function ResetQuota(client)
     character:SetData("quota", 0)
     character:SetData("quotamax", 3)
 end
-
-ix.command.Add("ResetQuota", {
-    description = "Reset your beating quota.",
-    OnRun = function(self, client)
-        if client:Team() == FACTION_CCA then
-            ResetQuota(client)
-            client:Notify("Your Beating Quota has been reset.")
-        else
-            client:Notify("You need to be a CCA to use this command.")
-        end
-    end
-})  
