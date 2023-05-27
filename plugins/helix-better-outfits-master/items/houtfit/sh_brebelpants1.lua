@@ -5,7 +5,7 @@ ITEM.outfitCategory = "Pants"
 ITEM.noResetBodyGroups = true
 
 ITEM.bodyGroups = {
-	["legs"] = 7
+	["legs"] = 14
 }
 
 ITEM.height = 2

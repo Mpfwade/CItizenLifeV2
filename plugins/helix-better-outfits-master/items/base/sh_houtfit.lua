@@ -29,6 +29,15 @@ ITEM.bodyGroups = {
 ]]
 --
 -- Inventory drawing
+local function armorPlayer(client, target, amount)
+	hook.Run("OnPlayerArmor", client, target, amount)
+
+	if (client:Alive() and target:Alive()) then
+			target:SetArmor(amount)
+	end
+end
+
+
 if CLIENT then
     function ITEM:PaintOver(item, w, h)
         if item:GetData("equip") then
@@ -96,7 +105,6 @@ function ITEM:RemoveOutfit(client)
     if self.fitArmor then
         local ply = self.player
         self:SetData("armor", math.Clamp(ply:Armor(), 0, self.fitArmor))
-        ply:EmitSound("npc/combine_soldier/zipline_clothing" .. math.random(1, 2) .. ".wav")
         ply:SetArmor(0)
     end
 
