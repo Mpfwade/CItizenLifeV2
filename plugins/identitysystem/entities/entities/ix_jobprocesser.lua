@@ -8,6 +8,10 @@ ENT.RenderGroup = RENDERGROUP_BOTH
 ENT.AdminOnly = true
 
 if SERVER then
+    util.AddNetworkString("ProcessorActionConfirmation")
+    util.AddNetworkString("PlayJobAcceptedSound")
+    util.AddNetworkString("StopJobAcceptedSound")
+
     function ENT:Initialize()
         self:SetModel("models/props_interiors/printer.mdl")
         self:SetSolid(SOLID_VPHYSICS)

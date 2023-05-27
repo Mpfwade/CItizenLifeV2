@@ -31,13 +31,6 @@ if (SERVER) then
                 inventory:Remove(data.item)
             end
 
-            for _, v in pairs(player.GetAll()) do
-                if v:GetCharacter() and v:GetCharacter():GetData("cid", "") == data[2] then
-                    v:SetCombine(true)
-                    break
-                end
-            end
-
             local format = "%A, %B %d, %Y. %H:%M:%S"
 
             inventory:Add("cid", 1, {

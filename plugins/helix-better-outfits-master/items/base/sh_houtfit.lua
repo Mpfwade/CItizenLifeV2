@@ -41,8 +41,8 @@ end
 function ITEM:RemoveOutfit(client)
     local character = client:GetCharacter()
     self:SetData("equip", false)
-
-	client:ForceSequence("photo_react_startle", nil, 0.85, true)
+    client:EmitSound("npc/combine_soldier/zipline_clothing" .. math.random(1, 2) .. ".wav")
+    client:ForceSequence("photo_react_startle", nil, 0.85, true)
 
     if character:GetData("oldModel" .. self.outfitCategory) then
         character:SetModel(character:GetData("oldModel" .. self.outfitCategory))
@@ -94,8 +94,10 @@ function ITEM:RemoveOutfit(client)
     end
 
     if self.fitArmor then
-        character:SetData("harmor", math.Clamp(self.player:Armor(), 0, self.fitArmor))
-        self.player:SetArmor(0)
+        local ply = self.player
+        self:SetData("armor", math.Clamp(ply:Armor(), 0, self.fitArmor))
+        ply:EmitSound("npc/combine_soldier/zipline_clothing" .. math.random(1, 2) .. ".wav")
+        ply:SetArmor(0)
     end
 
     self:OnUnequipped()
@@ -152,7 +154,8 @@ ITEM.functions.Equip = {
         local client = item.player
         local char = client:GetCharacter()
         local items = char:GetInventory():GetItems()
-		client:ForceSequence("photo_react_startle", nil, 0.85, true)
+        client:EmitSound("npc/combine_soldier/zipline_clothing" .. math.random(1, 2) .. ".wav")
+        client:ForceSequence("photo_react_startle", nil, 0.85, true)
 
         for _, v in pairs(items) do
             if v.id ~= item.id then
@@ -232,8 +235,13 @@ ITEM.functions.Equip = {
             end
         end
 
-		if item.fitArmor or item.category == "Armor Items" then
-            client:SetArmor(char:GetData("harmor", item.fitArmor))
+        if item.fitArmor then
+            local ply = item.player
+            ply:SetArmor(item:GetData("armor", item.fitArmor))
+
+            if item:GetData("armor", 75) >= 10 then
+                ply:SetArmor(item:GetData("armor", item.fitArmor))
+            end
         end
 
         item:OnEquipped()
@@ -272,25 +280,18 @@ function ITEM:CanEquipOutfit()
     return true
 end
 
-function ITEM:Repair(amount)
-	if self.fitArmor then
-	self:SetData("harmor", math.Clamp(self:GetData("harmor") + amount, 0, self.fitArmor))
-	end
-end
-
-
 function ITEM:OnLoadout()
-	if self.fitArmor then
-	if (self:GetData("equip")) then
-		self.player:SetArmor(self:GetData("harmor", self.fitArmor))
-	end
-	end
+    if self.fitArmor then
+        if self:GetData("equip") then
+            self.player:SetArmor(self:GetData("armor", self.fitArmor))
+        end
+    end
 end
 
 function ITEM:OnSave()
-	if self.fitArmor then
-	if (self:GetData("equip")) then
-		self:SetData("harmor", math.Clamp(self.player:Armor(), 0, self.fitArmor))
-	end
-	end
+    if self.fitArmor then
+        if self:GetData("equip") then
+            self:SetData("armor", math.Clamp(self.player:Armor(), 0, self.fitArmor))
+        end
+    end
 end

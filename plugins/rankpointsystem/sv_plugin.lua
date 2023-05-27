@@ -60,7 +60,7 @@ hook.Add("DoPlayerDeath", "FactionCCADeath", function(victim, attacker, dmginfo)
         local players = player.GetAll()
 
         for _, ply in ipairs(players) do
-            if ply:Team() == FACTION_CCA and ply:GetPos():Distance(victim:GetPos()) <= 500 then
+            if ply:Team() == FACTION_CCA and ply:GetPos():Distance(victim:GetPos()) <= 800 then
                 local victimWeapon = victim:GetActiveWeapon()
 
                 if IsValid(victimWeapon) and CitWeapons[victimWeapon:GetClass()] then

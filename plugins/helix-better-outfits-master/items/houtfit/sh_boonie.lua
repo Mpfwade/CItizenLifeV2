@@ -5,7 +5,7 @@ ITEM.outfitCategory = "Hats"
 ITEM.noResetBodyGroups = true
 
 ITEM.bodyGroups = {
-	["head"] = 5
+	["headgear"] = 6
 }
 
 ITEM.height = 1

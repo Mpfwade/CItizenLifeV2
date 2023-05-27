@@ -241,7 +241,7 @@ function Schema:PlayerUse(ply, entity)
             return false
         end
 
-        if not ply:IsRestricted() and ply:KeyDown(IN_SPEED) and (entity:IsPlayer() or entity.ixPlayer) and entity:IsRestricted() and not entity:GetNetVar("untying") then
+        if not ply:IsRestricted() and ply:KeyDown(IN_SPEED) and (entity:IsPlayer() or entity.ixPlayer) and (not entity.ixPlayer or entity:IsRestricted()) and not entity:GetNetVar("untying") then
             local tarchar = entity:GetCharacter()
             entity:SetAction("You are being untied.", 1)
             entity:SetNetVar("untying", true)
@@ -314,6 +314,17 @@ function Schema:PlayerLoadout(ply)
         if ply:Team() == FACTION_CITIZEN and char and ply:GetCharacter():GetClass() == CLASS_CITIZEN then
             ply:SetBodygroup(1, 0)
             ply:SetBodygroup(2, 0)
+            ply:SetBodygroup(3, 0)
+            ply:SetBodygroup(4, 0)
+            ply:SetBodygroup(5, 0)
+            ply:SetBodygroup(6, 0)
+            ply:SetBodygroup(7, 0)
+            ply:SetBodygroup(8, 0)
+            ply:SetBodygroup(9, 0)
+            ply:SetBodygroup(10, 0)
+            ply:SetBodygroup(11, 0)
+            ply:SetBodygroup(12, 0)
+            ply:SetBodygroup(13, 0)
         elseif ply:Team() == FACTION_VORTIGAUNT then
             ply:SetBodygroup(7, 1)
             ply:SetBodygroup(8, 1)

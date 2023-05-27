@@ -30,18 +30,34 @@ local MUSIC_INFO = {
     ["Restricted-Block"] = {name = "dispatch/disp_restrictedblock3.wav", volume = 27},
 }
 
-function PLUGIN:OnPlayerAreaChanged(client, old, new)
-    if not ix.config.Get("area-music", true) then return end
-    if not ix.option.Get(client, "area-music", false) then return end
+if SERVER then
+    util.AddNetworkString("AreaMusic")
 
-    local musicInfo = MUSIC_INFO[new]
+    function PLUGIN:OnPlayerAreaChanged(client, old, new)
+        if not ix.config.Get("area-music", true) then return end
+        if not ix.option.Get(client, "area-music", false) then return end
 
-    if new and musicInfo then
-        client.areaMusicPatch = CreateSound(client, musicInfo.name)
-        client.areaMusicPatch:PlayEx(musicInfo.volume, 100)
-    elseif old then
-        if client.areaMusicPatch and client.areaMusicPatch:IsPlaying() then
-        client.areaMusicPatch:FadeOut(3)
+        local musicInfo = MUSIC_INFO[new]
+
+        if new and musicInfo then
+            net.Start("AreaMusic")
+            net.WriteString(musicInfo.name)
+            net.WriteFloat(musicInfo.volume)
+            net.Send(client)
+        else
+            net.Start("AreaMusic")
+            net.Send(client)
         end
     end
+else -- CLIENT
+    net.Receive("AreaMusic", function()
+        local musicName = net.ReadString()
+
+        if musicName and musicName ~= "" then
+            local volume = net.ReadFloat()
+            surface.PlaySound(musicName)
+        else
+            surface.PlaySound("")
+        end
+    end)
 end

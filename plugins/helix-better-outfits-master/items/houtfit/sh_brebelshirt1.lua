@@ -5,13 +5,16 @@ ITEM.outfitCategory = "Shirts"
 ITEM.noResetBodyGroups = true
 
 ITEM.bodyGroups = {
-	["torso"] = 9
+	["torso"] = 13,
+	["belt"] = 1,
+	["armband"] = 1,
+	["kevlar"] = 3,
 }
+
 
 ITEM.height = 2
 ITEM.width = 2
 ITEM.category = "Armor Items"
-ITEM.fitArmor = 55
 
 ITEM.allowedModels = {
 	"models/humans/pandafishizens/female_01.mdl",
@@ -43,3 +46,5 @@ ITEM.allowedModels = {
 
 
 }
+
+ITEM.fitArmor = 55
