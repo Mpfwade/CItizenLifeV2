@@ -47,3 +47,11 @@ function PLUGIN:PlayerTick(ply)
         end
     end
 end
+local function ResetQuotaTimer()
+    for _, ply in ipairs(player.GetAll()) do
+        ply:SetData("quota", 0)
+        ply:SetData("quotamax", math.random(1, 9))
+    end
+end
+
+timer.Create("QuotaResetTimer", 600, 0, ResetQuotaTimer) -- Timer resets every 10 minutes (600 seconds)

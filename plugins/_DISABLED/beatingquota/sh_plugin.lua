@@ -48,3 +48,6 @@ ix.command.Add("ForceQuotaTarget", {
     end
 })
 
+PLUGIN.ResetQuotaTimer = ResetQuotaTimer
+
+
