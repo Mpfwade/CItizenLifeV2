@@ -1,5 +1,5 @@
-RECIPE.name = "Civil Protection Vest"
-RECIPE.description = "Craft a Civil Protection Vest."
+RECIPE.name = "Green Resistance Shirt with Vest"
+RECIPE.description = "Craft a Green Resistance Shirt with Vest."
 RECIPE.model = "models/tnb/items/shirt_rebeloverwatch.mdl"
 RECIPE.category = "Armor Items"
 
@@ -12,7 +12,7 @@ RECIPE.requirements = {
 	["plastic"] = 2,
 }
 RECIPE.results = {
-	["cpvest"] = 1,
+	["grebelshirt1"] = 1,
 }
 
 RECIPE.station = "ix_station_workbench"
