@@ -45,4 +45,4 @@ ITEM.allowedModels = {
 
 }
 
-ITEM.fitArmor = 5
+ITEM.fitArmor = 15

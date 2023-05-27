@@ -31,7 +31,7 @@ SWEP.EmptySound = "Weapon_Shotgun.Empty"
 
 SWEP.Primary.Sound = "Weapon_Shotgun.Single"
 SWEP.Primary.Recoil = 29
-SWEP.Primary.Damage = 14
+SWEP.Primary.Damage = 10
 SWEP.Primary.NumShots = 12
 SWEP.Primary.Cone = 0.100
 SWEP.Primary.Delay = RPM(80)
