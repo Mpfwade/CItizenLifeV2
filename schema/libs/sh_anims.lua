@@ -129,7 +129,72 @@ ix.anim.vortigaunt = {
 	glide = "jump_holding_glide"
 }
 
-ix.anim.pandacitizen = {
+ix.anim.normalcitizen_male = {
+	normal = {
+		[ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE_ANGRY_SMG1},
+		[ACT_MP_CROUCH_IDLE] = {ACT_COVER_LOW, ACT_COVER_LOW},
+		[ACT_MP_WALK] = {ACT_WALK, ACT_WALK_AIM_RIFLE_STIMULATED},
+		[ACT_MP_CROUCHWALK] = {ACT_WALK_CROUCH, ACT_WALK_CROUCH_AIM_RIFLE},
+		[ACT_MP_RUN] = {ACT_RUN, ACT_RUN_AIM_RIFLE_STIMULATED},
+		[ACT_LAND] = {ACT_RESET, ACT_RESET}
+	},
+	pistol = {
+		[ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_RANGE_ATTACK_PISTOL},
+		[ACT_MP_CROUCH_IDLE] = {ACT_COVER_LOW, ACT_RANGE_ATTACK_PISTOL_LOW},
+		[ACT_MP_WALK] = {ACT_WALK, ACT_WALK_AIM_RIFLE_STIMULATED},
+		[ACT_MP_CROUCHWALK] = {ACT_WALK_CROUCH, ACT_WALK_CROUCH_AIM_RIFLE},
+		[ACT_MP_RUN] = {ACT_RUN, ACT_RUN_AIM_RIFLE_STIMULATED},
+		[ACT_LAND] = {ACT_RESET, ACT_RESET},
+		attack = ACT_GESTURE_RANGE_ATTACK_PISTOL,
+		reload = ACT_RELOAD_PISTOL
+	},
+	smg = {
+		[ACT_MP_STAND_IDLE] = {ACT_IDLE_SMG1_RELAXED, ACT_IDLE_ANGRY_SMG1},
+		[ACT_MP_CROUCH_IDLE] = {ACT_COVER_LOW, ACT_RANGE_AIM_SMG1_LOW},
+		[ACT_MP_WALK] = {ACT_WALK_RIFLE_RELAXED, ACT_WALK_AIM_RIFLE_STIMULATED},
+		[ACT_MP_CROUCHWALK] = {ACT_WALK_CROUCH_RIFLE, ACT_WALK_CROUCH_AIM_RIFLE},
+		[ACT_MP_RUN] = {ACT_RUN_RIFLE_RELAXED, ACT_RUN_AIM_RIFLE_STIMULATED},
+		[ACT_LAND] = {ACT_RESET, ACT_RESET},
+		attack = ACT_GESTURE_RANGE_ATTACK_SMG1,
+		reload = ACT_GESTURE_RELOAD_SMG1
+	},
+	shotgun = {
+		[ACT_MP_STAND_IDLE] = {ACT_IDLE_SHOTGUN_RELAXED, ACT_IDLE_ANGRY_SMG1},
+		[ACT_MP_CROUCH_IDLE] = {ACT_COVER_LOW, ACT_RANGE_AIM_SMG1_LOW},
+		[ACT_MP_WALK] = {ACT_WALK_RIFLE_RELAXED, ACT_WALK_AIM_RIFLE_STIMULATED},
+		[ACT_MP_CROUCHWALK] = {ACT_WALK_CROUCH_RIFLE, ACT_WALK_CROUCH_RIFLE},
+		[ACT_MP_RUN] = {ACT_RUN_RIFLE_RELAXED, ACT_RUN_AIM_RIFLE_STIMULATED},
+		[ACT_LAND] = {ACT_RESET, ACT_RESET},
+		attack = ACT_GESTURE_RANGE_ATTACK_SHOTGUN
+	},
+	grenade = {
+		[ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE_MANNEDGUN},
+		[ACT_MP_CROUCH_IDLE] = {ACT_COVER_LOW, ACT_RANGE_AIM_SMG1_LOW},
+		[ACT_MP_WALK] = {ACT_WALK, ACT_WALK_AIM_RIFLE_STIMULATED},
+		[ACT_MP_CROUCHWALK] = {ACT_WALK_CROUCH, ACT_WALK_CROUCH_AIM_RIFLE},
+		[ACT_MP_RUN] = {ACT_RUN, ACT_RUN_RIFLE_STIMULATED},
+		[ACT_LAND] = {ACT_RESET, ACT_RESET},
+		attack = ACT_RANGE_ATTACK_THROW
+	},
+	melee = {
+		[ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE_ANGRY_MELEE},
+		[ACT_MP_CROUCH_IDLE] = {ACT_COVER_LOW, ACT_COVER_LOW},
+		[ACT_MP_WALK] = {ACT_WALK, ACT_WALK_AIM_RIFLE},
+		[ACT_MP_CROUCHWALK] = {ACT_WALK_CROUCH, ACT_WALK_CROUCH},
+		[ACT_MP_RUN] = {ACT_RUN, ACT_RUN},
+		[ACT_LAND] = {ACT_RESET, ACT_RESET},
+		attack = ACT_MELEE_ATTACK_SWING
+	},
+	glide = ACT_GLIDE,
+	vehicle = {
+		["prop_vehicle_prisoner_pod"] = {"podpose", Vector(-3, 0, 0)},
+		["prop_vehicle_jeep"] = {ACT_BUSY_SIT_CHAIR, Vector(14, 0, -14)},
+		["prop_vehicle_airboat"] = {ACT_BUSY_SIT_CHAIR, Vector(8, 0, -20)},
+		chair = {ACT_BUSY_SIT_CHAIR, Vector(1, 0, -23)}
+	},
+}
+
+ix.anim.citizen_male = {
 	normal = {
 		[ACT_MP_STAND_IDLE] = {ACT_IDLE, ACT_IDLE_ANGRY_SMG1},
 		[ACT_MP_CROUCH_IDLE] = {ACT_COVER_LOW, ACT_COVER_LOW},
@@ -230,7 +295,20 @@ ix.anim.SetModelClass("models/jq/hlvr/characters/combine/heavy/combine_heavy_hlv
 
 
 -- pandafish citizens
-ix.anim.SetModelClass("models/humans/pandafishizens/male_08.mdl", "pandacitizen")
+ix.anim.SetModelClass("models/humans/pandafishizens/male_01.mdl", "citizen_male")
+ix.anim.SetModelClass("models/humans/pandafishizens/male_02.mdl", "citizen_male")
+ix.anim.SetModelClass("models/humans/pandafishizens/male_03.mdl", "citizen_male")
+ix.anim.SetModelClass("models/humans/pandafishizens/male_04.mdl", "citizen_male")
+ix.anim.SetModelClass("models/humans/pandafishizens/male_05.mdl", "citizen_male")
+ix.anim.SetModelClass("models/humans/pandafishizens/male_06.mdl", "citizen_male")
+ix.anim.SetModelClass("models/humans/pandafishizens/male_07.mdl", "citizen_male")
+ix.anim.SetModelClass("models/humans/pandafishizens/male_09.mdl", "citizen_male")
+ix.anim.SetModelClass("models/humans/pandafishizens/male_10.mdl", "citizen_male")
+ix.anim.SetModelClass("models/humans/pandafishizens/male_11.mdl", "citizen_male")
+ix.anim.SetModelClass("models/humans/pandafishizens/male_12.mdl", "citizen_male")
+ix.anim.SetModelClass("models/humans/pandafishizens/male_15.mdl", "citizen_male")
+
+ix.anim.SetModelClass("models/humans/pandafishizens/male_08.mdl", "citizen_male")
 
 
 

@@ -20,6 +20,7 @@ function PLUGIN:SearchLootContainer(ent, ply)
                 ply:EmitSound("physics/plastic/plastic_box_scrape_rough_loop1.wav", 35)
                 ix.chat.Send(ply, "me", "goes through the trash, trying to find something useful.")
                 ply:ForceSequence("roofidle1", nil, 1, false)
+                ply:Freeze(true)
 
                 ply:SetAction("Searching...", 1, function()
                     ply:Freeze(false)
@@ -50,6 +51,7 @@ function PLUGIN:SearchLootContainer(ent, ply)
             if not ent.ixContainerNothingInItCooldown or ent.ixContainerNothingInItCooldown <= CurTime() then
                 ply:EmitSound("physics/plastic/plastic_box_scrape_rough_loop1.wav", 35)
                 ply:ForceSequence("roofidle1", nil, 1, false)
+                ply:Freeze(true)
                 ply:SetAction("Searching...", 1, function()
                     ply:ChatNotify("You didn't find anything!")
                     ent.ixContainerNothingInItCooldown = CurTime() + 1
