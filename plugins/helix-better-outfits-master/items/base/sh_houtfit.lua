@@ -8,12 +8,17 @@ ITEM.outfitCategory = "model"
 ITEM.pacData = {}
 
 local function armorPlayer(client, target, amount)
-	hook.Run("OnPlayerArmor", client, target, amount)
-
 	if client:Alive() and target:Alive() then
 		target:SetArmor(amount)
 	end
 end
+
+local function unarmorPlayer(client, target, amount)
+	if client:Alive() and target:Alive() then
+		target:SetArmor(target:Armor() - amount)
+	end
+end
+
 
 if CLIENT then
 	function ITEM:PaintOver(item, w, h)
@@ -25,65 +30,69 @@ if CLIENT then
 end
 
 function ITEM:RemoveOutfit(client)
-	local character = client:GetCharacter()
-	self:SetData("equip", false)
-	client:EmitSound("npc/combine_soldier/zipline_clothing" .. math.random(1, 2) .. ".wav")
-	client:ForceSequence("photo_react_startle", nil, 0.85, true)
+    local character = client:GetCharacter()
+    local fitArmor = self.fitArmor or 0
+    self:SetData("equip", false)
+    client:EmitSound("npc/combine_soldier/zipline_clothing" .. math.random(1, 2) .. ".wav")
+    client:ForceSequence("photo_react_startle", nil, 0.85, true)
 
-	if character:GetData("oldModel" .. self.outfitCategory) then
-		character:SetModel(character:GetData("oldModel" .. self.outfitCategory))
-		character:SetData("oldModel" .. self.outfitCategory, nil)
-	end
+    if character:GetData("oldModel" .. self.outfitCategory) then
+        character:SetModel(character:GetData("oldModel" .. self.outfitCategory))
+        character:SetData("oldModel" .. self.outfitCategory, nil)
+    end
 
-	if self.newSkin then
-		if character:GetData("oldSkin" .. self.outfitCategory) then
-			client:SetSkin(character:GetData("oldSkin" .. self.outfitCategory))
-			character:SetData("oldSkin" .. self.outfitCategory, nil)
-			character:SetData("skin", client:GetSkin())
-		else
-			client:SetSkin(0)
-		end
-	end
+    if self.newSkin then
+        if character:GetData("oldSkin" .. self.outfitCategory) then
+            client:SetSkin(character:GetData("oldSkin" .. self.outfitCategory))
+            character:SetData("oldSkin" .. self.outfitCategory, nil)
+            character:SetData("skin", client:GetSkin())
+        else
+            client:SetSkin(0)
+        end
+    end
 
-	for k, _ in pairs(self.bodyGroups or {}) do
-		local index = client:FindBodygroupByName(k)
+    for k, _ in pairs(self.bodyGroups or {}) do
+        local index = client:FindBodygroupByName(k)
 
-		if index > -1 then
-			client:SetBodygroup(index, 0)
-			local groups = character:GetData("groups", {})
+        if index > -1 then
+            client:SetBodygroup(index, 0)
+            local groups = character:GetData("groups", {})
 
-			if groups[index] then
-				groups[index] = nil
-				character:SetData("groups", groups)
-			end
-		end
-	end
+            if groups[index] then
+                groups[index] = nil
+                character:SetData("groups", groups)
+            end
+        end
+    end
 
-	if character:GetData("oldGroups" .. self.outfitCategory) then
-		for k, v in pairs(character:GetData("oldGroups" .. self.outfitCategory, {})) do
-			client:SetBodygroup(k, v)
-		end
+    if character:GetData("oldGroups" .. self.outfitCategory) then
+        for k, v in pairs(character:GetData("oldGroups" .. self.outfitCategory, {})) do
+            client:SetBodygroup(k, v)
+        end
 
-		character:SetData("groups", character:GetData("oldGroups" .. self.outfitCategory, {}))
-		character:SetData("oldGroups" .. self.outfitCategory, nil)
-	end
+        character:SetData("groups", character:GetData("oldGroups" .. self.outfitCategory, {}))
+        character:SetData("oldGroups" .. self.outfitCategory, nil)
+    end
 
-	if self.attribBoosts then
-		for k, _ in pairs(self.attribBoosts) do
-			character:RemoveBoost(self.uniqueID, k)
-		end
-	end
+    if self.attribBoosts then
+        for k, _ in pairs(self.attribBoosts) do
+            character:RemoveBoost(self.uniqueID, k)
+        end
+    end
 
-	for k, _ in pairs(self:GetData("outfitAttachments", {})) do
-		self:RemoveAttachment(k, client)
-	end
+    for k, _ in pairs(self:GetData("outfitAttachments", {})) do
+        self:RemoveAttachment(k, client)
+    end
 
-	if self.fitArmor then
-		armorPlayer(client, client, 0)
-	end
+    if fitArmor > 0 then
+        local currentArmor = client:Armor()
+        local armorToRemove = math.min(fitArmor, currentArmor)
+        unarmorPlayer(client, client, armorToRemove)
+    end
 
-	self:OnUnequipped()
+    self:OnUnequipped()
 end
+
 
 function ITEM:AddAttachment(id)
 	local attachments = self:GetData("outfitAttachments", {})
@@ -212,7 +221,7 @@ ITEM.functions.Equip = {
 		end
 
 		if item.fitArmor then
-			armorPlayer(item.player, item.player, item.fitArmor)
+			armorPlayer(item.player, item.player, item.fitArmor + client:Armor())
 		end
 
 		item:OnEquipped()
@@ -249,21 +258,3 @@ end
 function ITEM:CanEquipOutfit()
 	return true
 end
-
-function ITEM:OnLoadout()
-	if self.fitArmor then
-		if self:GetData("equip") then
-			self.player:SetArmor(self:GetData("armor", self.fitArmor))
-		end
-	end
-end
-
-function ITEM:OnSave()
-	if self.fitArmor then
-		if self:GetData("equip") then
-			self:SetData("armor", math.Clamp(self.player:Armor(), 0, self.fitArmor))
-		end
-	end
-end
-
--- Fix this code by providing appropriate changes and updates to the functions, comments, and any required code modifications.
