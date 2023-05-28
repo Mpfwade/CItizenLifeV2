@@ -7,7 +7,7 @@ ITEM.bDropOnDeath = true
 
 
 ITEM.bodyGroups = {
-	["head"] = 4,
+	["headgear"] = 4,
 }
 
 ITEM.height = 1
