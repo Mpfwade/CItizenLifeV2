@@ -3,6 +3,8 @@ ITEM.description = "A pair of black gloves."
 ITEM.model = "models/tnb/items/gloves.mdl"
 ITEM.outfitCategory = "Gloves"
 ITEM.noResetBodyGroups = true
+ITEM.bDropOnDeath = true
+
 
 ITEM.bodyGroups = {
 	["hands"] = 2,

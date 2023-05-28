@@ -3,6 +3,8 @@ ITEM.description = "A beanie, but green."
 ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Hats"
 ITEM.noResetBodyGroups = true
+ITEM.bDropOnDeath = true
+
 
 ITEM.bodyGroups = {
 	["head"] = 2,

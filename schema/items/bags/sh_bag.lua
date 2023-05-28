@@ -5,6 +5,7 @@ ITEM.outfitCategory = "Misc"
 ITEM.noResetBodyGroups = true
 ITEM.bDropOnDeath = true
 
+
 ITEM.bodyGroups = {
 	["bag"] = 1
 }

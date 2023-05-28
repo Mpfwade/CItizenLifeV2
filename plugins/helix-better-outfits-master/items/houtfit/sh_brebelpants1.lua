@@ -3,6 +3,8 @@ ITEM.description = "A pair of blue long pants, with armor pads on it."
 ITEM.model = "models/tnb/items/pants_rebel.mdl"
 ITEM.outfitCategory = "Pants"
 ITEM.noResetBodyGroups = true
+ITEM.bDropOnDeath = true
+
 
 ITEM.bodyGroups = {
 	["legs"] = 14

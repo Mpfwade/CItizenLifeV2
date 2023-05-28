@@ -3,6 +3,8 @@ ITEM.description = "A plastic frame with optical lenses."
 ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Glasses"
 ITEM.noResetBodyGroups = true
+ITEM.bDropOnDeath = true
+
 
 ITEM.bodyGroups = {
 	["glasses"] = 1

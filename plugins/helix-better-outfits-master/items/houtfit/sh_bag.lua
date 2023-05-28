@@ -3,6 +3,8 @@ ITEM.description = "A Universal Union-branded bag."
 ITEM.model = "models/props_junk/cardboard_box003b.mdl"
 ITEM.outfitCategory = "Misc"
 ITEM.noResetBodyGroups = true
+ITEM.bDropOnDeath = true
+
 
 ITEM.bodyGroups = {
 	["bag"] = 1

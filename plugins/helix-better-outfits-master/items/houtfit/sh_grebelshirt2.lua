@@ -4,6 +4,8 @@ ITEM.model = "models/tnb/items/shirt_rebel1.mdl"
 ITEM.skin = 1
 ITEM.outfitCategory = "Shirts"
 ITEM.noResetBodyGroups = true
+ITEM.bDropOnDeath = true
+
 
 ITEM.bodyGroups = {
 	["torso"] = 11,
