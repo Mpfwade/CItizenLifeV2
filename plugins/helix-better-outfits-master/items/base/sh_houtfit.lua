@@ -36,6 +36,10 @@ function ITEM:RemoveOutfit(client)
     client:EmitSound("npc/combine_soldier/zipline_clothing" .. math.random(1, 2) .. ".wav")
     client:ForceSequence("photo_react_startle", nil, 0.85, true)
 
+	timer.Simple(0.85, function()
+	client:ForceSequence()
+	end)
+
     if character:GetData("oldModel" .. self.outfitCategory) then
         character:SetModel(character:GetData("oldModel" .. self.outfitCategory))
         character:SetData("oldModel" .. self.outfitCategory, nil)
@@ -142,6 +146,10 @@ ITEM.functions.Equip = {
 		local items = char:GetInventory():GetItems()
 		client:EmitSound("npc/combine_soldier/zipline_clothing" .. math.random(1, 2) .. ".wav")
 		client:ForceSequence("photo_react_startle", nil, 0.85, true)
+
+		timer.Simple(0.85, function()
+			client:ForceSequence()
+			end)
 
 		for _, v in pairs(items) do
 			if v.id ~= item.id then
