@@ -1,6 +1,6 @@
 ITEM.name = "Black Gloves"
 ITEM.description = "A pair of black gloves."
-ITEM.model = "models/props_junk/cardboard_box003b.mdl"
+ITEM.model = "models/tnb/items/gloves.mdl"
 ITEM.outfitCategory = "Gloves"
 ITEM.noResetBodyGroups = true
 

@@ -1,6 +1,6 @@
 ITEM.name = "Green Resistance Pants"
 ITEM.description = "A dark-green long pants, with armor pads on it."
-ITEM.model = "models/props_junk/cardboard_box003b.mdl"
+ITEM.model = "models/tnb/items/pants_rebel.mdl"
 ITEM.outfitCategory = "Pants"
 ITEM.noResetBodyGroups = true
 

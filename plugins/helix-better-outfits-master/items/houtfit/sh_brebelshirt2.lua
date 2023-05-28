@@ -1,6 +1,7 @@
 ITEM.name = "Blue Resistance Shirt"
 ITEM.description = "A blue, long-sleeved shirt with a belt."
-ITEM.model = "models/props_junk/cardboard_box003b.mdl"
+ITEM.model = "models/tnb/items/shirt_rebel1.mdl"
+ITEM.skin = 1
 ITEM.outfitCategory = "Shirts"
 ITEM.noResetBodyGroups = true
 

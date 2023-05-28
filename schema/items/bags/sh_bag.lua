@@ -1,5 +1,5 @@
 ITEM.name = "Black Bag"
-ITEM.description = "A Universal Union-branded bag."
+ITEM.description = "A black bag to store stuff."
 ITEM.model = "models/willardnetworks/clothingitems/backpack.mdl"
 ITEM.outfitCategory = "Misc"
 ITEM.noResetBodyGroups = true

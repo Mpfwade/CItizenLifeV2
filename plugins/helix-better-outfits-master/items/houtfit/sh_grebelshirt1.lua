@@ -1,6 +1,7 @@
 ITEM.name = "Green Resistance Shirt with Vest"
 ITEM.description = "A dark-green, long-sleeved shirt with a vest ontop."
-ITEM.model = "models/props_junk/cardboard_box003b.mdl"
+ITEM.model = "models/tnb/items/shirt_rebel1.mdl"
+ITEM.skin = 1
 ITEM.outfitCategory = "Shirts"
 ITEM.noResetBodyGroups = true
 
