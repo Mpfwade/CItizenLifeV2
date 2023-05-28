@@ -311,7 +311,7 @@ function Schema:PlayerLoadout(ply)
         ply:SetCanZoom(false)
         ply:ConCommand("gmod_mcore_test 1")
 
-        if ply:Team() == FACTION_CITIZEN and char and ply:GetCharacter():GetClass() == CLASS_CITIZEN and not item:GetData("equip") then
+        if ply:Team() == FACTION_CITIZEN and char and ply:GetCharacter():GetClass() == CLASS_CITIZEN and not char:GetData("equip") then
             ply:SetBodygroup(1, 0)
             ply:SetBodygroup(2, 0)
             ply:SetBodygroup(3, 0)

@@ -4,7 +4,7 @@ ITEM.model = "models/props_junk/GlassBottle01a.mdl"
 ITEM.width = 1
 ITEM.height = 1
 ITEM.isGrenade = true
-
+ITEM.bDropOnDeath = true
 ITEM.functions.use = {
     name = "Equip",
     tip = "equipTip",
