@@ -25,7 +25,7 @@ function PLUGIN:EntityTakeDamage(target, dmginfo)
             local character = attacker:GetCharacter()
             character:SetData("quota", 0)
             character:SetData("quotamax", quotamax)
-            ply:SetRP(1 + ply:GetNWInt("ixRP"))
+            attacker:SetRP(1 + attacker:GetNWInt("ixRP"))
             attacker:ChatPrint("You've done your quota. You've been rewarded one rank point")
 
             if timer.Exists("ResetQuotaTimer") then
@@ -38,10 +38,12 @@ function PLUGIN:EntityTakeDamage(target, dmginfo)
                 attacker:ChatPrint("You've received a new quota.")
             end)
         else
+            attacker:SetData("quota", quotaamount + 1) -- Increase the quota amount
             attacker:ChatPrint("You have gained a point on your quota.")
         end
     end
 end
+
 
 function PLUGIN:PlayerLoadedCharacter(client, character)
     if client:Team() == FACTION_CCA then
@@ -98,7 +100,7 @@ function PLUGIN:PlayerTick(player)
             local rank = player:GetNWInt("ixRP")
 
             if rank > 0 then
-                ply:SetRP(RANK_PENALTY_AMOUNT - ply:GetNWInt("ixRP"))
+                player:SetRP(RANK_PENALTY_AMOUNT - player:GetNWInt("ixRP"))
                 player:ChatPrint("You lost one rank point due to not completing your quota in time.")
             end
 
