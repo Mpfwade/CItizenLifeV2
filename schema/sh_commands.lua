@@ -26,19 +26,11 @@ ix.command.Add("Tie", {
 			end
 
 			if not isRestricted then
-				ply:ForceSequence(tieAnim, nil, 0, true)
-				ply:EmitSound("misc/cablecuff.wav")
-				ix.chat.Send(ply, "me", "ties the person in front of them.")
-				ply:SetAction("Tying, target.", 1)
-				
-
-				timer.Simple(1, function()
-					ply:LeaveSequence()
-				end)
-
-				timer.Simple(1, function()
+				ply:DoStaredAction(targetEntity, tieAnim, 1.5, function()
 					if IsValid(ply) and IsValid(targetEntity) then
-						ply:LeaveSequence()
+						ply:EmitSound("misc/cablecuff.wav")
+						ix.chat.Send(ply, "me", "ties the person in front of them.")
+						ply:SetAction("Tying, target.", 1)
 						targetEntity:SetRestricted(true)
 						targetEntity:SetNetVar("tying")
 						targetEntity:NotifyLocalized("fTiedUp")
@@ -49,13 +41,22 @@ ix.command.Add("Tie", {
 							Schema:AddCombineDisplayMessage("Downloading lost radio contact information...")
 							Schema:AddCombineDisplayMessage("WARNING! Radio contact lost for unit at " .. location .. "...", Color(255, 0, 0, 255), true)
 						end
+
+						timer.Simple(1, function()
+							if IsValid(ply) and IsValid(targetEntity) then
+								ply:LeaveSequence()
+								targetEntity:LeaveSequence()
+								ply:SetAction()
+								targetEntity:SetAction()
+							end
+						end)
 					end
 				end)
 
 				target:SetNetVar("tying", true)
 				if not target.ixPlayer then
-				target:SetAction("You are being tied.", 1)
-				end				
+					target:SetAction("You are being tied.", 1)
+				end
 			else
 				ply:NotifyLocalized("Restricted")
 			end
@@ -64,6 +65,7 @@ ix.command.Add("Tie", {
 		end
 	end
 })
+
 
 
 ix.command.Add("Kickdoor", {

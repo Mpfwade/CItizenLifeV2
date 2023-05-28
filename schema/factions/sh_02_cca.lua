@@ -32,7 +32,13 @@ if SERVER then
             net.Start("ixIsCCA")
             net.Send(ply)
             ply.ixSwitchedToCCA = true
+            ply:Spawn()
+            char:SetName("UNRANKED CP UNIT")
         end
+    end
+
+    for k, v in pairs(character:GetInventory():GetItems()) do
+        v:Remove()
     end
 
     net.Receive("ixIsCCA", function()
