@@ -5,7 +5,10 @@ ITEM.outfitCategory = "Shirts"
 ITEM.noResetBodyGroups = true
 
 ITEM.bodyGroups = {
-	["torso"] = 12
+	["torso"] = 11,
+	["belt"] = 1,
+	["armband"] = 1,
+
 }
 
 ITEM.height = 2

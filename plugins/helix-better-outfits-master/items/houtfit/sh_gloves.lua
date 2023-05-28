@@ -5,7 +5,7 @@ ITEM.outfitCategory = "Gloves"
 ITEM.noResetBodyGroups = true
 
 ITEM.bodyGroups = {
-	["hands"] = 1
+	["hands"] = 2,
 }
 
 ITEM.height = 1

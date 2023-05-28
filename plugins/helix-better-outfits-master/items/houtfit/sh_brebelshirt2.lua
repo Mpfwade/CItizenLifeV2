@@ -7,7 +7,7 @@ ITEM.noResetBodyGroups = true
 ITEM.bodyGroups = {
 	["torso"] = 13,
 	["belt"] = 1,
-	["armband"] = 2,
+	["armband"] = 1,
 }
 
 ITEM.height = 2
