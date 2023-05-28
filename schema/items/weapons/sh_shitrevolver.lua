@@ -19,10 +19,3 @@ ITEM.height = 1
 
 ITEM.class = "ls_shitrevolver"
 ITEM.weaponCategory = "sidearm"
-
-ITEM.exRender = true
-ITEM.iconCam = {
-	pos = Vector(0, 200, 0),
-	ang = Angle(0.47, 269.84, 0),
-	fov = 5.84
-}

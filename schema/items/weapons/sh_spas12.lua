@@ -18,10 +18,3 @@ ITEM.height = 1
 
 ITEM.class = "ls_spas12"
 ITEM.weaponCategory = "primary"
-
-ITEM.exRender = true
-ITEM.iconCam = {
-	pos = Vector(0, 200, 0),
-	ang = Angle(0, 270, 0),
-	fov = 9.62
-}

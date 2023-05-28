@@ -19,9 +19,3 @@ ITEM.height = 2
 
 -- Item Custom Configuration
 
-ITEM.exRender = true
-ITEM.iconCam = {
-	pos = Vector(-18.23, -41.6, 201.17),
-	ang = Angle(74.7, 58.54, 0),
-	fov = 14.35
-}

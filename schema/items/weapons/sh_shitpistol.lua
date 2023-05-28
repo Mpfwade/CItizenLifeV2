@@ -19,10 +19,3 @@ ITEM.height = 2
 
 ITEM.class = "ls_nailgun"
 ITEM.weaponCategory = "sidearm"
-
-ITEM.exRender = true
-ITEM.iconCam = {
-	pos = Vector(-18, 213, 6),
-	ang = Angle(0, 273, 0),
-	fov = 4
-}

@@ -18,10 +18,3 @@ ITEM.height = 2
 
 ITEM.class = "weapon_crowbar"
 ITEM.weaponCategory = "melee"
-
-ITEM.exRender = true
-ITEM.iconCam = {
-	pos = Vector(66.62, 77.77, 172.12),
-	ang = Angle(59.09, 228.7, 0),
-	fov = 9.01
-}

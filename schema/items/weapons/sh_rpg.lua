@@ -19,9 +19,3 @@ ITEM.height = 2
 ITEM.class = "weapon_rpg"
 ITEM.weaponCategory = "primary"
 
-ITEM.exRender = true
-ITEM.iconCam = {
-	pos = Vector(0, 200, 0),
-	ang = Angle(-0.67, 275.21, 0),
-	fov = 15.14
-}

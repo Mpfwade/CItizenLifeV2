@@ -19,10 +19,3 @@ ITEM.height = 1
 
 ITEM.class = "ls_357mag"
 ITEM.weaponCategory = "sidearm"
-
-ITEM.exRender = true
-ITEM.iconCam = {
-	pos = Vector(0.92, -199.96, -3.74),
-	ang = Angle(-1.27, 88.23, 0),
-	fov = 5.62
-}

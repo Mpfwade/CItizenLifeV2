@@ -19,9 +19,3 @@ ITEM.height = 1
 ITEM.class = "ix_stunstick"
 ITEM.weaponCategory = "melee"
 
-ITEM.exRender = true
-ITEM.iconCam = {
-	pos = Vector(98.23, 69.47, 159.77),
-	ang = Angle(52.79, 214.56, 0),
-	fov = 6.87
-}

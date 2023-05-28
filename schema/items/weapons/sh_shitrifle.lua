@@ -19,9 +19,3 @@ ITEM.height = 2
 ITEM.class = "ls_shitsemirifle"
 ITEM.weaponCategory = "primary"
 
-ITEM.exRender = true
-ITEM.iconCam = {
-	pos = Vector(-13.45, 199.66, 0),
-	ang = Angle(-0.02, 273.39, 0),
-	fov = 6.42
-}

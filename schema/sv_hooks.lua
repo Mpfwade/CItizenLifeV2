@@ -195,7 +195,6 @@ function Schema:Move(ply, mv)
         end
     end
 
-
     ply:SetDuckSpeed(0.4)
     ply:SetUnDuckSpeed(0.4)
     ply:SetSlowWalkSpeed(70)
@@ -295,7 +294,6 @@ function Schema:PlayerCanHearPlayersVoice(listener, ply)
     return true
 end
 
-
 util.AddNetworkString("ixCustomSettings")
 
 function Schema:PlayerLoadout(ply)
@@ -310,8 +308,182 @@ function Schema:PlayerLoadout(ply)
     if char then
         ply:SetCanZoom(false)
         ply:ConCommand("gmod_mcore_test 1")
+        net.Start("ixCustomSettings")
+        net.Send(ply)
 
-        if ply:Team() == FACTION_CITIZEN and char and ply:GetCharacter():GetClass() == CLASS_CITIZEN and not char:GetData("equip") then
+        for k, v in pairs(ents.GetAll()) do
+            if v:IsNPC() then
+                Schema:UpdateRelationShip(v)
+            end
+        end
+
+        print(ply:IPAddress(), " ", ply:SteamName(), " [", ply:Nick(), "] - ", ply:SteamID(), " | PlayerLoadout")
+    end
+
+    function Schema:PlayerLoadedCharacter(ply, char, oldChar)
+        if ply:Team() == FACTION_CITIZEN then
+            char:GiveFlags("pet")
+        end
+
+        if ply:IsAdmin() then
+            char:GiveFlags("Cn")
+            char:GiveFlags("pet")
+        end
+    end
+
+    local dropAbleWeapons = {
+        ["weapon_357"] = "357",
+        ["tfa_ocipr"] = "ar1",
+        ["tfa_ins2_mp7"] = "mp7",
+        ["tfa_ins2_spas12"] = "spas12",
+        ["tfa_ins2_usp_match"] = "usp",
+        ["tfa_m1a1_thompson"] = "m1a1_thompson",
+        ["tfa_ins2_remington_m870"] = "remington_m870",
+        ["tfa_combineshotgun"] = "cmb_12g",
+        ["ix_stunstick"] = "stunstick",
+        ["weapon_crowbar"] = "crowbar",
+        ["ls_axe"] = "axe",
+        ["weapon_grenade"] = "grenade",
+        ["tfa_crossbow"] = "crossbow",
+        ["weapon_rpg"] = "rpg",
+        ["tfa_nam_ppsh41"] = "ppsh",
+        ["tfa_nam_m60"] = "m60",
+        ["tfa_osips"] = "gruntsmg",
+    }
+
+    local function DropRandomWeapon(ply, held, dropAmmoInstead)
+        if IsValid(held) and dropAbleWeapons[ply:GetActiveWeapon():GetClass()] and ply:Team() == FACTION_CCA or FACTION_OTA then
+            if ply:GetActiveWeapon(weapons[1]) then return end
+            local wep = dropAbleWeapons[held:GetClass()]
+
+            if dropAbleWeapons then
+                if wep then
+                    ix.item.Spawn(wep, ply:GetPos() + Vector(0, 0, 40), nil, ply:GetAngles())
+                end
+            end
+        else
+            local weapons = {}
+
+            for i, v in ipairs(ply:GetWeapons()) do
+                local class = v:GetClass()
+
+                if dropAbleWeapons[class] then
+                    weapons[#weapons + 1] = dropAbleWeapons[class]
+                end
+            end
+
+            if #weapons > 0 then
+                local randWeapon = table.Random(weapons)
+                ix.item.Spawn(randWeapon, ply:GetPos() + Vector(0, 0, 40), nil, ply:GetAngles())
+            end
+        end
+    end
+
+    function Schema:DoPlayerDeath(ply, inflicter, attacker)
+        local randomChance = math.random(1, 3)
+        ply.deathPos = ply:GetPos()
+        ply.deathAngles = ply:GetAngles()
+        ply.ixCWUClass = 0
+
+        if ply:IsRestricted() then
+            ply:Freeze(false)
+        end
+
+        local char = ply:GetCharacter()
+        if not char then return end
+
+        if ply:Team() == FACTION_OTA then
+            ix.item.Spawn("damagedotavest", ply:GetPos() + Vector(0, 0, 60))
+        end
+
+        if ply:Team() == FACTION_CCA then
+            ix.item.Spawn("damagedcpvest", ply:GetPos() + Vector(0, 0, 60))
+        end
+
+        local held = ply:GetActiveWeapon()
+
+        if randomChance == 1 then
+            if ply:IsCombine() then
+                ix.item.Spawn("biolink", ply:GetPos() + Vector(0, 0, 50))
+            else
+                DropRandomWeapon(ply, held, true)
+            end
+        elseif ply:IsCombine() then
+            DropRandomWeapon(ply, held, true)
+        else
+            DropRandomWeapon(ply, held)
+        end
+
+        if ply:IsBot() then return false end
+        if char:GetMoney() == 0 then return end
+        local droppedTokens = ents.Create("ix_money")
+        droppedTokens:SetModel(ix.currency.model)
+        droppedTokens:SetPos(ply:GetPos())
+        droppedTokens:SetAngles(ply:GetAngles())
+        droppedTokens:SetAmount(char:GetMoney())
+        droppedTokens:Spawn()
+        char:SetMoney(0)
+    end
+
+    function Schema:PlayerDeath(ply, inflictor, attacker)
+        local char = ply:GetCharacter()
+        char:SetData("tied", false)
+        ply:SetRestricted(false)
+        ply:ConCommand("Stopsound")
+        ply.ixJailState = nil
+    
+        if ply:IsCombine() then
+            local location = ply:GetArea()
+    
+            if location == "" then
+                location = "unknown location"
+            end
+    
+            local combineName = string.upper(ply:Nick() or "unknown unit")
+    
+            local sounds = {"npc/overwatch/radiovoice/on3.wav", "npc/overwatch/radiovoice/attention.wav", "npc/overwatch/radiovoice/lostbiosignalforunit.wav", "npc/overwatch/radiovoice/off4.wav", "hl1/fvox/_comma.wav", "npc/overwatch/radiovoice/on1.wav", "npc/overwatch/radiovoice/unitdownat.wav", "npc/overwatch/radiovoice/404zone.wav", "npc/overwatch/radiovoice/reinforcementteamscode3.wav", "npc/overwatch/radiovoice/investigateandreport.wav", "npc/overwatch/radiovoice/off2.wav",}
+    
+            for k, v in ipairs(player.GetAll()) do
+                if v:IsCombine() then
+                    ix.util.EmitQueuedSounds(v, sounds, 3, 0.2, 40)
+                end
+            end
+    
+            ply:SetNWBool("CPRespawn", true)
+            ply:SetNWBool("AlreadyaRank", false)
+    
+            if ply:GetSquad() then
+                ply:SetNetVar("squadleader", nil)
+                ply:SetNetVar("squad", nil)
+            end
+    
+            timer.Simple(math.random(4.00, 5.00), function()
+                ix.chat.Send(ply, "dispatchradioforce", "Attention, lost biosignal for protection team unit " .. combineName .. ".", false)
+                Schema:AddCombineDisplayMessage("Downloading lost biosignal...")
+    
+                timer.Simple(math.random(4.00, 5.00), function()
+                    ix.chat.Send(ply, "dispatchradioforce", "Unit down at, " .. location .. " reinforcement teams code 3. Investigate and report.", false)
+                    Schema:AddCombineDisplayMessage("WARNING! Biosignal lost for protection team unit " .. combineName .. " at " .. location .. "...", Color(255, 0, 0, 255))
+                    Schema:AddWaypoint(ply.deathPos + Vector(0, 0, 30), "LOST BIOSIGNAL FOR " .. combineName, Color(200, 0, 0), 120, ply)
+                end)
+            end)
+        end
+    
+        if attacker:IsNPC() and (attacker:GetClass() == "npc_headcrab" or attacker:GetClass() == "npc_headcrab_fast") then
+            local headCrab = ents.Create("npc_zombie")
+    
+            if attacker:GetClass() == "npc_headcrab_fast" then
+                headCrab = ents.Create("npc_fastzombie")
+            end
+    
+            headCrab:SetPos(ply:GetPos())
+            headCrab:SetAngles(ply:GetAngles())
+            headCrab:Spawn()
+            attacker:Remove()
+            ply:Notify("A Headcrab has latched on to your body and is now taking control of it!")
+        end
+    
+        if ply:Team() == FACTION_CITIZEN and char and ply:GetCharacter():GetClass() == CLASS_CITIZEN then
             ply:SetBodygroup(1, 0)
             ply:SetBodygroup(2, 0)
             ply:SetBodygroup(3, 0)
@@ -331,184 +503,8 @@ function Schema:PlayerLoadout(ply)
             ply:SetBodygroup(9, 1)
         end
     end
-    net.Start("ixCustomSettings")
-    net.Send(ply)
-
-    for k, v in pairs(ents.GetAll()) do
-        if v:IsNPC() then
-            Schema:UpdateRelationShip(v)
-        end
-    end
-
-    print(ply:IPAddress(), " ", ply:SteamName(), " [", ply:Nick(), "] - ", ply:SteamID(), " | PlayerLoadout")
 end
 
-function Schema:PlayerLoadedCharacter(ply, char, oldChar)
-    
-    if ply:Team() == FACTION_CITIZEN then
-        char:GiveFlags("pet")
-    end
-
-    if ply:IsAdmin() then
-        char:GiveFlags("Cn")
-        char:GiveFlags("pet")
-    end
-end
-
-local dropAbleWeapons = {
-    ["weapon_357"] = "357",
-    ["tfa_ocipr"] = "ar1",
-    ["tfa_ins2_mp7"] = "mp7",
-    ["tfa_ins2_spas12"] = "spas12",
-    ["tfa_ins2_usp_match"] = "usp",
-    ["tfa_m1a1_thompson"] = "m1a1_thompson",
-    ["tfa_ins2_remington_m870"] = "remington_m870",
-    ["tfa_combineshotgun"] = "cmb_12g",
-    ["ix_stunstick"] = "stunstick",
-    ["weapon_crowbar"] = "crowbar",
-    ["ls_axe"] = "axe",
-    ["weapon_grenade"] = "grenade",
-    ["tfa_crossbow"] = "crossbow",
-    ["weapon_rpg"] = "rpg",
-    ["tfa_nam_ppsh41"] = "ppsh",
-    ["tfa_nam_m60"] = "m60",
-    ["tfa_osips"] = "gruntsmg",
-}
-
-local function DropRandomWeapon(ply, held, dropAmmoInstead)
-    if IsValid(held) and dropAbleWeapons[ply:GetActiveWeapon():GetClass()] and ply:Team() == FACTION_CCA or FACTION_OTA then
-        if ply:GetActiveWeapon(weapons[1]) then return end
-        local wep = dropAbleWeapons[held:GetClass()]
-
-        if dropAbleWeapons then
-            if wep then
-                ix.item.Spawn(wep, ply:GetPos() + Vector(0, 0, 40), nil, ply:GetAngles())
-            end
-        end
-    else
-        local weapons = {}
-
-        for i, v in ipairs(ply:GetWeapons()) do
-            local class = v:GetClass()
-
-            if dropAbleWeapons[class] then
-                weapons[#weapons + 1] = dropAbleWeapons[class]
-            end
-        end
-
-        if #weapons > 0 then
-            local randWeapon = table.Random(weapons)
-            ix.item.Spawn(randWeapon, ply:GetPos() + Vector(0, 0, 40), nil, ply:GetAngles())
-        end
-    end
-end
-
-function Schema:DoPlayerDeath(ply, inflicter, attacker)
-    local randomChance = math.random(1, 3)
-    ply.deathPos = ply:GetPos()
-    ply.deathAngles = ply:GetAngles()
-    ply.ixCWUClass = 0
-
-    if ply:IsRestricted() then
-        ply:Freeze(false)
-    end
-
-    local char = ply:GetCharacter()
-    if not char then return end
-
-    if ply:Team() == FACTION_OTA then
-        ix.item.Spawn("damagedotavest", ply:GetPos() + Vector(0, 0, 60))
-    end
-
-    if ply:Team() == FACTION_CCA then
-        ix.item.Spawn("damagedcpvest", ply:GetPos() + Vector(0, 0, 60))
-    end
-
-    local held = ply:GetActiveWeapon()
-
-    if randomChance == 1 then
-        if ply:IsCombine() then
-            ix.item.Spawn("biolink", ply:GetPos() + Vector(0, 0, 50))
-        else
-            DropRandomWeapon(ply, held, true)
-        end
-    elseif ply:IsCombine() then
-        DropRandomWeapon(ply, held, true)
-    else
-        DropRandomWeapon(ply, held)
-    end
-
-    if ply:IsBot() then return false end
-    if char:GetMoney() == 0 then return end
-    local droppedTokens = ents.Create("ix_money")
-    droppedTokens:SetModel(ix.currency.model)
-    droppedTokens:SetPos(ply:GetPos())
-    droppedTokens:SetAngles(ply:GetAngles())
-    droppedTokens:SetAmount(char:GetMoney())
-    droppedTokens:Spawn()
-    char:SetMoney(0)
-end
-
-function Schema:PlayerDeath(ply, inflictor, attacker)
-    local char = ply:GetCharacter()
-
-    char:SetData("tied", false)
-    ply:SetRestricted(false)
-    ply:ConCommand("Stopsound")
-    ply.ixJailState = nil
-
-    if ply:IsCombine() then
-        local location = ply:GetArea()
-
-        if location == "" then
-            location = "unknown location"
-        end
-
-        local combineName = string.upper(ply:Nick() or "unknown unit")
-
-        local sounds = {"npc/overwatch/radiovoice/on3.wav", "npc/overwatch/radiovoice/attention.wav", "npc/overwatch/radiovoice/lostbiosignalforunit.wav", "npc/overwatch/radiovoice/off4.wav", "hl1/fvox/_comma.wav", "npc/overwatch/radiovoice/on1.wav", "npc/overwatch/radiovoice/unitdownat.wav", "npc/overwatch/radiovoice/404zone.wav", "npc/overwatch/radiovoice/reinforcementteamscode3.wav", "npc/overwatch/radiovoice/investigateandreport.wav", "npc/overwatch/radiovoice/off2.wav",}
-
-        for k, v in ipairs(player.GetAll()) do
-            if v:IsCombine() then
-                ix.util.EmitQueuedSounds(v, sounds, 3, 0.2, 40)
-            end
-        end
-        
-        ply:SetNWBool("CPRespawn", true)
-        ply:SetNWBool("AlreadyaRank", false)
-
-        if ply:GetSquad() then
-            ply:SetNetVar("squadleader", nil)
-            ply:SetNetVar("squad", nil)
-        end
-
-        timer.Simple(math.random(4.00, 5.00), function()
-            ix.chat.Send(ply, "dispatchradioforce", "Attention, lost biosignal for protection team unit " .. combineName .. ".", false)
-            Schema:AddCombineDisplayMessage("Downloading lost biosignal...")
-
-            timer.Simple(math.random(4.00, 5.00), function()
-                ix.chat.Send(ply, "dispatchradioforce", "Unit down at, " .. location .. " reinforcement teams code 3. Investigate and report.", false)
-                Schema:AddCombineDisplayMessage("WARNING! Biosignal lost for protection team unit " .. combineName .. " at " .. location .. "...", Color(255, 0, 0, 255))
-                Schema:AddWaypoint(ply.deathPos + Vector(0, 0, 30), "LOST BIOSIGNAL FOR " .. combineName, Color(200, 0, 0), 120, ply)
-            end)
-        end)
-    end
-
-    if attacker:IsNPC() and (attacker:GetClass() == "npc_headcrab" or attacker:GetClass() == "npc_headcrab_fast") then
-        local headCrab = ents.Create("npc_zombie")
-
-        if attacker:GetClass() == "npc_headcrab_fast" then
-            headCrab = ents.Create("npc_fastzombie")
-        end
-
-        headCrab:SetPos(ply:GetPos())
-        headCrab:SetAngles(ply:GetAngles())
-        headCrab:Spawn()
-        attacker:Remove()
-        ply:Notify("A Headcrab has latched on to your body and is now taking control of it!")
-    end
-end
- 
 function Schema:PlayerInteractItem(ply, action, item)
     if action == "drop" then
         timer.Simple(0.1, function()
@@ -586,8 +582,8 @@ function Schema:OnPlayerHitGround(ply, inWater, onFloater, speed)
 
                         timer.Simple(65, function()
                             ply:GetCharacter():SetData("ixBrokenLegs", false)
-
                         end)
+
                         if ply:IsCombine() then
                             Schema:AddCombineDisplayMessage("WARNING! UNIT " .. string.upper(ply:Nick()) .. " RECEIVED LEG FRACTURE...", Color(200, 50, 0, 255))
                         end
@@ -629,22 +625,25 @@ function Schema:PlayerSpawnedNPC(ply, ent)
 end
 
 local painSounds = {
-    [FACTION_CITIZEN] = {sound = function() return "" end},
-	[FACTION_CCA] = {sound = function() return "npc/metropolice/pain"..math.random(1,4)..".wav" end},
-	[FACTION_OTA] = {sound = function() return "npc/combine_soldier/pain"..math.random(1,3)..".wav" end},
-	[FACTION_VORTIGAUNT] = {sound = function() return table.Random({
-		"vo/npc/vortigaunt/vortigese02.wav",
-		"vo/npc/vortigaunt/vortigese03.wav",
-		"vo/npc/vortigaunt/vortigese04.wav",
-		"vo/npc/vortigaunt/vortigese07.wav",
-	}) end},
+    [FACTION_CITIZEN] = {
+        sound = function() return "" end
+    },
+    [FACTION_CCA] = {
+        sound = function() return "npc/metropolice/pain" .. math.random(1, 4) .. ".wav" end
+    },
+    [FACTION_OTA] = {
+        sound = function() return "npc/combine_soldier/pain" .. math.random(1, 3) .. ".wav" end
+    },
+    [FACTION_VORTIGAUNT] = {
+        sound = function()
+            return table.Random({"vo/npc/vortigaunt/vortigese02.wav", "vo/npc/vortigaunt/vortigese03.wav", "vo/npc/vortigaunt/vortigese04.wav", "vo/npc/vortigaunt/vortigese07.wav",})
+        end
+    },
 }
-function Schema:GetPlayerPainSound(ply)
-	if ( painSounds[ply:Team()] and painSounds[ply:Team()].sound ) then
-		return painSounds[ply:Team()].sound()
-	end
-end
 
+function Schema:GetPlayerPainSound(ply)
+    if painSounds[ply:Team()] and painSounds[ply:Team()].sound then return painSounds[ply:Team()].sound() end
+end
 
 function Schema:GetPlayerDeathSound()
     return false
@@ -749,17 +748,14 @@ function Schema:PlayerSpawnVehicle(ply)
     end
 end
 
-    if SERVER then
-        concommand.Add("+mmm", function(ply, cmd, args)
-            if cmd == "+mmm" then
-                print("Blocked command: " .. cmd)
-            end
-        end)
-    
-        hook.Add("SetupMove", "BlockCommand", function(ply, move)
-            if move:GetImpulseCommand() == 103 then -- The impulse command for "+mmm" is 103
-                return true -- Return true to block the command
-            end
-        end)
-    end
-    
+if SERVER then
+    concommand.Add("+mmm", function(ply, cmd, args)
+        if cmd == "+mmm" then
+            print("Blocked command: " .. cmd)
+        end
+    end)
+
+    hook.Add("SetupMove", "BlockCommand", function(ply, move)
+        if move:GetImpulseCommand() == 103 then return true end -- The impulse command for "+mmm" is 103 -- Return true to block the command
+    end)
+end
