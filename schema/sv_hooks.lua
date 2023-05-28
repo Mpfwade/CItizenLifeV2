@@ -544,7 +544,7 @@ end
 function Schema:PlayerSpawnProp(ply)
     local char = ply:GetCharacter()
 
-    if ply:IsAdmin() or (ply:IsCombine() and ply:Nick():find("GRID")) and not ply:GetArea() == "Intake-Hub 1" then
+    if ply:IsAdmin() or (ply:IsCombine() and ply:Nick():find("GRID")) then
         ply:Notify("You did not pay any tokens to spawn this prop.")
 
         return true
@@ -552,12 +552,12 @@ function Schema:PlayerSpawnProp(ply)
         return false, ply:Notify("You cannot spawn props right now")
     end
 
-    if char:HasMoney(4) and not ply:GetArea() == "Intake-Hub 1" then
+    if char:HasMoney(4) then
         char:TakeMoney(4)
 
         return true
     else
-        return false, ply:Notify("You cannot spawn props right now")
+        return false, ply:Notify("You need 4 tokens!")
     end
 end
 
