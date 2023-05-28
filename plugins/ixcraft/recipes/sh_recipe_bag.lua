@@ -1,6 +1,6 @@
-RECIPE.name = "UU Bag"
+RECIPE.name = "Bag"
 RECIPE.description = "Craft a Bag."
-RECIPE.model = "models/willardnetworks/clothingitems/backpack.mdl"
+RECIPE.model = "models/props_junk/cardboard_box003b.mdl"
 RECIPE.category = "Clothing"
 
 RECIPE.base = "recipe_base"

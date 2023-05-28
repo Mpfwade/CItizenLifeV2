@@ -1,6 +1,6 @@
 RECIPE.name = "Blue Resistance Shirt with Vest"
 RECIPE.description = "Craft a Blue Resistance Shirt with Vest."
-RECIPE.model = "models/tnb/items/shirt_rebeloverwatch.mdl"
+RECIPE.model = "models/tnb/items/shirt_rebel1.mdl"
 RECIPE.category = "Armor Items"
 
 RECIPE.base = "recipe_base"

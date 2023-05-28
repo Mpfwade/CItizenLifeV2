@@ -1,6 +1,6 @@
 RECIPE.name = "Black Gloves"
 RECIPE.description = "Craft Gloves."
-RECIPE.model = "models/willardnetworks/clothingitems/hands_glove.mdl"
+RECIPE.model = "models/tnb/items/gloves.mdl"
 RECIPE.category = "Clothing"
 
 RECIPE.base = "recipe_base"

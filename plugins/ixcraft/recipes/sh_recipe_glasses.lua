@@ -1,6 +1,6 @@
 RECIPE.name = "Glasses"
 RECIPE.description = "Craft Glasses."
-RECIPE.model = "models/willardnetworks/clothingitems/glasses.mdl"
+RECIPE.model = "models/props_lab/box01a.mdl"
 RECIPE.category = "Clothing"
 
 RECIPE.base = "recipe_base"
