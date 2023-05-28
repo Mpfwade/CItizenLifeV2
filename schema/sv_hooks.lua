@@ -454,6 +454,7 @@ function Schema:PlayerDeath(ply, inflictor, attacker)
 
     char:SetData("tied", false)
     ply:SetRestricted(false)
+    ply:ConCommand("Stopsound")
     ply.ixJailState = nil
 
     if ply:IsCombine() then
