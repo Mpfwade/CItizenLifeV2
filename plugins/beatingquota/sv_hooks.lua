@@ -46,6 +46,7 @@ end
 
 
 function PLUGIN:PlayerLoadedCharacter(client, character)
+    if not client:Team() == FACTION_CCA then return end
     if client:Team() == FACTION_CCA then
         if client:GetData("quota") == nil then
             client:SetData("quota", 0)
@@ -75,9 +76,9 @@ function PLUGIN:PlayerLoadedCharacter(client, character)
                 local quotamax = client:GetData("quotamax") or QUOTA_MAX
 
                 if quotaamount < quotamax then
-                    client:SetData("quota", quotaamount + QUOTA_INCREASE_AMOUNT)
+                    client:SetData("quota", quotamax + QUOTA_INCREASE_AMOUNT)
                     client:SetData("lastQuotaIncreaseTime", currentTime)
-                    client:ChatPrint("Your quota has increased to " .. (quotaamount + QUOTA_INCREASE_AMOUNT))
+                    client:ChatPrint("Your quota has increased to " .. (quotamax + QUOTA_INCREASE_AMOUNT))
                 end
             end
         end)
