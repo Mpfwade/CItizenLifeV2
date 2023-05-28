@@ -92,6 +92,7 @@ function PLUGIN:PlayerDisconnected(client)
 end
 
 function PLUGIN:PlayerTick(player)
+    if not player:Team() == FACTION_CCA then return end
     if player:Team() == FACTION_CCA then
         local lastIncreaseTime = player:GetData("lastQuotaIncreaseTime") or 0
         local currentTime = os.time()

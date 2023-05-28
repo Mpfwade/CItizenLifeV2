@@ -34,7 +34,7 @@ hook.Add("ScalePlayerDamage", "BetterCombat", function(ply, hitgroup, dmginfo)
                 [HITGROUP_HEAD] = function()
                     local fadeDuration = 5
                     local fadeColor = Color(255, 0, 0, 255)
-                    dmginfo:ScaleDamage( 1.7 )
+                    dmginfo:ScaleDamage( 5 )
                     ply:ScreenFade(SCREENFADE.IN, fadeColor, fadeDuration, 0)
 
                     if not ply:IsFemale() then
