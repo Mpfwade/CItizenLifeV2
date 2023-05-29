@@ -42,7 +42,7 @@ function ITEM:RemoveOutfit(client)
     end
 
     client:EmitSound("npc/combine_soldier/zipline_clothing" .. math.random(1, 2) .. ".wav")
-    client:ForceSequence("photo_react_startle", nil, 0.85, true)
+    client:ForceSequence("photo_react_startle", nil, 0.85, false)
     client.isEquipingOutfit = true
 
     timer.Simple(0.85, function()
@@ -166,13 +166,13 @@ ITEM.functions.Equip = {
         local items = char:GetInventory():GetItems()
 
         if client.isEquipingOutfit == true then
-            ply:ChatPrint("I can only put on one peice of clothing at a time.")
+            client:ChatPrint("I can only put on one peice of clothing at a time.")
 
             return false
         end
 
         client:EmitSound("npc/combine_soldier/zipline_clothing" .. math.random(1, 2) .. ".wav")
-        client:ForceSequence("photo_react_startle", nil, 0.85, true)
+        client:ForceSequence("photo_react_startle", nil, 0.85, false)
         client.isEquipingOutfit = true
 
         timer.Simple(0.85, function()
