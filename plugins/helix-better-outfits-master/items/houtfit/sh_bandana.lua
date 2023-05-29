@@ -1,18 +1,25 @@
-ITEM.name = "Black Gloves"
-ITEM.description = "A pair of black gloves."
-ITEM.model = "models/tnb/items/gloves.mdl"
-ITEM.outfitCategory = "Hands"
-ITEM.noResetBodyGroups = true
+-- Item Statistics
+
+ITEM.name = "Bandana"
+ITEM.description = "A Bandana, it can be used to hide your identity."
+ITEM.category = "Clothing"
+ITEM.outfitCategory = "Headstrap"
 ITEM.bDropOnDeath = true
 
+-- Item Configuration
+
+ITEM.model = "models/props_lab/box01a.mdl"
+ITEM.skin = 0
+
+-- Item Inventory Size Configuration
+
+ITEM.width = 1
+ITEM.height = 1
 
 ITEM.bodyGroups = {
-	["hands"] = 2,
+	["headstrap"] = 6
 }
 
-ITEM.height = 1
-ITEM.width = 1
-ITEM.category = "Clothes/Outfits"
 
 ITEM.allowedModels = {
 	"models/humans/pandafishizens/female_01.mdl",

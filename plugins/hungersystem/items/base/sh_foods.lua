@@ -71,7 +71,7 @@ ITEM.functions.Consume = {
         local actiontext = "Invalid Action"
 
         if ply.isConsumingConsumeable == true then
-            ply:Notify("You can't stuff too much food in your mouth.")
+            ply:ChatPrint("I can't stuff too much food down my mouth.")
 
             return false
         end
@@ -156,6 +156,7 @@ ITEM.functions.Consume = {
                     model:FollowBone(ply, rightHandBone) -- Attach the model to the right hand bone
                     ply:ConCommand("ix_act_FistRight")
                     ply.ix_foodModel = model
+                    ply.isConsumingConsumeable = true
                 end
             end
 
@@ -163,16 +164,15 @@ ITEM.functions.Consume = {
             timer.Simple(1.3, function()
                 if IsValid(ply.ix_foodModel) then
                     ply.ix_foodModel:Remove()
+                    ply.isConsumingConsumeable = false
                 end
             end)
         end
 
         if item.useTime then
-            ply.isConsumingConsumeable = true
 
             ply:SetAction(actiontext, item.useTime, function()
                 EatFunction(ply, character, bSpoiled)
-                ply.isConsumingConsumeable = false
             end)
         else
             EatFunction(ply, character, bSpoiled)

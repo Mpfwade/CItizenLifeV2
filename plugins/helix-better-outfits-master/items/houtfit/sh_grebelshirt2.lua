@@ -5,6 +5,7 @@ ITEM.skin = 1
 ITEM.outfitCategory = "Shirts"
 ITEM.noResetBodyGroups = true
 ITEM.bDropOnDeath = true
+ITEM.fitData = "greenrebshirt2"
 
 
 ITEM.bodyGroups = {

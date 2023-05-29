@@ -110,7 +110,10 @@ local function ixActMenu()
         armorText = "I sorta feel protected"
         surface.SetTextColor(Color(230, 100, 0, 255))
     elseif armor >= 20 then
-        armorText = "I don't feel protected"
+        armorText = "I barely feel protected"
+        surface.SetTextColor(Color(230, 40, 0, 255))
+    elseif armor >= 10 then
+        armorText = "I don't really feel protected at all"
         surface.SetTextColor(Color(230, 40, 0, 255))
     else
         armorText = "I don't have any armor"

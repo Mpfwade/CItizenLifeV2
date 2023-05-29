@@ -6,6 +6,7 @@ ITEM.width = 1
 ITEM.height = 1
 ITEM.outfitCategory = "model"
 ITEM.pacData = {}
+-- ITEM.fitData = "dataOutfit"
 
 local function armorPlayer(client, target, amount)
 	if client:Alive() and target:Alive() then
@@ -30,6 +31,7 @@ if CLIENT then
 end
 
 function ITEM:RemoveOutfit(client)
+	util.AddNetworkString("ixBandanaUnEquip")
     local character = client:GetCharacter()
     local fitArmor = self.fitArmor or 0
     self:SetData("equip", false)
@@ -92,7 +94,14 @@ function ITEM:RemoveOutfit(client)
         local currentArmor = client:Armor()
         local armorToRemove = math.min(fitArmor, currentArmor)
         unarmorPlayer(client, client, armorToRemove)
+		character:SetData(self.fitData, currentArmor - armorToRemove)
     end
+
+	if self.name == "Bandana" then
+		local ply = self.player
+		net.Start("ixBandanaUnEquip") net.Send(ply)
+		ply.ixBandanaEquipped = nil
+	end
 
     self:OnUnequipped()
 end
@@ -141,6 +150,7 @@ ITEM.functions.Equip = {
 	tip = "equipTip",
 	icon = "icon16/tick.png",
 	OnRun = function(item)
+		util.AddNetworkString("ixBandanaEquip")
 		local client = item.player
 		local char = client:GetCharacter()
 		local items = char:GetInventory():GetItems()
@@ -230,6 +240,13 @@ ITEM.functions.Equip = {
 
 		if item.fitArmor then
 			armorPlayer(item.player, item.player, item.fitArmor + client:Armor())
+			char:SetData(item.fitData, item.fitArmor + client:Armor())
+		end
+
+		if item.name == "Bandana" then
+			local ply = item.player
+			net.Start("ixBandanaEquip") net.Send(ply)
+			ply.ixBandanaEquipped = true
 		end
 
 		item:OnEquipped()
@@ -265,4 +282,15 @@ end
 
 function ITEM:CanEquipOutfit()
 	return true
+end
+
+if (SERVER) then 
+
+	net.Receive("ixBandanaEquip", function()
+		LocalPlayer().ixBandanaEquipped = true
+	end)
+
+	net.Receive("ixBandanaUnEquip", function()
+		LocalPlayer().ixBandanaEquipped = nil
+	end)
 end

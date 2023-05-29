@@ -1,6 +1,6 @@
 RECIPE.name = "Bandana"
 RECIPE.description = "Craft a Bandana."
-RECIPE.model = "models/willardnetworks/clothingitems/head_facewrap.mdl"
+RECIPE.model = "models/props_lab/box01a.mdl"
 RECIPE.category = "Clothing"
 
 RECIPE.base = "recipe_base"
@@ -13,5 +13,5 @@ RECIPE.results = {
 }
 
 RECIPE.craftStartSound = "physics/body/body_medium_impact_soft"..math.random(1,7)..".wav"
-RECIPE.craftTime = 8
+RECIPE.craftTime = 5
 RECIPE.craftEndSound = "physics/body/body_medium_impact_soft"..math.random(1,7)..".wav"

@@ -4,7 +4,7 @@ ITEM.model = "models/tnb/items/pants_rebel.mdl"
 ITEM.outfitCategory = "Pants"
 ITEM.noResetBodyGroups = true
 ITEM.bDropOnDeath = true
-
+ITEM.fitData = "bluerebpants1"
 
 ITEM.bodyGroups = {
 	["legs"] = 14
