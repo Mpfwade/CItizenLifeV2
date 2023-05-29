@@ -35,8 +35,8 @@ function ITEM:RemoveOutfit(client)
     local fitArmor = self.fitArmor or 0
     self:SetData("equip", false)
 
-    if ply.isEquipingOutfit == true then
-        ply:ChatPrint("I can only put on take off one peice of clothing at a time.")
+    if client.isEquipingOutfit == true then
+        client:ChatPrint("I can only put on take off one peice of clothing at a time.")
 
         return false
     end
@@ -165,7 +165,7 @@ ITEM.functions.Equip = {
         local char = client:GetCharacter()
         local items = char:GetInventory():GetItems()
 
-        if ply.isEquipingOutfit == true then
+        if client.isEquipingOutfit == true then
             ply:ChatPrint("I can only put on one peice of clothing at a time.")
 
             return false
