@@ -51,3 +51,12 @@ ITEM.allowedModels = {
 }
 
 ITEM.fitArmor = 15
+
+function ITEM:PopulateTooltip(tooltip)
+	local illitem = tooltip:AddRow("illitem")
+	illitem:SetBackgroundColor(Color(255, 0, 0))
+	illitem:SetText("69, possession of resources (CONTRABAND).")
+	illitem:SetFont("DermaDefault")
+	illitem:SetExpensiveShadow(0.5)
+	illitem:SizeToContents()
+end
