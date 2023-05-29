@@ -39,15 +39,6 @@ ix.act.Register("Knock", "metrocop", {
 
 ix.flag.Add("V", "Access to voice chat.")
 
-function Schema:IllegalRow(tooltip)
-    local warning = tooltip:AddRow("warning")
-    warning:SetBackgroundColor(derma.GetColor("Error", tooltip))
-    warning:SetText("// THIS ITEM IS ILLEGAL TO CARRY AROUND, FOUND WITH THIS ITEM CAN CAUSE VIOLATIONS BY UU AUTHORITIES //")
-    warning:SetFont("BudgetLabel")
-    warning:SetExpensiveShadow(0.5)
-    warning:SizeToContents()
-end
-
 --[[---------------------------------------------------------------------------
 	Helix Base Settings
 ---------------------------------------------------------------------------]]--

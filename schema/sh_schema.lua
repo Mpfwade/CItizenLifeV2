@@ -22,18 +22,11 @@ ix.util.IncludeDir("voicelines")
 
 
 ix.moreItemsTable = {
-    ["damagedotavest"] = {
-        ["name"] = "Damaged Overwatch Vest",
-        ["description"] = "A Damaged Overwatch Soldier Vest, can be salvaged to a resistance vest.",
-        ["model"] = "models/tnb/items/shirt_rebeloverwatch.mdl",
-        ["width"] = 2,
-        ["height"] = 2,
-        ["price"] = 200,
-    },
     ["damagedcpvest"] = {
         ["name"] = "Damaged Civil Protection Vest",
-        ["description"] = "A Damaged Civil Protection Vest, can be salvaged to a resistance vest.",
-        ["model"] = "models/tnb/items/shirt_rebeloverwatch.mdl",
+        ["description"] = "A damaged Civil Protection vest, can be turned into a resistance shirt.",
+        ["model"] = "models/tnb/items/shirt_rebelmetrocop.mdl",
+        ["skin"] = 1,
         ["width"] = 2,
         ["height"] = 2,
         ["price"] = 105,
@@ -45,6 +38,7 @@ for k, v in pairs(ix.moreItemsTable) do
     ITEM.name = v.name or "An Undefined Name, please configue items.lua in the plugins folder."
     ITEM.description = v.description or "An Undefined Description, please configue items.lua in the plugins folder."
     ITEM.model = v.model or "models/hunter/plates/plate025x025.mdl"
+    ITEM.skin = v.skin or 0
     ITEM.width = v.width or 1
     ITEM.height = v.height or 1
     ITEM.price = v.price or 10

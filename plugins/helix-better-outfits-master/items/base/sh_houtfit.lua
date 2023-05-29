@@ -6,41 +6,49 @@ ITEM.width = 1
 ITEM.height = 1
 ITEM.outfitCategory = "model"
 ITEM.pacData = {}
--- ITEM.fitData = "dataOutfit"
 
+-- ITEM.fitData = "dataOutfit"
 local function armorPlayer(client, target, amount)
-	if client:Alive() and target:Alive() then
-		target:SetArmor(amount)
-	end
+    if client:Alive() and target:Alive() then
+        target:SetArmor(amount)
+    end
 end
 
 local function unarmorPlayer(client, target, amount)
-	if client:Alive() and target:Alive() then
-		target:SetArmor(target:Armor() - amount)
-	end
+    if client:Alive() and target:Alive() then
+        target:SetArmor(target:Armor() - amount)
+    end
 end
 
-
 if CLIENT then
-	function ITEM:PaintOver(item, w, h)
-		if item:GetData("equip") then
-			surface.SetDrawColor(110, 255, 110, 100)
-			surface.DrawRect(w - 14, h - 14, 8, 8)
-		end
-	end
+    function ITEM:PaintOver(item, w, h)
+        if item:GetData("equip") then
+            surface.SetDrawColor(110, 255, 110, 100)
+            surface.DrawRect(w - 14, h - 14, 8, 8)
+        end
+    end
 end
 
 function ITEM:RemoveOutfit(client)
-	util.AddNetworkString("ixBandanaUnEquip")
+    util.AddNetworkString("ixBandanaUnEquip")
     local character = client:GetCharacter()
     local fitArmor = self.fitArmor or 0
     self:SetData("equip", false)
+
+    if ply.isEquipingOutfit == true then
+        ply:ChatPrint("I can only put on take off one peice of clothing at a time.")
+
+        return false
+    end
+
     client:EmitSound("npc/combine_soldier/zipline_clothing" .. math.random(1, 2) .. ".wav")
     client:ForceSequence("photo_react_startle", nil, 0.85, true)
+    client.isEquipingOutfit = true
 
-	timer.Simple(0.85, function()
-	client:ForceSequence()
-	end)
+    timer.Simple(0.85, function()
+        client:ForceSequence()
+        client.isEquipingOutfit = false
+    end)
 
     if character:GetData("oldModel" .. self.outfitCategory) then
         character:SetModel(character:GetData("oldModel" .. self.outfitCategory))
@@ -94,184 +102,198 @@ function ITEM:RemoveOutfit(client)
         local currentArmor = client:Armor()
         local armorToRemove = math.min(fitArmor, currentArmor)
         unarmorPlayer(client, client, armorToRemove)
-		character:SetData(self.fitData, currentArmor - armorToRemove)
+        character:SetData(self.fitData, currentArmor - armorToRemove)
     end
 
-	if self.name == "Bandana" then
-		local ply = self.player
-		net.Start("ixBandanaUnEquip") net.Send(ply)
-		ply.ixBandanaEquipped = nil
-	end
+    if self.name == "Bandana" then
+        local ply = self.player
+        net.Start("ixBandanaUnEquip")
+        net.Send(ply)
+        ply.ixBandanaEquipped = nil
+    end
 
     self:OnUnequipped()
 end
 
-
 function ITEM:AddAttachment(id)
-	local attachments = self:GetData("outfitAttachments", {})
-	attachments[id] = true
-	self:SetData("outfitAttachments", attachments)
+    local attachments = self:GetData("outfitAttachments", {})
+    attachments[id] = true
+    self:SetData("outfitAttachments", attachments)
 end
 
 function ITEM:RemoveAttachment(id, client)
-	local item = ix.item.instances[id]
-	local attachments = self:GetData("outfitAttachments", {})
+    local item = ix.item.instances[id]
+    local attachments = self:GetData("outfitAttachments", {})
 
-	if item and attachments[id] then
-		item:OnDetached(client)
-	end
+    if item and attachments[id] then
+        item:OnDetached(client)
+    end
 
-	attachments[id] = nil
-	self:SetData("outfitAttachments", attachments)
+    attachments[id] = nil
+    self:SetData("outfitAttachments", attachments)
 end
 
 ITEM:Hook("drop", function(item)
-	if item:GetData("equip") then
-		item:RemoveOutfit(item:GetOwner())
-	end
+    if item:GetData("equip") then
+        item:RemoveOutfit(item:GetOwner())
+    end
 end)
 
 ITEM.functions.EquipUn = {
-	name = "Unequip",
-	tip = "equipTip",
-	icon = "icon16/cross.png",
-	OnRun = function(item)
-		item:RemoveOutfit(item.player)
-		return false
-	end,
-	OnCanRun = function(item)
-		local client = item.player
-		return not IsValid(item.entity) and IsValid(client) and item:GetData("equip") == true and hook.Run("CanPlayerUnequipItem", client, item) ~= false and item.invID == client:GetCharacter():GetInventory():GetID()
-	end
+    name = "Unequip",
+    tip = "equipTip",
+    icon = "icon16/cross.png",
+    OnRun = function(item)
+        item:RemoveOutfit(item.player)
+
+        return false
+    end,
+    OnCanRun = function(item)
+        local client = item.player
+
+        return not IsValid(item.entity) and IsValid(client) and item:GetData("equip") == true and hook.Run("CanPlayerUnequipItem", client, item) ~= false and item.invID == client:GetCharacter():GetInventory():GetID()
+    end
 }
 
 ITEM.functions.Equip = {
-	name = "Equip",
-	tip = "equipTip",
-	icon = "icon16/tick.png",
-	OnRun = function(item)
-		util.AddNetworkString("ixBandanaEquip")
-		local client = item.player
-		local char = client:GetCharacter()
-		local items = char:GetInventory():GetItems()
-		client:EmitSound("npc/combine_soldier/zipline_clothing" .. math.random(1, 2) .. ".wav")
-		client:ForceSequence("photo_react_startle", nil, 0.85, true)
+    name = "Equip",
+    tip = "equipTip",
+    icon = "icon16/tick.png",
+    OnRun = function(item)
+        util.AddNetworkString("ixBandanaEquip")
+        local client = item.player
+        local char = client:GetCharacter()
+        local items = char:GetInventory():GetItems()
 
-		timer.Simple(0.85, function()
-			client:ForceSequence()
-			end)
+        if ply.isEquipingOutfit == true then
+            ply:ChatPrint("I can only put on one peice of clothing at a time.")
 
-		for _, v in pairs(items) do
-			if v.id ~= item.id then
-				local itemTable = ix.item.instances[v.id]
+            return false
+        end
 
-				if itemTable.pacData and v.outfitCategory == item.outfitCategory and itemTable:GetData("equip") then
-					client:NotifyLocalized(item.equippedNotify or "outfitAlreadyEquipped")
-					return false
-				end
-			end
-		end
+        client:EmitSound("npc/combine_soldier/zipline_clothing" .. math.random(1, 2) .. ".wav")
+        client:ForceSequence("photo_react_startle", nil, 0.85, true)
+        client.isEquipingOutfit = true
 
-		item:SetData("equip", true)
+        timer.Simple(0.85, function()
+            client:ForceSequence()
+            client.isEquipingOutfit = false
+        end)
 
-		if isfunction(item.OnGetReplacement) then
-			char:SetData("oldModel" .. item.outfitCategory, char:GetData("oldModel" .. item.outfitCategory, item.player:GetModel()))
-			char:SetModel(item:OnGetReplacement())
-		elseif item.replacement or item.replacements then
-			char:SetData("oldModel" .. item.outfitCategory, char:GetData("oldModel" .. item.outfitCategory, item.player:GetModel()))
+        for _, v in pairs(items) do
+            if v.id ~= item.id then
+                local itemTable = ix.item.instances[v.id]
 
-			if istable(item.replacements) then
-				if #item.replacements == 2 and isstring(item.replacements[1]) then
-					char:SetModel(item.player:GetModel():gsub(item.replacements[1], item.replacements[2]))
-				else
-					for _, v in ipairs(item.replacements) do
-						char:SetModel(item.player:GetModel():gsub(v[1], v[2]))
-					end
-				end
-			else
-				char:SetModel(item.replacement or item.replacements)
-			end
-		end
+                if itemTable.pacData and v.outfitCategory == item.outfitCategory and itemTable:GetData("equip") then
+                    client:NotifyLocalized(item.equippedNotify or "outfitAlreadyEquipped")
 
-		if item.newSkin then
-			char:SetData("oldSkin" .. item.outfitCategory, item.player:GetSkin())
-			char:SetData("skin", item.newSkin)
-			item.player:SetSkin(item.newSkin)
-		end
+                    return false
+                end
+            end
+        end
 
-		local groups = char:GetData("groups", {})
+        item:SetData("equip", true)
 
-		if not table.IsEmpty(groups) then
-			char:SetData("oldGroups" .. item.outfitCategory, groups)
+        if isfunction(item.OnGetReplacement) then
+            char:SetData("oldModel" .. item.outfitCategory, char:GetData("oldModel" .. item.outfitCategory, item.player:GetModel()))
+            char:SetModel(item:OnGetReplacement())
+        elseif item.replacement or item.replacements then
+            char:SetData("oldModel" .. item.outfitCategory, char:GetData("oldModel" .. item.outfitCategory, item.player:GetModel()))
 
-			if not item.noResetBodyGroups then
-				client:ResetBodygroups()
-			end
-		end
+            if istable(item.replacements) then
+                if #item.replacements == 2 and isstring(item.replacements[1]) then
+                    char:SetModel(item.player:GetModel():gsub(item.replacements[1], item.replacements[2]))
+                else
+                    for _, v in ipairs(item.replacements) do
+                        char:SetModel(item.player:GetModel():gsub(v[1], v[2]))
+                    end
+                end
+            else
+                char:SetModel(item.replacement or item.replacements)
+            end
+        end
 
-		if item.bodyGroups then
-			groups = {}
+        if item.newSkin then
+            char:SetData("oldSkin" .. item.outfitCategory, item.player:GetSkin())
+            char:SetData("skin", item.newSkin)
+            item.player:SetSkin(item.newSkin)
+        end
 
-			for k, value in pairs(item.bodyGroups) do
-				local index = item.player:FindBodygroupByName(k)
+        local groups = char:GetData("groups", {})
 
-				if index > -1 then
-					groups[index] = value
-				end
-			end
+        if not table.IsEmpty(groups) then
+            char:SetData("oldGroups" .. item.outfitCategory, groups)
 
-			local newGroups = char:GetData("groups", {})
+            if not item.noResetBodyGroups then
+                client:ResetBodygroups()
+            end
+        end
 
-			for index, value in pairs(groups) do
-				newGroups[index] = value
-				item.player:SetBodygroup(index, value)
-			end
+        if item.bodyGroups then
+            groups = {}
 
-			if not table.IsEmpty(newGroups) then
-				char:SetData("groups", newGroups)
-			end
-		end
+            for k, value in pairs(item.bodyGroups) do
+                local index = item.player:FindBodygroupByName(k)
 
-		if item.attribBoosts then
-			for k, v in pairs(item.attribBoosts) do
-				char:AddBoost(item.uniqueID, k, v)
-			end
-		end
+                if index > -1 then
+                    groups[index] = value
+                end
+            end
 
-		if item.fitArmor then
-			armorPlayer(item.player, item.player, item.fitArmor + client:Armor())
-			char:SetData(item.fitData, item.fitArmor + client:Armor())
-		end
+            local newGroups = char:GetData("groups", {})
 
-		if item.name == "Bandana" then
-			local ply = item.player
-			net.Start("ixBandanaEquip") net.Send(ply)
-			ply.ixBandanaEquipped = true
-		end
+            for index, value in pairs(groups) do
+                newGroups[index] = value
+                item.player:SetBodygroup(index, value)
+            end
 
-		item:OnEquipped()
+            if not table.IsEmpty(newGroups) then
+                char:SetData("groups", newGroups)
+            end
+        end
 
-		return false
-	end,
-	OnCanRun = function(item)
-		local client = item.player
-		if item.allowedModels and not table.HasValue(item.allowedModels, item.player:GetModel()) then return false end
+        if item.attribBoosts then
+            for k, v in pairs(item.attribBoosts) do
+                char:AddBoost(item.uniqueID, k, v)
+            end
+        end
 
-		return not IsValid(item.entity) and IsValid(client) and item:GetData("equip") ~= true and item:CanEquipOutfit() and hook.Run("CanPlayerEquipItem", client, item) ~= false and item.invID == client:GetCharacter():GetInventory():GetID()
-	end
+        if item.fitArmor then
+            armorPlayer(item.player, item.player, item.fitArmor + client:Armor())
+            char:SetData(item.fitData, item.fitArmor + client:Armor())
+        end
+
+        if item.name == "Bandana" then
+            local ply = item.player
+            net.Start("ixBandanaEquip")
+            net.Send(ply)
+            ply.ixBandanaEquipped = true
+        end
+
+        item:OnEquipped()
+
+        return false
+    end,
+    OnCanRun = function(item)
+        local client = item.player
+        if item.allowedModels and not table.HasValue(item.allowedModels, item.player:GetModel()) then return false end
+
+        return not IsValid(item.entity) and IsValid(client) and item:GetData("equip") ~= true and item:CanEquipOutfit() and hook.Run("CanPlayerEquipItem", client, item) ~= false and item.invID == client:GetCharacter():GetInventory():GetID()
+    end
 }
 
 function ITEM:CanTransfer(oldInventory, newInventory)
-	if newInventory and self:GetData("equip") then return false end
-	return true
+    if newInventory and self:GetData("equip") then return false end
+
+    return true
 end
 
 function ITEM:OnRemoved()
-	if self.invID ~= 0 and self:GetData("equip") then
-		self.player = self:GetOwner()
-		self:RemoveOutfit(self.player)
-		self.player = nil
-	end
+    if self.invID ~= 0 and self:GetData("equip") then
+        self.player = self:GetOwner()
+        self:RemoveOutfit(self.player)
+        self.player = nil
+    end
 end
 
 function ITEM:OnEquipped()
@@ -281,16 +303,15 @@ function ITEM:OnUnequipped()
 end
 
 function ITEM:CanEquipOutfit()
-	return true
+    return true
 end
 
-if (SERVER) then 
+if SERVER then
+    net.Receive("ixBandanaEquip", function()
+        LocalPlayer().ixBandanaEquipped = true
+    end)
 
-	net.Receive("ixBandanaEquip", function()
-		LocalPlayer().ixBandanaEquipped = true
-	end)
-
-	net.Receive("ixBandanaUnEquip", function()
-		LocalPlayer().ixBandanaEquipped = nil
-	end)
+    net.Receive("ixBandanaUnEquip", function()
+        LocalPlayer().ixBandanaEquipped = nil
+    end)
 end
