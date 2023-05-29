@@ -1,7 +1,7 @@
 -- Item Statistics
 
 ITEM.name = "Axe"
-ITEM.description = "A axe with a wooden grip, can be used on wood surfaces to gain wood."
+ITEM.description = "A axe with a wooden grip."
 ITEM.category = "Weapons"
 ITEM.bDropOnDeath = true
 -- Item Configuration
