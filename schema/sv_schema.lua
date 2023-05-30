@@ -112,22 +112,6 @@ function Schema:PlayerModelChanged(client, model)
     local character = client:GetCharacter()
 
     local descriptions = {
-        ["models/humans/pandafishizens/female_01.mdl"] = "She has her hair tied back, revealing a weary face marked by dirt and grime. Her appearance was unkempt and disheveled, as if she had been through challenging circumstances.",
-        ["models/humans/pandafishizens/female_02.mdl"] = "She has her hair tied in a ponytail, revealing a haggard face marked by dirt and sweat. Her appearance was rugged and worn, as if she had been through a lot of hardship.",
-        ["models/humans/pandafishizens/female_03.mdl"] = "A dark-skinned female with short braided hair, revealing a tired face marked by dirt and exhaustion. Her appearance was unkempt and disheveled, with a ruggedness that hinted at her resilience.",
-        ["models/humans/pandafishizens/female_04.mdl"] = "The Asian girl has a tied ponytail, revealing a worn face marked by dirt and sweat. Her appearance was disheveled and unkempt, yet she carried a sense of determination in her ruggedness.",
-        ["models/humans/pandafishizens/female_06.mdl"] = "She has her hair tied in a bun, revealing a fatigued face marked by dirt and grime. Her appearance was disheveled and unkempt, as if she had been through challenging circumstances.",
-        ["models/humans/pandafishizens/female_07.mdl"] = "A dark-skinned female, her hair was made into an afro, revealing a tired face marked by dirt and sweat. Her appearance was rugged and unkempt, yet there was a sense of strength in her resilience.",
-        ["models/humans/pandafishizens/male_01.mdl"] = "A dark-skinned male with a full beard, revealing a face marked by dirt and exhaustion. His appearance was rugged and disheveled, as if he had been through challenging circumstances.",
-        ["models/humans/pandafishizens/male_02.mdl"] = "The man has a receding hairline and stubble on his face, revealing a weary expression marked by dirt and grime. His appearance was disheveled and unkempt, as if he had been through difficult times.",
-        ["models/humans/pandafishizens/male_03.mdl"] = "The dark-skinned man has short hair and a goatee, revealing a rugged face marked by dirt and sweat. His appearance was unkempt and disheveled, yet there was a sense of resilience in his ruggedness.",
-        ["models/humans/pandafishizens/male_04.mdl"] = "The dirty bald man has a weathered face, marked by time and hardship. His scalp was devoid of hair, and his skin carried the stains of dirt and grime.",
-        ["models/humans/pandafishizens/male_05.mdl"] = "The Asian man has a thin mustache, revealing a weary face marked by dirt and exhaustion. His appearance was rugged and disheveled, as if he had been through challenging circumstances.",
-        ["models/humans/pandafishizens/male_06.mdl"] = "The tired and dirty older man has some stubble on his face, revealing a fatigued expression marked by dirt and grime. His appearance was unkempt and disheveled, reflecting the hardships he had endured.",
-        ["models/humans/pandafishizens/male_07.mdl"] = "The familiar looking dirty younger male has a disheveled appearance, marked by dirt and sweat. Despite his youthful features, his ruggedness hinted at the struggles he had faced.",
-        ["models/humans/pandafishizens/male_08.mdl"] = "The dirty older male has unkempt grayish hair, a face weathered by time and neglect, and a disheveled appearance.",
-        ["models/humans/pandafishizens/male_09.mdl"] = "He has a prominent nose and stubble on his face, revealing a weary expression marked by dirt and exhaustion. His appearance was rugged and disheveled, as if he had been through difficult times.",
-        ["models/humans/pandafishizens/male_10.mdl"] = "The old man is bald, with white hair and a thin beard, revealing a weathered face marked by dirt and age. His appearance was disheveled and unkempt, reflecting a lifetime of hardship and struggle.",
         ["models/police.mdl"] = "A Civil Protection Officer, they're indistinguishable from their peers.",
     }
 

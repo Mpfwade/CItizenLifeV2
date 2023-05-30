@@ -852,6 +852,11 @@ hook.Add("CreateMenuButtons", "ixInventory", function(tabs)
 			container.money:SetList(container.characterInfo.list)
 			container.money:Dock(TOP)
 			container.money:SizeToContents()
+
+			container.description = container.characterInfo:Add("ixListRow")
+			container.description:SetList(container.characterInfo.list)
+			container.description:Dock(TOP)
+			container.description:SizeToContents()
 		
 			hook.Run("CreateCharacterInfo", container.characterInfo)
 			container.characterInfo:SizeToContents()
@@ -875,6 +880,7 @@ hook.Add("CreateMenuButtons", "ixInventory", function(tabs)
 				end
 			
 				if (self.description) then
+					self.description:SetLabelText(L("description"))
 					self.description:SetText(character:GetDescription())
 					self.description:SizeToContents()
 				end
@@ -897,7 +903,7 @@ hook.Add("CreateMenuButtons", "ixInventory", function(tabs)
 				end
 			
 				if (self.money) then
-					self.money:SetLabelText(L("money"))
+					self.money:SetLabelText(L("Currency"))
 					self.money:SetText(ix.currency.Get(character:GetMoney()))
 					self.money:SizeToContents()
 				end

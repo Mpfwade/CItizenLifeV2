@@ -1,9 +1,6 @@
-
-
-Schema.name = "Lite Network: Half-Life 2 Semi Serious Roleplay"
-Schema.author = "Riggs Mackay"
+Schema.name = "CitizenLife"
+Schema.author = "Wade"
 Schema.description = "A base schema for development."
-
 ix.util.Include("cl_schema.lua")
 ix.util.Include("sv_schema.lua")
 ix.util.Include("cl_hooks.lua")
@@ -19,7 +16,6 @@ ix.divisions = ix.divisions or {}
 ix.util.IncludeDir("divisions")
 ix.util.IncludeDir("meta")
 ix.util.IncludeDir("voicelines")
-
 
 ix.moreItemsTable = {
     ["damagedcpvest"] = {
@@ -59,10 +55,37 @@ for k, v in pairs(ix.moreItemsTable) do
     end
 end
 
-
-
 ix.char.RegisterVar("description", {
     bNoDisplay = false,
+    bHidden = {
+        FACTION_CCA = true
+    },
+    field = "description",
+    fieldType = ix.type.text,
+    default = "",
+    index = 2,
+    OnValidate = function(self, value, payload)
+        value = string.Trim(tostring(value):gsub("\r\n", ""):gsub("\n", ""))
+        local minLength = ix.config.Get("minDescriptionLength", 16)
+
+        if value:utf8len() < minLength then
+            return false, "descMinLen", minLength
+        elseif not value:find("%s+") or not value:find("%S") then
+            return false, "invalid", "description"
+        end
+
+        return value
+    end,
+    OnPostSetup = function(self, panel, payload)
+        panel:SetMultiline(true)
+        panel:SetFont("ixMenuButtonFont")
+        panel:SetTall(panel:GetTall() * 2 + 6) -- add another line
+
+        panel.AllowInput = function(_, character)
+            if character == "\n" or character == "\r" then return true end
+        end
+    end,
+    alias = "Desc"
 })
 
 ix.char.RegisterVar("attributes", {
@@ -241,7 +264,6 @@ ix.char.RegisterVar("model", {
         return #faction:GetModels(LocalPlayer()) > 1
     end
 })
-
 
 function Schema:ZeroNumber(number, length)
     local amount = math.max(0, length - string.len(number))
