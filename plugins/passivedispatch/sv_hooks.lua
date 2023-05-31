@@ -1,18 +1,20 @@
-function PLUGIN:EmitRandomChatter(player, position)
-    local randomSounds = {"npc/overwatch/cityvoice/f_innactionisconspiracy_spkr.wav", "dispatch/disp_civilized.wav"}
+function PLUGIN:EmitRandomChatter(position)
+    local randomSounds = {
+        Sound("npc/overwatch/cityvoice/f_innactionisconspiracy_spkr.wav"),
+        Sound("dispatch/disp_civilized.wav")
+    }
     local randomSound = randomSounds[math.random(1, #randomSounds)]
 
     -- Play the sound at the specified position and sound level
-    EmitSound(randomSound, position, player:EntIndex(), 90)
+    sound.Play(randomSound, position, 100)
 end
 
--- Color(128, 218, 235)
 function PLUGIN:Tick()
     for k, v in ipairs(player.GetAll()) do
         local curTime = CurTime()
 
         if not self.nextChatterEmit then
-            self.nextChatterEmit = curTime + math.random(5, 10)
+            self.nextChatterEmit = curTime + math.random(55, 200)
         end
 
         if curTime >= self.nextChatterEmit then
@@ -21,12 +23,16 @@ function PLUGIN:Tick()
             local positions = {
                 Vector(-3630, -1989, -538),
                 Vector(-3065, -136, -366),
-                Vector(-5686, -1464, -659)
+                Vector(-5686, -1464, -659),
+                Vector(-1582, -1700, -673),
+                Vector(-2075, -3952, -541),
+                Vector(-4165, -1433, 572),
+                Vector(-4418, -3099, 743),
             }
             local position = positions[math.random(1, #positions)]
 
-            -- Pass the player's position to EmitRandomChatter
-            self:EmitRandomChatter(v, position)
+            -- Pass the position to EmitRandomChatter
+            self:EmitRandomChatter(position)
         end
     end
 end

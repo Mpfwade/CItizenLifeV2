@@ -17,4 +17,4 @@ ITEM.height = 1
 
 ITEM.useTime = 0.01
 ITEM.useSound = "npc/barnacle/barnacle_gulp2.wav"
-ITEM.RestoreHunger = 5
+ITEM.RestoreHunger = 1

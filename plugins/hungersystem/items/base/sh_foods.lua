@@ -71,7 +71,7 @@ ITEM.functions.Consume = {
         local actiontext = "Invalid Action"
 
         if ply.isConsumingConsumeable == true then
-            ply:ChatPrint("I can't stuff too much food down my mouth.")
+            ply:ChatNotify("I can't stuff too much food down my mouth.")
 
             return false
         end
@@ -95,6 +95,24 @@ ITEM.functions.Consume = {
 
             ply:AddDrunkEffect(item.effectAmount, item.effectTime)
         end
+
+        if item.name == "Water Can" then
+            character:SetData("Water", true)
+
+            ply:ViewPunch(Angle(math.Rand(10, 10), math.Rand(10, 10), math.Rand(10, 10)))
+
+            timer.Simple(3.5, function()
+                ply:ChatNotify("I feel funny...")
+            end)
+            timer.Simple(20, function()
+            ply:ScreenFade(SCREENFADE.IN, Color(0, 0, 0), 1, 1)
+            character:SetData("Water", false)
+            timer.Simple(1.5, function()
+            ply:ChatNotify("Where am I? How did I get here?")
+            end)
+            end)
+        end
+
 
         local function EatFunction(ply, character, bSpoiled)
             if not (ply:IsValid() and ply:Alive() and character) then return end

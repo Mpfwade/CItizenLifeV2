@@ -1,11 +1,17 @@
 local PLUGIN = PLUGIN or {}
 
 function PLUGIN:RenderScreenspaceEffects()
-	if LocalPlayer():GetCharacter() != nil then
-		local drunkEffect = LocalPlayer():GetCharacter():GetDrunkEffect()
+    local character = LocalPlayer():GetCharacter()
 
-		if (drunkEffect > 0) then
-			DrawMotionBlur(0.075, drunkEffect, 0.025)
-		end
-	end
+    if character then
+        local drunkEffect = character:GetDrunkEffect()
+
+        if drunkEffect > 0 then
+            DrawMotionBlur(0.075, drunkEffect, 0.025)
+        end
+
+        if character:GetData("Water", true) then
+            DrawSharpen(5, 5)
+        end
+    end
 end
