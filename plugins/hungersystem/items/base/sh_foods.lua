@@ -112,6 +112,8 @@ ITEM.functions.Consume = {
             ply:ChatNotify("Where am I? How did I get here?")
             end)
             end)
+        else
+            return ply:ChatNotify("Maybe I shouldn't drink another one for a second...")
         end
 
 

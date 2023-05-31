@@ -4,6 +4,7 @@ function PLUGIN:PlayerSpawn(ply)
     if ( ply:IsValid() and ply:GetCharacter() ) then
         ply.ixHungerTick = CurTime() + ( ix.config.Get("hungerTime", 120) )
         ply:GetCharacter():SetHunger(100)
+        character:GetData("Water", false)
     end
 end
 
