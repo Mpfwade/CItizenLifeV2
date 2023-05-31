@@ -45,7 +45,7 @@ function PLUGIN:GetEvent()
     local timeSinceInspectionEvent = curTime - self.nextInspectionEvent
 
     if timeSinceInspectionEvent >= self.events[1].cooldown then
-        if not self:IsEventActive() and ix.config.Get("cityCode", 0) and self:GetNextEvent() == "Inspection" then
+        if not self:IsEventActive() and ix.config.Get("cityCode") < 1 and self:GetNextEvent() == "Inspection" then
             local inspectionEvent = self.events[1]
             inspectionEvent.start(true)
             SetGlobalString("ixCurrentEvent", inspectionEvent.name)
@@ -60,7 +60,7 @@ function PLUGIN:GetEvent()
     end
 
     if timeSinceRationEvent >= self.events[2].cooldown then
-        if not self:IsEventActive() and ix.config.Get("cityCode", 0) and self:GetNextEvent() == "Ration" then
+        if not self:IsEventActive() and ix.config.Get("cityCode") < 1 and self:GetNextEvent() == "Ration" then
             local rationEvent = self.events[2]
             rationEvent.start(true)
             SetGlobalString("ixCurrentEvent", rationEvent.name)
@@ -83,6 +83,10 @@ function PLUGIN:GetEvent()
         if timeSinceRationEvent >= 0 then
             self.nextRationEvent = curTime + self.events[2].duration
         end
+    end
+
+    if not ix.config.Get("cityCode") < 1 then
+        SetGlobalString("ixCurrentEvent", "PATROL, PROTECT")
     end
 
     return GetGlobalString("ixCurrentEvent", "PATROL, PROTECT")
