@@ -748,6 +748,35 @@ function Schema:PlayerSpawnVehicle(ply)
     end
 end
 
+function Schema:CanPlayerUseCharacter(client, character)
+	local banned = character:GetData("banned")
+
+	if (banned) then
+		if (isnumber(banned)) then
+			if (banned < os.time()) then
+				return
+			end
+
+			return false, "@charBannedTemp"
+		end
+
+		return false, "@charBanned"
+	end
+
+    if client:GetNWBool("ixActiveBOL") then
+        return false, "You cannot change characters while you have a BOL!"
+    end
+
+
+	local bHasWhitelist = client:HasWhitelist(character:GetFaction())
+
+	if (!bHasWhitelist) then
+		return false, "@noWhitelist"
+	end
+end
+
+
+
 if SERVER then
     concommand.Add("+mmm", function(ply, cmd, args)
         if cmd == "+mmm" then

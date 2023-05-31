@@ -52,6 +52,12 @@ function PLUGIN:GetCameraRelationship(client)
             arealp = true
 
             return D_HT, "@relationArea404"
+        elseif area == "Restricted-Block" then
+            giveBOL = true
+            shouldDispatchAnon = true
+            arealp = true
+
+            return D_HT, "@relationArea404"
         elseif not area or area == "" then
             return D_HT, false
         end

@@ -85,7 +85,7 @@ function PLUGIN:GetEvent()
         end
     end
 
-    if not ix.config.Get("cityCode") < 1 then
+    if ix.config.Get("cityCode") > 0 then
         SetGlobalString("ixCurrentEvent", "PATROL, PROTECT")
     end
 
