@@ -83,7 +83,6 @@ if SERVER then
 
     function PLUGIN:OnPlayerAreaChanged(client, old, new)
         if not ix.config.Get("area-music", true) then return end
-        if not ix.option.Get(client, "area-music", false) then return end
         local musicInfo = MUSIC_INFO[new]
 
         if new and musicInfo then
@@ -107,7 +106,7 @@ else -- CLIENT
             currentMusic = nil
         end
 
-        if musicName and musicName ~= "" then
+        if musicName and musicName ~= "" and ix.option.Get("area-music", true) and ix.config.Get("cityCode") < 1 then
             local volume = net.ReadFloat()
             currentMusic = CreateSound(LocalPlayer(), musicName)
             currentMusic:SetSoundLevel(volume)
