@@ -184,14 +184,14 @@ local function DrawCombineHud(ply, char)
     draw.SimpleTextOutlined("SPS CHARGE: " .. ply:Armor() .. "% ::>", "CLCHud1", ScrW() - 10, 58, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
     draw.SimpleTextOutlined("BIOSIGNAL GRID: " .. grid .. " ::>", "CLCHud1", ScrW() - 10, 74, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
     draw.SimpleTextOutlined("BIOSIGNAL ZONE: " .. zone .. " ::>", "CLCHud1", ScrW() - 10, 90, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
-    draw.SimpleTextOutlined("BEATING QUOTA: (" .. quota .. "/" .. quotamax .. ") ::>", "CLCHud1", ScrW() - 10, 109, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
+    draw.SimpleTextOutlined("BEATING QUOTA: " .. quota .. "/" .. quotamax .. " ::>", "CLCHud1", ScrW() - 10, 109, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
     draw.SimpleTextOutlined("// ACTIVE BOLS ::>", "CLCHud1", ScrW() - 10, 210, Color( 0,138,216 ), TEXT_ALIGN_RIGHT, nil, 1, color_black)
     
     local y = 16
 
     for k, v in pairs(player.GetAll()) do
         if v:GetNWBool("ixActiveBOL", false) == true then
-            draw.SimpleTextOutlined(string.upper(v:Nick()) .. " ::>", "CLCHud1", ScrW() - 10, 210 + y, Color( 0,138,216 ) or color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
+            draw.SimpleTextOutlined(string.upper(v:Nick()) .. " ::>", CLCHud1, ScrW() - 10, 210 + y, Color( 0,138,216 ) or color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
             y = y + 16
         end
     end
@@ -199,18 +199,17 @@ local function DrawCombineHud(ply, char)
     local y = 16
 
     if ix.option.Get("showLocalAssets", true) == true then
-        draw.SimpleTextOutlined("<:: LOCAL ASSETS //", "CLCHud1", 10, 200, Color( 0,138,216 ), nil, nil, 1, color_black)
+        local squad = ply:GetSquad() or "NONE"
+        draw.SimpleTextOutlined("<:: PATROL TEAM: ".. squad .." //", "CLCHud1", 10, 200, Color( 0,138,216 ), nil, nil, 1, color_black)
 
         for k, v in pairs(player.GetAll()) do
             if (v:Team() == FACTION_CCA) and (ply:Team() == FACTION_CCA) then
-                local squad = v:GetSquad() or "NONE"
 
                 if not v:Alive() then
                     squad = "<BIOSIGNAL LOST>"
                 end
 
                 draw.SimpleTextOutlined("<:: UNIT: " .. string.upper(v:Nick()), "CLCHud1", 10, 210 + y, color_white, nil, nil, 1, color_black)
-                draw.SimpleTextOutlined(" | PATROL TEAM: " .. squad, "CLCHud1", 330, 210 + y, color_white, nil, nil, 1, color_black)
                 y = y + 16
             elseif (v:Team() == FACTION_OTA) and (ply:Team() == FACTION_OTA) then
                 local health = v:Health() .. "%"

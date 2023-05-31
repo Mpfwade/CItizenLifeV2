@@ -113,7 +113,7 @@ if CLIENT then
 		self.PlayerModelLabel:SetSize(64, 64)
 		self.PlayerModelLabel:SetModel(LocalPlayer():GetModel())
 		local lposx, lposy = self.PlayerNameLabel:GetPos()
-		self.PlayerModelLabel:SetPos(0, lposy + 25)
+		self.PlayerModelLabel:SetPos(0, lposy + 72)
 		self.InviteButton = self.ButtonPanel:Add("DButton")
 		self.InviteButton:Dock(BOTTOM)
 		self.InviteButton:SetText("Invite To Team")

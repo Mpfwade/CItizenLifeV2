@@ -5,7 +5,7 @@ PLUGIN.description = "Random events"
 
 PLUGIN.events = {
     {
-        name = "Inspection",
+        name = "INSPECTION",
         start = function(bIsStart)
             if bIsStart then
                 RunConsoleCommand("ix_curfew")
@@ -15,7 +15,7 @@ PLUGIN.events = {
         cooldown = 300
     },
     {
-        name = "Rations",
+        name = "RATIONS",
         start = function(bIsStart)
             if bIsStart then
                 RunConsoleCommand("ix_rations")
@@ -53,7 +53,7 @@ function PLUGIN:GetEvent()
 
             timer.Create("InspectionTimer", inspectionEvent.duration, 1, function()
                 inspectionEvent.start(false)
-                SetGlobalString("ixCurrentEvent", "N/A")
+                SetGlobalString("ixCurrentEvent", "PATROL, PROTECT")
                 self.nextInspectionEvent = curTime + inspectionEvent.cooldown
             end)
         end
@@ -67,7 +67,7 @@ function PLUGIN:GetEvent()
 
             timer.Create("RationTimer", rationEvent.duration, 1, function()
                 rationEvent.start(false)
-                SetGlobalString("ixCurrentEvent", "N/A")
+                SetGlobalString("ixCurrentEvent", "PATROL, PROTECT")
                 self.nextRationEvent = curTime + rationEvent.cooldown
                 self.inspectionCounter = 0
             end)
@@ -85,7 +85,7 @@ function PLUGIN:GetEvent()
         end
     end
 
-    return GetGlobalString("ixCurrentEvent", "N/A")
+    return GetGlobalString("ixCurrentEvent", "PATROL, PROTECT")
 end
 
 function PLUGIN:Think()
@@ -93,7 +93,7 @@ function PLUGIN:Think()
 end
 
 function PLUGIN:IsEventActive()
-    local currentEvent = GetGlobalString("ixCurrentEvent", "N/A")
+    local currentEvent = GetGlobalString("ixCurrentEvent", "PATROL, PROTECT")
 
     for _, event in ipairs(self.events) do
         if event.name == currentEvent then return true end

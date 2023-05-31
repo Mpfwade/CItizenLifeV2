@@ -2,6 +2,7 @@ local PLUGIN = PLUGIN or {}
 
 function PLUGIN:RenderScreenspaceEffects()
     local character = LocalPlayer():GetCharacter()
+	if LocalPlayer():IsCombine() then return end
 
     if character then
         local drunkEffect = character:GetDrunkEffect()

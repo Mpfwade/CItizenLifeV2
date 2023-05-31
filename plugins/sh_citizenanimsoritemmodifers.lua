@@ -2,8 +2,12 @@ local PLUGIN = PLUGIN
 
 function PLUGIN:PlayerInteractItem(client, action, item)
     local dropAnim = "ThrowItem"
+    local hands = {
+        ["ix_keys"] = true,
+        ["ix_hands"] = true
+    }
 
-    if action == "drop" and not client:IsWepRaised() then
+    if action == "drop" and hands[client:GetActiveWeapon():GetClass()] then
         client:ForceSequence(dropAnim, nil, 1, true)
     end
 
@@ -30,10 +34,12 @@ function PLUGIN:PlayerInteractItem(client, action, item)
 end
 
 function PLUGIN:Equip(client, bNoSelect, bNoSound)
+    if not client:IsCombine() then
     local strapAnim = "gunrack"
 
     if itemTable:GetData("equip") then
-        client:ForceSequence(strapAnim, nil, 1, true)
+            client:ForceSequence(strapAnim, nil, 1, true)
+        end
     end
 end
 
@@ -41,6 +47,10 @@ local doorLockedNotified = {} -- Table to track door locked notifications
 
 -- Register the hook on the server-side
 hook.Add("PlayerUse", "DoorOpenCheck", function(client, entity)
+    local hands = {
+        ["ix_keys"] = true,
+        ["ix_hands"] = true
+    }
     -- Check if the entity being used is a door
     if IsValid(entity) and entity:IsDoor() then
         if entity:IsLocked() then
@@ -55,10 +65,10 @@ hook.Add("PlayerUse", "DoorOpenCheck", function(client, entity)
                 end)
             end
         else
-            if not client:IsWepRaised() then
+            if hands[client:GetActiveWeapon():GetClass()] then
                 client:ForceSequence("Open_door_towards_right", nil, 0.5, true)
 
-                timer.Simple(0.6, function()
+                timer.Simple(0.4, function()
                     client:LeaveSequence()
                 end)
             end

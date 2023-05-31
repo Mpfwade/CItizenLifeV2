@@ -11,7 +11,7 @@ function PLUGIN:HUDPaint(ply )
     end
 
     if LocalPlayer():IsCombine() then
-        draw.SimpleTextOutlined("Current Event: " .. self:GetEvent(), font, sW / 2, 65, Color( 0,138,216 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, Color( 0,0,0 ))
+        draw.SimpleTextOutlined("<:: CURRENT ASSIGNMENT: " .. self:GetEvent().. " ::>", font, sW / 2, 65, Color( 0,138,216 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 1, Color( 0,0,0 ))
     end
 end
 

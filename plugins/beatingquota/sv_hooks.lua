@@ -54,21 +54,3 @@ function PLUGIN:PlayerLoadedCharacter(client, character)
         end
     end
 end
-
-function PLUGIN:PlayerTick(player)
-    if not player:Team() == FACTION_CCA then return end
-
-    if player:Team() == FACTION_CCA then
-        local currentTime = os.time()
-        local timeDiff = currentTime - lastIncreaseTime
-
-        if timeDiff >= RANK_PENALTY_TIME then
-            local rank = player:GetNWInt("ixRP")
-
-            if rank > 0 then
-                player:SetRP(RANK_PENALTY_AMOUNT - player:GetNWInt("ixRP"))
-                player:ChatPrint("You lost one rank point due to not completing your quota in time.")
-            end
-        end
-    end
-end

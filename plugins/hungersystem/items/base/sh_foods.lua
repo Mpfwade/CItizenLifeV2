@@ -69,6 +69,7 @@ ITEM.functions.Consume = {
         local character = item.player:GetCharacter()
         local bSpoiled = item:GetSpoiled()
         local actiontext = "Invalid Action"
+        character:SetData("Water", false)
 
         if ply.isConsumingConsumeable == true then
             ply:ChatNotify("I can't stuff too much food down my mouth.")
