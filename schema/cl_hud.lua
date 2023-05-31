@@ -78,7 +78,29 @@ local function DrawHud(ply, char)
     surface.DrawText("Don't have this weapon out in RP.")
     surface.SetTextPos(10, text02position)
     surface.DrawText("You may be punished for this.")
+
+    -- Stamina Bar
+    local stamina = ply:GetLocalVar("stm", 100) -- Assuming the stamina data is stored as "stamina" in the character data table
+    local barX = 10 -- X position of the stamina bar
+    local barY = 60 -- Y position of the stamina bar
+    local barWidth = 200 -- Width of the stamina bar
+    local barHeight = 10 -- Height of the stamina bar
+    local barPadding = 2 -- Padding between the stamina bar and its background
+    local backgroundColor = Color(0, 0, 0, 150) -- Background color of the stamina bar
+    local fillColor = Color(0, 255, 0) -- Fill color of the stamina bar
+
+    -- Draw the background of the stamina bar
+    surface.SetDrawColor(backgroundColor)
+    surface.DrawRect(barX, barY, barWidth, barHeight)
+
+    -- Calculate the width of the filled portion of the stamina bar
+    local fillWidth = math.Clamp(stamina / 100, 0, 1) * (barWidth - barPadding * 2)
+
+    -- Draw the filled portion of the stamina bar
+    surface.SetDrawColor(fillColor)
+    surface.DrawRect(barX + barPadding, barY + barPadding, fillWidth, barHeight - barPadding * 2)
 end
+
 
 
 ix.gui.CombineHudMessagesList = {"Updating biosignal co-ordinates...", "Parsing heads-up display and data arrays...", "Working deconfliction with other ground assets...", "Transmitting physical transition vector...", "Sensoring proximity...", "Regaining equalization modules...", "Encoding network messages...", "Analyzing Overwatch protocols...", "Filtering incoming messages...", "Updating biosignal coordinates...", "Synchronizing database records...", "Appending all data to black box...",}

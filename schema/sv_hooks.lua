@@ -192,6 +192,8 @@ function Schema:Move(ply, mv)
         elseif ply:IsRestricted() then
             walkPenalty = 3
             runPenalty = 75
+        elseif ply:GetCharacter():GetData("stamina") < 0 then
+            runPenalty = 80
         end
     end
 
