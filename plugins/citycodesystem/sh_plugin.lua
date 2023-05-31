@@ -114,3 +114,50 @@ ix.command.Add("ChangeCityCode", {
 		end
 	end
 })
+
+-- Define the thresholds for changing city codes
+local THRESHOLD_DEATHS = 3
+local THRESHOLD_WEAPONS_DETECTED = 5
+
+-- Initialize the counters for anti-civil activity
+local deathsCount = 0
+local weaponsDetectedCount = 0
+
+-- Function to check and update the city code based on activity levels
+local function CheckCityCode()
+    local cityCode = ix.config.Get("cityCode", 0)
+    
+    if deathsCount >= THRESHOLD_DEATHS then
+        cityCode = math.max(cityCode - 1, 0)
+        deathsCount = 0 -- Reset the counter
+    end
+
+    if weaponsDetectedCount >= THRESHOLD_WEAPONS_DETECTED then
+        cityCode = math.min(cityCode + 1, #ix.cityCodes - 1)
+        weaponsDetectedCount = 0 -- Reset the counter
+    end
+
+    -- Update the city code
+    ix.config.Set("cityCode", cityCode)
+end
+
+-- Hook into events to detect anti-civil activity
+function PLUGIN:PlayerDeath(client)
+    if client:IsCombine() then
+        deathsCount = deathsCount + 1
+        CheckCityCode()
+    end
+end
+
+function PLUGIN:OnFoundPlayer(entity, client)
+    if client:IsCombine() then
+        weaponsDetectedCount = weaponsDetectedCount + 1
+        CheckCityCode()
+    end
+end
+
+-- Reset the counters on code change
+function PLUGIN:OnCityCodeChange(oldCode, newCode)
+    deathsCount = 0
+    weaponsDetectedCount = 0
+end
