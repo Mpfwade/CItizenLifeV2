@@ -38,3 +38,7 @@ ITEM.functions.Open = {
         ply:EmitSound("physics/plastic/plastic_barrel_break" .. math.random(1, 2) .. ".wav", 80)
     end
 }
+
+function ITEM:OnEntityTakeDamage(ent, dmg)
+    return false
+end

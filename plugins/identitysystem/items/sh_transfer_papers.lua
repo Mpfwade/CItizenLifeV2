@@ -31,3 +31,7 @@ function ITEM:PopulateTooltip(tooltip)
 	data2:SetExpensiveShadow(0.5)
 	data2:SizeToContents()
 end
+
+function ITEM:OnEntityTakeDamage(ent, dmg)
+    return false
+end

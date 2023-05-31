@@ -81,3 +81,7 @@ ITEM.functions.ViewRecord = {
 		return item.player:IsCombine() or item.invID != item.player:GetCharacter():GetInventory():GetID()
 	end
 }
+
+function ITEM:OnEntityTakeDamage(ent, dmg)
+    return false
+end

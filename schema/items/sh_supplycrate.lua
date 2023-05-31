@@ -176,3 +176,8 @@ ITEM.functions.Open = {
         return true -- Return true to indicate successful execution of the function
     end
 }
+
+
+function ITEM:OnEntityTakeDamage(ent, dmg)
+    return false
+end
