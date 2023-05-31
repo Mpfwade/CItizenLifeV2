@@ -162,7 +162,7 @@ local CPdeathSounds = {Sound("npc/metropolice/die" .. math.random(1, 4) .. ".wav
 
 hook.Add("EntityTakeDamage", "Knockout", function(target, dmginfo)
     if target:IsPlayer() then
-        if dmginfo:IsDamageType(DMG_CLUB) or dmginfo:IsDamageType(DMG_BULLET) or dmginfo:IsDamageType(DMG_SHOCK) and not dmginfo:IsDamageType(DMG_BURN) or dmginfo:IsDamageType(DMG_BLAST) then
+        if dmginfo:IsDamageType(DMG_CLUB) or dmginfo:IsDamageType(DMG_BULLET) or dmginfo:IsDamageType(DMG_SHOCK) then
             if target:Health() < 15 and not target:GetNWBool("Ragdolled", false) then
                 target:ShouldSetRagdolled(true)
                 target:SetNWBool("Ragdolled", true)

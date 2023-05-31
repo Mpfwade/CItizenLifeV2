@@ -157,13 +157,13 @@ if CLIENT then
 
                         local descriptionText = ix.util.WrapText(character:GetDescription() or "", 512, "ixItemDescFont")
 
-                    if entity.ixBandanaEquipped then
-                        name = "Their face is concealed"
-                    end
                 
                         for i, _ in pairs(descriptionText) do
                             ix.util.DrawText(descriptionText[i], x, y + (descHeight * i) - (genericHeight / 2), ColorAlpha(color_white, v.alpha * 255), 1, 1, "ixItemDescFont")
+                        if entity.ixBandanaEquipped then
+                            descriptionText = "Their face is concealed"
                         end
+                    end
 
                         continue
                     end
