@@ -114,8 +114,6 @@ ix.command.Add("ChangeCityCode", {
 		end
 	end
 })
-<<<<<<< HEAD
-=======
 
 -- Define the thresholds for changing city codes
 local THRESHOLD_DEATHS = 3
@@ -163,4 +161,3 @@ function PLUGIN:OnCityCodeChange(oldCode, newCode)
     deathsCount = 0
     weaponsDetectedCount = 0
 end
->>>>>>> d68ddd803b910a9266031e4c083be6fb10ac59b3
