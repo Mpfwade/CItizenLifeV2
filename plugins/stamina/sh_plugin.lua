@@ -30,6 +30,16 @@ local function CalcStaminaChange(client)
 		return 0
 	end
 
+	local runSpeed
+
+	if (SERVER) then
+		runSpeed = ix.config.Get("runSpeed") + character:GetAttribute("stm", 0)
+
+		if (client:WaterLevel() > 1) then
+			runSpeed = runSpeed * 0.775
+		end
+	end
+
 	local walkSpeed = ix.config.Get("walkSpeed")
 	local maxAttributes = ix.config.Get("maxAttributes", 100)
 	local offset
@@ -53,6 +63,7 @@ local function CalcStaminaChange(client)
 			client:SetLocalVar("stm", value)
 
 			if (value == 0 and !client:GetNetVar("brth", false)) then
+				character:SetData("outofstm", true)
 				client:SetNetVar("brth", true)
 
 				character:UpdateAttrib("end", 0.1)
@@ -60,6 +71,7 @@ local function CalcStaminaChange(client)
 
 				hook.Run("PlayerStaminaLost", client)
 			elseif (value >= 50 and client:GetNetVar("brth", false)) then
+				character:SetData("outofstm", false)
 				client:SetNetVar("brth", nil)
 
 				hook.Run("PlayerStaminaGained", client)

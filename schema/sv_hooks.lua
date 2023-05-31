@@ -177,6 +177,7 @@ function Schema:ShowSpare2(ply)
 end
 
 function Schema:Move(ply, mv)
+    local char = ply:GetCharacter()
     local walkPenalty = 0
     local runPenalty = 0
     local runBoost = 0
@@ -185,14 +186,14 @@ function Schema:Move(ply, mv)
         runBoost = 5
     end
 
-    if ply:GetCharacter() then
-        if ply:GetCharacter():GetData("ixBrokenLegs") then
+    if char then
+        if char:GetData("ixBrokenLegs") then
             walkPenalty = 5
             runPenalty = 85
         elseif ply:IsRestricted() then
             walkPenalty = 3
             runPenalty = 75
-        elseif ply:GetCharacter():GetData("stamina") == 0 then
+        elseif char:SetData("outofstm", true)   then
             runPenalty = 80
         end
     end
