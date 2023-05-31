@@ -27,9 +27,9 @@ ix.currency.plural = "tokens"
 ix.currency.model = "models/bioshockinfinite/hext_coin.mdl"
 
 ix.vendingItems = {
-	{"REGULAR", "water", 15},
-	{"SPARKLING", "water_sparkling", 25},
-	{"SPECIAL", "water_special", 35}
+	{"REGULAR", "water", 0},
+	{"SPARKLING", "water_sparkling", 15},
+	{"SPECIAL", "water_special", 25}
 }
 
 ix.act.Register("Knock", "metrocop", {

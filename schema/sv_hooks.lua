@@ -281,7 +281,7 @@ function Schema:PlayerUseDoor(client, door)
 end
 
 function Schema:PlayerSpray(ply)
-    return true
+    return false
 end
 
 function Schema:OnDamagedByExplosion()
