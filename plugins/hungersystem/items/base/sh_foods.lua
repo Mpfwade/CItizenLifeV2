@@ -97,7 +97,7 @@ ITEM.functions.Consume = {
             ply:AddDrunkEffect(item.effectAmount, item.effectTime)
         end
 
-        if item.name == "Water Can" then
+        if item.name == "Water Can" and not character:GetData("Water", true) then
             character:SetData("Water", true)
 
             ply:ViewPunch(Angle(math.Rand(10, 10), math.Rand(10, 10), math.Rand(10, 10)))
