@@ -1,3 +1,4 @@
+local PLUGIN = PLUGIN
 PLUGIN.name = "Permakill"
 PLUGIN.author = "Thadah Denyse"
 PLUGIN.description = "Adds permanent death in the server options."
@@ -10,42 +11,54 @@ ix.config.Add("permakillWorld", false, "Whether or not world and self damage pro
     category = "Permakill"
 })
 
-local deathTimes = 0
-local lastDeathTime = 0
 local decreaseInterval = 3600
+
+function PLUGIN:PlayerLoadedCharacter(client, char, currentChar)
+    if not client:IsCombine() then
+        char:SetData("deathTimes", 0)
+        char:SetData("lastDeathTime", 0)
+    end
+end
 
 function PLUGIN:PlayerDeath(client, inflictor, attacker)
     local character = client:GetCharacter()
 
     if ix.config.Get("permakill") and character then
-        if (hook.Run("ShouldPermakillCharacter", client, character, inflictor, attacker) == false) or ply:IsCombine() or deathTimes < 3 then return end
+        if hook.Run("ShouldPermakillCharacter", client, character, inflictor, attacker) == false and character:GetData("deathTimes") > 3 then return end
         if ix.config.Get("permakillWorld") and (client == attacker or inflictor:IsWorld()) then return end
-        character:SetData("permakilled", true)
+
+        if not client:IsCombine() then
+            character:SetData("permakilled", true)
+        end
     end
 end
 
 function PLUGIN:DoPlayerDeath(ply, attacker, dmginfo)
     if (dmginfo:IsDamageType(DMG_BULLET) or dmginfo:IsDamageType(DMG_BLAST) or dmginfo:IsDamageType(DMG_CLUB) or dmginfo:IsDamageType(DMG_BUCKSHOT)) and not ply:IsCombine() then
-        deathTimes = deathTimes + 1
-        print("[DEATHPERMA " .. deathTimes .. " ]")
-        lastDeathTime = CurTime()
-
-        timer.Create("DeathTimeDecrease", decreaseInterval, 0, function()
-            for _, ply in ipairs(player.GetAll()) do
-                if not ply:IsCombine() then
-                    if CurTime() - lastDeathTime >= decreaseInterval then
-                        deathTimes = math.max(deathTimes - 1, 0)
-                    end
-                end
-            end
-        end)
+        local character = ply:GetCharacter()
+        character:SetData("deathTimes", character:GetData("deathTimes", 0) + 1)
+        print("[DEATHPERMA " .. character:GetData("deathTimes") .. " ]")
+        character:SetData("lastDeathTime", CurTime())
     end
 end
+
+timer.Create("DeathTimeDecrease", decreaseInterval, 0, function()
+    for _, ply in ipairs(player.GetAll()) do
+        if not ply:IsCombine() then
+            local character = ply:GetCharacter()
+            if CurTime() - character:GetData("lastDeathTime", 0) >= decreaseInterval then
+                character:SetData("deathTimes", math.max(character:GetData("deathTimes", 0) - 1, 0))
+            end
+        end
+    end
+end)
 
 function PLUGIN:PlayerSpawn(client)
     local character = client:GetCharacter()
 
-    if not client:IsCombine() then
+    if ix.config.Get("permakill") and character and character:GetData("permakilled") and not client:IsCombine() then
+        local deathTimes = character:GetData("deathTimes", 0)
+
         if deathTimes == 1 then
             -- Add debuffs for the first death
             character:SetData("hunger", 65) -- Reduced hunger value (60 instead of 100)
@@ -53,11 +66,9 @@ function PLUGIN:PlayerSpawn(client)
             -- Add debuffs for the second death
             character:SetData("hunger", 45) -- Further reduced hunger value (45 instead of 100)
             client:SetHealth(75) -- Reduced health value (75 instead of 100)
-        end
-
-        if ix.config.Get("permakill") and character and character:GetData("permakilled") then
+        elseif deathTimes > 3 then
             character:Ban()
-            character:SetData("permakilled")
+            character:SetData("permakilled", false) -- Reset the permakilled data field
         end
     end
 end
