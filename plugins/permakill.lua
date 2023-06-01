@@ -10,13 +10,17 @@ ix.config.Add("permakillWorld", false, "Whether or not world and self damage pro
     category = "Permakill"
 })
 
+local deathTimes = 0
+local lastDeathTime = 0
+local decreaseInterval = 3600
+
 function PLUGIN:PlayerDeath(client, inflictor, attacker)
     local character = client:GetCharacter()
 
     if ix.config.Get("permakill") and character then
         if (hook.Run("ShouldPermakillCharacter", client, character, inflictor, attacker) == false) or ply:IsCombine() or deathTimes < 3 then return end
         if ix.config.Get("permakillWorld") and (client == attacker or inflictor:IsWorld()) then return end
-        char:SetData("permakilled", true)
+        character:SetData("permakilled", true)
     end
 end
 
@@ -25,20 +29,30 @@ function PLUGIN:DoPlayerDeath(ply, attacker, dmginfo)
         deathTimes = deathTimes + 1
         print("[DEATHPERMA " .. deathTimes .. " ]")
         lastDeathTime = CurTime()
+
+        timer.Create("DeathTimeDecrease", decreaseInterval, 0, function()
+            for _, ply in ipairs(player.GetAll()) do
+                if not ply:IsCombine() then
+                    if CurTime() - lastDeathTime >= decreaseInterval then
+                        deathTimes = math.max(deathTimes - 1, 0)
+                    end
+                end
+            end
+        end)
     end
 end
 
 function PLUGIN:PlayerSpawn(client)
     local character = client:GetCharacter()
 
-    if not ply:IsCombine() then
+    if not client:IsCombine() then
         if deathTimes == 1 then
             -- Add debuffs for the first death
-            char:SetData("hunger", 65) -- Reduced hunger value (60 instead of 100)
+            character:SetData("hunger", 65) -- Reduced hunger value (60 instead of 100)
         elseif deathTimes == 2 then
             -- Add debuffs for the second death
-            char:SetData("hunger", 45) -- Further reduced hunger value (45 instead of 100)
-            ply:SetHealth(75) -- Reduced health value (75 instead of 100)
+            character:SetData("hunger", 45) -- Further reduced hunger value (45 instead of 100)
+            client:SetHealth(75) -- Reduced health value (75 instead of 100)
         end
 
         if ix.config.Get("permakill") and character and character:GetData("permakilled") then
@@ -47,13 +61,3 @@ function PLUGIN:PlayerSpawn(client)
         end
     end
 end
-
-timer.Create("DeathTimeDecrease", decreaseInterval, 0, function()
-    for _, ply in ipairs(player.GetAll()) do
-        if not ply:IsCombine() then
-            if CurTime() - lastDeathTime >= decreaseInterval then
-                deathTimes = math.max(deathTimes - 1, 0)
-            end
-        end
-    end
-end)
