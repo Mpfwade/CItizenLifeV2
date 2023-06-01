@@ -44,6 +44,7 @@ function PLUGIN:Equip(client, bNoSelect, bNoSound)
 end
 
 local doorLockedNotified = {} -- Table to track door locked notifications
+local doorFull = false
 
 -- Register the hook on the server-side
 hook.Add("PlayerUse", "DoorOpenCheck", function(client, entity)
@@ -51,6 +52,7 @@ hook.Add("PlayerUse", "DoorOpenCheck", function(client, entity)
         ["ix_keys"] = true,
         ["ix_hands"] = true
     }
+    
     -- Check if the entity being used is a door
     if IsValid(entity) and entity:IsDoor() then
         if entity:IsLocked() then
@@ -65,14 +67,22 @@ hook.Add("PlayerUse", "DoorOpenCheck", function(client, entity)
                 end)
             end
         else
-            if hands[client:GetActiveWeapon():GetClass()] then
+            if hands[client:GetActiveWeapon():GetClass()] and not client:IsWepRaised() then
                 client:ForceSequence("Open_door_towards_right", nil, 0.5, true)
 
                 timer.Simple(0.4, function()
                     client:LeaveSequence()
                 end)
+            elseif client:IsWepRaised() then
+                if not doorFull then
+                    client:ChatNotify("I cannot open or close a door if I have something in my hands!")
+                    doorFull = true 
+                    timer.Simple(5, function()
+                        doorFull = false 
+                    end)
+                end
+                return false
             end
         end
     end
 end)
-                                                                                                                                                    

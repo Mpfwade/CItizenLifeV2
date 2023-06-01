@@ -30,11 +30,11 @@ function PLUGIN:SearchLootContainer(ent, ply)
                     for i = 1, lootAmount do
                         if randomChance == math.random(1, 20) then
                             randomLootItem = table.Random(PLUGIN.randomLoot.rare)
-                            ply:ChatNotify("You found " .. ix.item.Get(randomLootItem):GetName() .. ".")
+                            ply:ChatNotify("I found " .. ix.item.Get(randomLootItem):GetName() .. ".")
                             ply:GetCharacter():GetInventory():Add(randomLootItem)
                         else
                             randomLootItem = table.Random(PLUGIN.randomLoot.common)
-                            ply:ChatNotify("You found " .. ix.item.Get(randomLootItem):GetName() .. ".")
+                            ply:ChatNotify("I found " .. ix.item.Get(randomLootItem):GetName() .. ".")
                             ply:GetCharacter():GetInventory():Add(randomLootItem)
                         end
                     end
@@ -43,7 +43,7 @@ function PLUGIN:SearchLootContainer(ent, ply)
                 ent.containerAlreadyUsed = CurTime() + 180
             else
                 if not ent.ixContainerNotAllowedEat or ent.ixContainerNotAllowedEat <= CurTime() then
-                    ply:Notify("You cannot loot anything while you are eating!")
+                    ply:ChatNotify("I cannot loot anything while I'm are eating!")
                     ent.ixContainerNotAllowedEat = CurTime() + 1
                 end
             end
@@ -53,7 +53,7 @@ function PLUGIN:SearchLootContainer(ent, ply)
                 ply:ForceSequence("roofidle1", nil, 1, false)
                 ply:Freeze(true)
                 ply:SetAction("Searching...", 1, function()
-                    ply:ChatNotify("You didn't find anything!")
+                    ply:ChatNotify("I didn't find anything!")
                     ent.ixContainerNothingInItCooldown = CurTime() + 1
                     ply:Freeze(false)
                     ply:StopSound("physics/plastic/plastic_box_scrape_rough_loop1.wav")
