@@ -37,8 +37,8 @@ ix.hints.Register("Don't enrage a local officer, or you'll find yourself being r
 
 if ( CLIENT ) then
     surface.CreateFont("HintFont", {
-        font = "Akbar",
-        size = 30,
+        font = "Consolas",
+        size = 20,
         weight = 500,
         blursize = 0.5,
         shadow = true,

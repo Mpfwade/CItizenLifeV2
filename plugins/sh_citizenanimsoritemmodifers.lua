@@ -2,6 +2,7 @@ local PLUGIN = PLUGIN
 
 function PLUGIN:PlayerInteractItem(client, action, item)
     local dropAnim = "ThrowItem"
+
     local hands = {
         ["ix_keys"] = true,
         ["ix_hands"] = true
@@ -35,16 +36,16 @@ end
 
 function PLUGIN:Equip(client, bNoSelect, bNoSound)
     if not client:IsCombine() then
-    local strapAnim = "gunrack"
+        local strapAnim = "gunrack"
 
-    if itemTable:GetData("equip") then
+        if itemTable:GetData("equip") then
             client:ForceSequence(strapAnim, nil, 1, true)
         end
     end
 end
 
 local doorLockedNotified = {} -- Table to track door locked notifications
-local doorFull = false
+local doorOpen = false
 
 -- Register the hook on the server-side
 hook.Add("PlayerUse", "DoorOpenCheck", function(client, entity)
@@ -52,7 +53,7 @@ hook.Add("PlayerUse", "DoorOpenCheck", function(client, entity)
         ["ix_keys"] = true,
         ["ix_hands"] = true
     }
-    
+
     -- Check if the entity being used is a door
     if IsValid(entity) and entity:IsDoor() then
         if entity:IsLocked() then
@@ -68,21 +69,28 @@ hook.Add("PlayerUse", "DoorOpenCheck", function(client, entity)
             end
         else
             if hands[client:GetActiveWeapon():GetClass()] and not client:IsWepRaised() then
+                doorOpen = true
                 client:ForceSequence("Open_door_towards_right", nil, 0.5, true)
 
                 timer.Simple(0.4, function()
                     client:LeaveSequence()
+                    doorOpen = false
                 end)
-            elseif client:IsWepRaised() then
-                if not doorFull then
-                    client:ChatNotify("I cannot open or close a door if I have something in my hands!")
-                    doorFull = true 
-                    timer.Simple(5, function()
-                        doorFull = false 
-                    end)
-                end
-                return false
             end
         end
     end
 end)
+
+function Schema:CanPlayerThrowPunch(ply)
+    if ply:IsWepRaised() then
+        if SERVER then
+            ply:ForceSequence("MeleeAttack01", nil, 0.5, true)
+        end
+    end
+
+    if not doorOpen then
+        return true
+    else
+        return false
+    end
+end
