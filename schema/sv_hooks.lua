@@ -193,7 +193,7 @@ function Schema:Move(ply, mv)
         elseif ply:IsRestricted() then
             walkPenalty = 3
             runPenalty = 75
-        elseif char:SetData("outofstm", true) == true then
+        elseif ply:GetLocalVar("stm", 0) then
             runPenalty = 80
         end
     end
