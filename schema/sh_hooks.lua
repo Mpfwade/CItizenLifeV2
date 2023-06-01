@@ -257,17 +257,6 @@ function Schema:PrePACEditorOpen(ply)
     end
 end
 
-function Schema:CanPlayerThrowPunch(ply)
-	if ply:IsWepRaised() then
-			if ( SERVER ) then
-				ply:ForceSequence("MeleeAttack01", nil, 0.5, true)
-			end
-			return true
-		else
-			return false
-		end
-	end
-
 
 
 function Schema:CanPlayerJoinClass()
