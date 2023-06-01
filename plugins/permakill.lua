@@ -15,7 +15,8 @@ function PLUGIN:PlayerDeath(client, inflictor, attacker)
 
     if ix.config.Get("permakill") and character then
         if (hook.Run("ShouldPermakillCharacter", client, character, inflictor, attacker) == false) or ply:IsCombine() or deathTimes < 3 then return end
-        if ix.config.Get("permakillWorld") and (client == attacker or inflictor:IsWorld()) then return char:SetData("permakilled", true) end
+        if ix.config.Get("permakillWorld") and (client == attacker or inflictor:IsWorld()) then return end
+        char:SetData("permakilled", true)
     end
 end
 
