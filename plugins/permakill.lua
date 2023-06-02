@@ -11,7 +11,7 @@ ix.config.Add("permakillWorld", false, "Whether or not world and self damage pro
     category = "Permakill"
 })
 
-local decreaseInterval = 3600
+local decreaseInterval = 1800
 
 function PLUGIN:PlayerLoadedCharacter(client, char, currentChar)
     if not client:IsCombine() then

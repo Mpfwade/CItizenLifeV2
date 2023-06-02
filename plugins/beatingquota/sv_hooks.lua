@@ -28,7 +28,7 @@ function PLUGIN:EntityTakeDamage(target, dmginfo)
             end
 
             timer.Create("ResetQuotaTimer", QUOTA_RESET_TIME, 1, function()
-                character:SetData("quota", 0)
+                character:SetData(attacker:GetData("quota"), 0)
                 character:SetData("quotamax", quotamax)
                 attacker:ChatPrint("You've received a new quota.")
             end)

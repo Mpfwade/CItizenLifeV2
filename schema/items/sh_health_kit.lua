@@ -99,7 +99,7 @@ ITEM.functions.ApplyTarget = {
 						target:SetNWBool("Dying", false)
 						target:StopSound("player/heartbeat1.wav")
 					end
-	
+	                ply:LeaveSequence()
 					ply:Freeze(false)
 					target:Freeze(false)
 					return true

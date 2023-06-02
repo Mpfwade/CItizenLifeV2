@@ -243,7 +243,7 @@ function Schema:PlayerUse(ply, entity)
             return false
         end
 
-        if not ply:IsRestricted() and ply:KeyDown(IN_SPEED) and (entity:IsPlayer() or entity.ixPlayer) and (not entity.ixPlayer or entity:IsRestricted()) and not entity:GetNetVar("untying") then
+        if not ply:IsRestricted() and ply:IsCombine() and ply:KeyDown(IN_SPEED) and entity:IsPlayer() and entity:IsRestricted() and not entity.ixPlayer or entity:GetNetVar("untying") then
             local tarchar = entity:GetCharacter()
             entity:SetAction("You are being untied.", 1)
             entity:SetNetVar("untying", true)

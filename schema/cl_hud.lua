@@ -206,7 +206,7 @@ local function DrawCombineHud(ply, char)
     draw.SimpleTextOutlined("SPS CHARGE: " .. ply:Armor() .. "% ::>", "CLCHud1", ScrW() - 10, 58, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
     draw.SimpleTextOutlined("BIOSIGNAL GRID: " .. grid .. " ::>", "CLCHud1", ScrW() - 10, 74, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
     draw.SimpleTextOutlined("BIOSIGNAL ZONE: " .. zone .. " ::>", "CLCHud1", ScrW() - 10, 90, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
-    draw.SimpleTextOutlined("BEATING QUOTA: " .. quota .. "/" .. quotamax .. " ::>", "CLCHud1", ScrW() - 10, 109, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
+    draw.SimpleTextOutlined("BEATING QUOTA: " .. quota .. " ::>", "CLCHud1", ScrW() - 10, 109, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
     draw.SimpleTextOutlined("// ACTIVE BOLS ::>", "CLCHud1", ScrW() - 10, 210, Color( 0,138,216 ), TEXT_ALIGN_RIGHT, nil, 1, color_black)
     
     local y = 16
