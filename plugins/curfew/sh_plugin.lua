@@ -107,10 +107,13 @@ function PLUGIN:IsEventActive()
 end
 
 function PLUGIN:Initialize()
+    SetGlobalBool("ixRationOnline", false) -- Set ixRationOnline to false by default
+
     hook.Add("Think", "RandomEventThink", function()
         self:Think()
     end)
 end
+
 
 function PLUGIN:GetNextEvent()
     if SERVER then

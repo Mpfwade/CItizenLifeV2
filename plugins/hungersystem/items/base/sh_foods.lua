@@ -97,7 +97,8 @@ ITEM.functions.Consume = {
             ply:AddDrunkEffect(item.effectAmount, item.effectTime)
         end
         
-        if item.name == "Water Can" and not character:GetData("Water", false) then
+        if item.name == "Water Can" then
+            if character:GetData("Water", false) then
             character:SetData("Water", true)
     
             ply:ViewPunch(Angle(math.Rand(10, 10), math.Rand(10, 10), math.Rand(10, 10)))
@@ -117,6 +118,7 @@ ITEM.functions.Consume = {
         else
             return ply:ChatNotify("Maybe I shouldn't drink another one for a second...")
         end
+    end
 
 
         local function EatFunction(ply, character, bSpoiled)
