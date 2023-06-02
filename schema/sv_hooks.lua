@@ -337,7 +337,7 @@ function Schema:PlayerLoadout(ply)
     local dropAbleWeapons = {
         ["weapon_357"] = "357",
         ["tfa_ocipr"] = "ar1",
-        ["tfa_ins2_mp7"] = "mp7",
+        ["tfa_ins2_smg"] = "smg",
         ["tfa_ins2_spas12"] = "spas12",
         ["tfa_ins2_usp_match"] = "usp",
         ["tfa_m1a1_thompson"] = "m1a1_thompson",

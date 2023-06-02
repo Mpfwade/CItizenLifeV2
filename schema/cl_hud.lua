@@ -164,7 +164,7 @@ end
 
 local combatWeapons = {
     ["ix_usp"] = "USP MATCH PISTOL",
-    ["ix_mp7"] = "MP7",
+    ["ix_smg"] = "smg",
     ["ix_357"] = "357 REVOLVER",
     ["ix_spas12"] = "SPAS-12 SHOTGUN",
     ["ix_ar2"] = "OSIPR",
@@ -206,10 +206,14 @@ local function DrawCombineHud(ply, char)
     draw.SimpleTextOutlined("SPS CHARGE: " .. ply:Armor() .. "% ::>", "CLCHud1", ScrW() - 10, 58, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
     draw.SimpleTextOutlined("BIOSIGNAL GRID: " .. grid .. " ::>", "CLCHud1", ScrW() - 10, 74, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
     draw.SimpleTextOutlined("BIOSIGNAL ZONE: " .. zone .. " ::>", "CLCHud1", ScrW() - 10, 90, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
-    draw.SimpleTextOutlined("BEATING QUOTA: " .. quota .. " ::>", "CLCHud1", ScrW() - 10, 109, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
     draw.SimpleTextOutlined("// ACTIVE BOLS ::>", "CLCHud1", ScrW() - 10, 210, Color( 0,138,216 ), TEXT_ALIGN_RIGHT, nil, 1, color_black)
     
+    if quota then
+        draw.SimpleTextOutlined("BEATING QUOTA: " .. quota .. " ::>", "CLCHud1", ScrW() - 10, 109, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
+    end
+
     local y = 16
+
 
     for k, v in pairs(player.GetAll()) do
         if v:GetNWBool("ixActiveBOL", false) == true then

@@ -74,14 +74,14 @@ ix.ranks.cca[3] = {
         local char = ply:GetCharacter()
         local inventory = char:GetInventory()
 
-        if not inventory:HasItem("stunstick") or not inventory:HasItem("usp") or not inventory:HasItem("mp7") then
+        if not inventory:HasItem("stunstick") or not inventory:HasItem("usp") or not inventory:HasItem("smg") then
             if ply:GetNWBool("CPRespawn", true) == true then
 
             ply:SetNWBool("CPRespawn", false)
 
             inventory:Add("stunstick")
             inventory:Add("usp")
-            inventory:Add("mp7")
+            inventory:Add("smg")
         end
     end
 
@@ -108,14 +108,14 @@ ix.ranks.cca[4] = {
         local char = ply:GetCharacter()
         local inventory = char:GetInventory()
 
-        if not inventory:HasItem("stunstick") or not inventory:HasItem("usp") or not inventory:HasItem("mp7") then
+        if not inventory:HasItem("stunstick") or not inventory:HasItem("usp") or not inventory:HasItem("smg") then
             if ply:GetNWBool("CPRespawn", true) == true then
 
             ply:SetNWBool("CPRespawn", false)
 
             inventory:Add("stunstick")
             inventory:Add("usp")
-            inventory:Add("mp7")
+            inventory:Add("smg")
         end
     end
 

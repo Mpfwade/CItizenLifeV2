@@ -7,11 +7,11 @@ PLUGIN.description = "City Codes for Lite Network, used from Overlord Community.
 ix.util.Include("sv_plugin.lua")
 
 ix.cityCodes = {
-    [0] = {"PRESERVED", Color( 0,138,216 ), "Civil"},
-    [1] = {"MARGINAL", Color(223, 195, 33), "Civil Unrest"},
-    [2] = {"FRACTURED", Color(128, 0, 0), "City Turmoil"},
-    [3] = {"RE-ADMINISTRATION IN PROGRESS", Color(150, 150, 150), "Judgement Waiver"},
-    [4] = {"CODE VOID", Color(50, 50, 50), "Autonomous Judgement"},
+	[0] = {"PRESERVED", Color( 0,138,216 ), "Civil"},
+	[1] = {"MARGINAL", Color(223, 195, 33), "Civil Unrest"},
+	[2] = {"FRACTURED", Color(128, 0, 0), "City Turmoil"},
+	[3] = {"RE-ADMINISTRATION IN PROGRESS", Color(150, 150, 150), "Judgement Waiver"},
+	[4] = {"CODE VOID", Color(50, 50, 50), "Autonomous Judgement"},
 }
 
 local cityCodes = {
@@ -114,3 +114,30 @@ ix.command.Add("ChangeCityCode", {
 		end
 	end
 })
+
+-- Number of CCA deaths required to change city code to yellow
+local THRESHOLD_CCA_DEATHS = 2
+
+-- Initialize the counter for CCA deaths
+local ccaDeathsCount = 0
+
+-- Function to check and update the city code based on CCA deaths
+local function CheckCityCode()
+	local cityCode = ix.config.Get("cityCode", 0)
+
+	if ccaDeathsCount >= THRESHOLD_CCA_DEATHS then
+		cityCode = cityCodes["yellow"]
+		ccaDeathsCount = 0 -- Reset the counter
+	end
+
+	-- Update the city code
+	ix.config.Set("cityCode", cityCode)
+end
+
+-- Hook into events to detect CCA deaths
+function PLUGIN:PlayerDeath(client)
+	if client:IsCombine() then
+		ccaDeathsCount = ccaDeathsCount + 1
+		CheckCityCode()
+	end
+end
