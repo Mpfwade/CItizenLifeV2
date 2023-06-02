@@ -39,6 +39,7 @@ function PLUGIN:DoPlayerDeath(ply, attacker, dmginfo)
         character:SetData("deathTimes", character:GetData("deathTimes", 0) + 1)
         print("[DEATHPERMA " .. character:GetData("deathTimes") .. " ]")
         character:SetData("lastDeathTime", CurTime())
+		ply:ChatPrint("You do not remember what killed you or what led to your death...")
     end
 end
 

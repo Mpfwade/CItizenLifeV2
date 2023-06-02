@@ -112,22 +112,20 @@ if CLIENT then
 
                 if entity:IsPlayer() then
                     local character = entity:GetCharacter()
-
+            
                     if character then
                         local name = hook.Run("GetCharacterName", entity) or character:GetName()
-
+            
                         if entity:Team() == FACTION_CCA then
                             name = "Civil Protection Officer"
                         elseif entity:Team() == FACTION_OTA then
                             name = "Overwatch Soldier"
                         elseif entity:Team() == FACTION_VORTIGAUNT then
                             name = "Vortigaunt"
-                        elseif entity:Team() == FACTION_CITIZEN and entity.ixBandanaEquipped and not entity:IsFemale() then
-                            name = "Masked Male"
-                        elseif entity:Team() == FACTION_CITIZEN and entity.ixBandanaEquipped and entity:IsFemale() then
-                            name = "Masked Female"
+                        elseif entity:Team() == FACTION_CITIZEN and entity.ixBandanaEquipped then
+                            name = "Masked Person"
                         end
-                    else
+                    
                         ix.util.DrawText(name or "", x, y - (genericHeight / 2), ColorAlpha(team.GetColor(entity:Team()), v.alpha * 255), 1, 1)
 
                         if entity:IsRestricted() then
@@ -155,15 +153,13 @@ if CLIENT then
                             y = y + descHeight
                         end
 
-                        local descriptionText = ix.util.WrapText(character:GetDescription() or "", 512, "ixItemDescFont")
+                        local descriptionText = entity.ixBandanaEquipped and "Their face is concealed" or character:GetDescription() or ""
 
-                
-                        for i, _ in pairs(descriptionText) do
-                            ix.util.DrawText(descriptionText[i], x, y + (descHeight * i) - (genericHeight / 2), ColorAlpha(color_white, v.alpha * 255), 1, 1, "ixItemDescFont")
-                        if entity.ixBandanaEquipped then
-                            descriptionText = "Their face is concealed"
+                        local descriptionLines = ix.util.WrapText(descriptionText, 512, "ixItemDescFont")
+            
+                        for i, line in ipairs(descriptionLines) do
+                            ix.util.DrawText(line, x, y + (descHeight * i) - (genericHeight / 2), ColorAlpha(color_white, v.alpha * 255), 1, 1, "ixItemDescFont")
                         end
-                    end
 
                         continue
                     end

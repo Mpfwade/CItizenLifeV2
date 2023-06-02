@@ -3,6 +3,7 @@
 ITEM.name = "Bullet Casing"
 ITEM.description = "A metal casing for bullets."
 ITEM.category = "Items"
+ITEM.bDropOnDeath = true
 
 -- Item Configuration
 

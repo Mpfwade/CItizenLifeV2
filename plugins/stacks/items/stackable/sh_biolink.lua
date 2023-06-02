@@ -3,6 +3,7 @@
 ITEM.name = "Destroyed Biolink"
 ITEM.description = "An Destroyed Biolink from an Metropolice Unit."
 ITEM.category = "Items"
+ITEM.bDropOnDeath = true
 
 -- Item Configuration
 

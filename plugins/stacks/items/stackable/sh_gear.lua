@@ -3,6 +3,7 @@
 ITEM.name = "Metal Gear"
 ITEM.description = "A small metal gear."
 ITEM.category = "Items"
+ITEM.bDropOnDeath = true
 
 -- Item Configuration
 

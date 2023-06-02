@@ -105,7 +105,7 @@ function ITEM:RemoveOutfit(client)
         character:SetData(self.fitData, currentArmor - armorToRemove)
     end
 
-    if self.name == "Bandana" then
+    if self.name == "Bandana" and client:Alive() then
         local ply = self.player
         net.Start("ixBandanaUnEquip")
         net.Send(ply)

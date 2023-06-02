@@ -3,6 +3,7 @@
 ITEM.name = "Gun Scraps"
 ITEM.description = "Some gun scraps, can be used to craft guns."
 ITEM.category = "Items"
+ITEM.bDropOnDeath = true
 
 -- Item Configuration
 

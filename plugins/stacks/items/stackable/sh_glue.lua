@@ -3,6 +3,7 @@
 ITEM.name = "Glue"
 ITEM.description = "A tube with sticky liquid."
 ITEM.category = "Items"
+ITEM.bDropOnDeath = true
 
 -- Item Configuration
 

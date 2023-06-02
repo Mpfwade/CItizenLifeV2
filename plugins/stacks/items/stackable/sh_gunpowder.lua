@@ -3,6 +3,7 @@
 ITEM.name = "Jar of Gunpowder"
 ITEM.description = "A jar of gunpowder, mostly used for ammo and explosives."
 ITEM.category = "Items"
+ITEM.bDropOnDeath = true
 
 -- Item Configuration
 

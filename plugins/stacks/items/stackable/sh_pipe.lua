@@ -3,6 +3,7 @@
 ITEM.name = "Metal Pipe"
 ITEM.description = "A metal pipe."
 ITEM.category = "Items"
+ITEM.bDropOnDeath = true
 
 -- Item Configuration
 

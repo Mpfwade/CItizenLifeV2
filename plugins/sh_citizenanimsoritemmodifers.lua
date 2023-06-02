@@ -68,7 +68,7 @@ hook.Add("PlayerUse", "DoorOpenCheck", function(client, entity)
                 end)
             end
         else
-            if hands[client:GetActiveWeapon():GetClass()] and not client:IsWepRaised() then
+            if client:Alive() and hands[client:GetActiveWeapon():GetClass()] and not client:IsWepRaised() then
                 doorOpen = true
                 client:ForceSequence("Open_door_towards_right", nil, 0.5, true)
 
