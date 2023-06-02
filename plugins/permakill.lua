@@ -46,6 +46,7 @@ timer.Create("DeathTimeDecrease", decreaseInterval, 0, function()
     for _, ply in ipairs(player.GetAll()) do
         if not ply:IsCombine() then
             local character = ply:GetCharacter()
+
             if CurTime() - character:GetData("lastDeathTime", 0) >= decreaseInterval then
                 character:SetData("deathTimes", math.max(character:GetData("deathTimes", 0) - 1, 0))
             end
@@ -59,16 +60,25 @@ function PLUGIN:PlayerSpawn(client)
     if ix.config.Get("permakill") and character and character:GetData("permakilled") and not client:IsCombine() then
         local deathTimes = character:GetData("deathTimes", 0)
 
-        if deathTimes == 1 then
-            -- Add debuffs for the first death
-            character:SetData("hunger", 65) -- Reduced hunger value (60 instead of 100)
-        elseif deathTimes == 2 then
-            -- Add debuffs for the second death
-            character:SetData("hunger", 45) -- Further reduced hunger value (45 instead of 100)
-            client:SetHealth(75) -- Reduced health value (75 instead of 100)
-        elseif deathTimes > 3 then
+        if deathTimes > 3 then
             character:Ban()
             character:SetData("permakilled", false) -- Reset the permakilled data field
+        end
+    end
+end
+
+function PLUGIN:PlayerLoadout(ply)
+    local character = ply:GetCharacter()
+
+    if character and not ply:IsCombine() then
+		local deathTimes = character:GetData("deathTimes", 0)
+        if deathTimes == 1 then
+            -- Add debuffs for the first death
+            character:SetHunger(65) -- Reduced hunger value (60 instead of 100)
+        elseif deathTimes == 2 then
+            -- Add debuffs for the second death
+            character:SetHunger(45) -- Further reduced hunger value (45 instead of 100)
+            ply:SetHealth(60) -- Reduced health value (75 instead of 100)
         end
     end
 end

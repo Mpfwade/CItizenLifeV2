@@ -88,7 +88,7 @@ function Schema:CanPlayerThrowPunch(ply)
         end
     end
 
-    if not doorOpen then
+    if not doorOpen and ply:IsWepRaised() then
         return true
     else
         return false
