@@ -75,10 +75,15 @@ function PLUGIN:PlayerLoadout(ply)
         if deathTimes == 1 then
             -- Add debuffs for the first death
             character:SetHunger(65) -- Reduced hunger value (60 instead of 100)
+			ply:SetHealth(85)
         elseif deathTimes == 2 then
             -- Add debuffs for the second death
             character:SetHunger(45) -- Further reduced hunger value (45 instead of 100)
             ply:SetHealth(60) -- Reduced health value (75 instead of 100)
+		elseif deathTimes == 3 then
+            -- Add debuffs for the second death
+            character:SetHunger(25) -- Further reduced hunger value (45 instead of 100)
+            ply:SetHealth(35) -- Reduced health value (75 instead of 100)
         end
     end
 end
