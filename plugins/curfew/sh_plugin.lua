@@ -30,6 +30,8 @@ PLUGIN.nextRationEvent = nil
 PLUGIN.nextInspectionEvent = nil
 PLUGIN.inspectionCounter = 0
 
+SetGlobalBool("ixRationOnline", false)
+
 function PLUGIN:GetEvent()
     local curTime = CurTime()
 
@@ -107,8 +109,6 @@ function PLUGIN:IsEventActive()
 end
 
 function PLUGIN:Initialize()
-    SetGlobalBool("ixRationOnline", false) -- Set ixRationOnline to false by default
-
     hook.Add("Think", "RandomEventThink", function()
         self:Think()
     end)
