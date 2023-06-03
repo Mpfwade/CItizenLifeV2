@@ -131,7 +131,7 @@ hook.Add("CreateMenuButtons", "ixInventory", function(tabs)
                                 end
                             else
                                 menu:AddOption(L(v.name or k), function()
-                                    itemTable.player = ply + nil
+                                    itemTable.player = ply
                                     send = true
 
                                     if v.OnClick then
@@ -268,7 +268,7 @@ hook.Add("CreateMenuButtons", "ixInventory", function(tabs)
                                 end
                             else
                                 menu:AddOption(L(v.name or k), function()
-                                    itemTable.player = ply + nil
+                                    itemTable.player = ply
                                     send = true
 
                                     if v.OnClick then
