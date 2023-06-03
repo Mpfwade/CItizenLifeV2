@@ -128,6 +128,7 @@ local function CheckCityCode()
 	if ccaDeathsCount >= THRESHOLD_CCA_DEATHS then
 		cityCode = cityCodes["yellow"]
 		ccaDeathsCount = 0 -- Reset the counter
+		PLUGIN:CivilUnrestStart()
 	end
 
 	-- Update the city code

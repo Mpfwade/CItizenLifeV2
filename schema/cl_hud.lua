@@ -229,7 +229,7 @@ local function DrawCombineHud(ply, char)
         draw.SimpleTextOutlined("<:: PATROL TEAM: ".. squad .." //", "CLCHud1", 10, 200, Color( 0,138,216 ), nil, nil, 1, color_black)
 
         for k, v in pairs(player.GetAll()) do
-            if (v:Team() == FACTION_CCA) and (ply:Team() == FACTION_CCA) then
+            if (v:Team() == FACTION_CCA and v:GetNetVar("squad")) and (ply:Team() == FACTION_CCA) then
 
                 if not v:Alive() then
                     squad = "<BIOSIGNAL LOST>"
