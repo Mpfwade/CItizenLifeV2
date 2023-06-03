@@ -73,7 +73,7 @@ if CLIENT then
 
 				-- scale stuff properly with distance
 				local size = sizes[v:EntIndex()]
-				local scale = v:GetPos():Distance(LocalPlayer():GetPos()) / 384
+				local scale = v:GetPos():Distance(LocalPlayer():GetPos()) / 250
 				size = size / scale
 				local name = v:Name()
 				surface.SetFont("FaceDick")
@@ -109,10 +109,6 @@ if CLIENT then
 				--[[and v:GetAimVector():Dot(LocalPlayer():GetAimVector()) < 0--]]
 				-- draw the box/line
 				surface.SetDrawColor(255, 255, 255, alphas[v:EntIndex()])
-				--surface.DrawOutlinedRect(headpos.x - size / 2, headpos.y - size / 2, size, size)
-				--surface.DrawRect(headpos.x + size / 1.9, headpos.y - size * 0.9, 150, 10)
-				--surface.DrawCircle(headpos.x - size / 2, headpos.y - size / 2, size,Color(255,255,255,255))
-				-- draw the name in their team color (citizens brown, admins yellow, etc.)
 				local team_color = team.GetColor(v:Team())
 				local name_size = 0.075				--[[-------------------------------------------------------------------------
 			If we ever go to ALL CAPS ranks i'll kill myself.
@@ -130,21 +126,13 @@ if CLIENT then
 				-- draw text
 				if v:IsCombine() then
 					if v:Team() == FACTION_CCA then
-						MatrixText("<:: UNIT: " .. string.upper(v:Nick()) .. " ::>", "FaceDick", headpos.x + size / 1.9, headpos.y - size * 0.9, Color(team_color.r, team_color.g, team_color.b, alphas[v:EntIndex()]), Vector(name_size / scale, name_size / scale, 1))
-						-- scaling with random numbers sure is fun
-						--MatrixText("RANK: " .. rank, "FaceDick", headpos.x + size / 1.9, headpos.y - size / 2, Color(255, 255, 255, alphas[v:EntIndex()]), Vector(0.05 / scale, 0.05 / scale, 1))
-						MatrixText("ASSESSMENT: PROTECT, SERVE", "FaceDick", headpos.x + size / 1.9, headpos.y - size / 4, Color(255, 255, 255, alphas[v:EntIndex()]), Vector(0.05 / scale, 0.05 / scale, 1))
-						-- scaling with random numbers sure is fun
-						--MatrixText("Rank: " .. string.gsub(rank,"%p", ""), "FaceDick", headpos.x + size / 1.9, headpos.y - size / 2, Color(255, 255, 255, alphas[v:EntIndex()]), Vector(0.05 / scale, 0.05 / scale, 1))
-						MatrixText("PATROL TEAM: " .. squad, "FaceDick", headpos.x + size / 1.9, headpos.y - size * 1.1, Color(team_color.r - 50, team_color.g - 50, team_color.b - 50, alphas[v:EntIndex()]), Vector(0.05 / scale, 0.05 / scale, 1))
+						MatrixText("<:: UNIT: " .. string.upper(v:Nick()) .. " //", "FaceDick", headpos.x + size / 1.9, headpos.y - size * 0.9, Color(team_color.r, team_color.g, team_color.b, alphas[v:EntIndex()]), Vector(name_size / scale, name_size / scale, 1))
+						MatrixText("ASSESSMENT: PROTECT, SERVE ::>", "FaceDick", headpos.x + size / 1.9, headpos.y - size / 4, Color(255, 255, 255, alphas[v:EntIndex()]), Vector(0.05 / scale, 0.05 / scale, 1))
+						MatrixText("PATROL TEAM: " .. squad, "FaceDick", headpos.x + size / 1.9, headpos.y - size * 0.5, Color(team_color.r - 50, team_color.g - 50, team_color.b - 50, alphas[v:EntIndex()]), Vector(0.05 / scale, 0.05 / scale, 1))
 
 					elseif v:Team() == FACTION_OTA then
 							MatrixText("<:: SOLIDER: " .. string.upper(v:Nick()) .. " ::>", "FaceDick", headpos.x + size / 1.9, headpos.y - size * 0.9, Color(team_color.r, team_color.g, team_color.b, alphas[v:EntIndex()]), Vector(name_size / scale, name_size / scale, 1))
-							-- scaling with random numbers sure is fun
-							--MatrixText("RANK: " .. rank, "FaceDick", headpos.x + size / 1.9, headpos.y - size / 2, Color(255, 255, 255, alphas[v:EntIndex()]), Vector(0.05 / scale, 0.05 / scale, 1))
 							MatrixText("ASSESSMENT: CONTAIN, SACRIFICE", "FaceDick", headpos.x + size / 1.9, headpos.y - size / 4, Color(255, 255, 255, alphas[v:EntIndex()]), Vector(0.05 / scale, 0.05 / scale, 1))
-							-- scaling with random numbers sure is fun
-							--MatrixText("Rank: " .. string.gsub(rank,"%p", ""), "FaceDick", headpos.x + size / 1.9, headpos.y - size / 2, Color(255, 255, 255, alphas[v:EntIndex()]), Vector(0.05 / scale, 0.05 / scale, 1))
 							MatrixText("SQUAD TEAM: " .. squad, "FaceDick", headpos.x + size / 1.9, headpos.y - size * 1.1, Color(team_color.r - 50, team_color.g - 50, team_color.b - 50, alphas[v:EntIndex()]), Vector(0.05 / scale, 0.05 / scale, 1))
 
 						if v:IsSquadLeader() then
