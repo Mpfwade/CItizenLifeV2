@@ -206,24 +206,45 @@ if CLIENT then
 			end
 		end
 	end)--]]
-    hook.Add("PreDrawHalos", "ixDrawSquadHalos", function()
-        local squad = LocalPlayer():GetSquadMembers()
-
-        if ix.option.Get("SquadHalos") then
-            if squad then
-                for k, v in pairs(squad) do
-                    if v:GetNetVar("squadleader") then
-                        halo.Add({v}, Color(0,188,227), 2, 2, 2, true, true)
-
-                        table.RemoveByValue(squad, v)
-                        break
-                    end
-                end
-
-                halo.Add(squad, Color(0,110,179), 2, 2, 2, true, true)
-            end
-        end
-    end)
+	hook.Add("PreDrawHalos", "ixDrawSquadHalos", function()
+		local squad = LocalPlayer():GetSquadMembers()
+	
+		if ix.option.Get("SquadHalos") then
+			if squad then
+				for k, v in pairs(squad) do
+					if v:GetNetVar("squadleader") then
+						local tr = util.TraceLine({
+							start = EyePos(),
+							endpos = v:EyePos(),
+							filter = {LocalPlayer(), v},
+							mask = MASK_OPAQUE
+						})
+	
+						if tr.Fraction < 1 then
+							halo.Add({v}, Color(0, 188, 227), 2, 2, 2, true, true)
+						end
+	
+						table.RemoveByValue(squad, v)
+						break
+					end
+				end
+	
+				for _, v in pairs(squad) do
+					local tr = util.TraceLine({
+						start = EyePos(),
+						endpos = v:EyePos(),
+						filter = {LocalPlayer(), v},
+						mask = MASK_OPAQUE
+					})
+	
+					if tr.Fraction < 1 then
+						halo.Add({v}, Color(0, 110, 179), 2, 2, 2, true, true)
+					end
+				end
+			end
+		end
+	end)	
+	
     --vgui.Create("ixSquadUI") -- remove on production
 else
     netstream.Hook("CreateSquad", function(ply, data)
