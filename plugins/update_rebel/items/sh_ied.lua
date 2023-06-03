@@ -91,7 +91,7 @@ ITEM.functions.Arm = {
 				explode:SetPos(ply:GetPos())
 				explode:SetOwner(ply)
 				explode:Spawn()
-				explode:SetKeyValue("iMagnitude", "1000")
+				explode:SetKeyValue("iMagnitude", "500")
 				explode:Fire("Explode", 0, 0)
 				explode:EmitSound("weapons/c4/c4_explode1.wav", 100)
 				explode:EmitSound("weapons/c4/c4_exp_deb1.wav", 90)
@@ -152,7 +152,7 @@ ITEM.functions.Arm2 = {
 				explode:SetPos(ied:GetPos())
 				explode:SetOwner(ied)
 				explode:Spawn()
-				explode:SetKeyValue("iMagnitude", "100")
+				explode:SetKeyValue("iMagnitude", "500")
 				explode:Fire("explode", "", 0)
 				explode:EmitSound("weapons/c4/c4_explode1.wav", 100)
 				explode:EmitSound("weapons/c4/c4_exp_deb1.wav", 90)
@@ -170,7 +170,7 @@ ITEM.functions.Arm2 = {
 					if i > 4 then
 						flyer:SetModel("models/props_debris/wood_chunk08b.mdl")
 					else
-						flyer:SetModel("models/combine_helicopter/bomb_debris_"..math.random(2, 3)..".mdl")
+						flyer:SetModel("models/gibs/metal_gib" .. math.random(1, 5) .. ".mdl")
 					end
 
 					flyer:Spawn()

@@ -221,6 +221,13 @@ function Schema:CanTool(ply, trace, toolname, tool, button)
             return false
         end
 
+        if (toolname == "paint") and not ply:IsSuperAdmin() then
+            ply:Notify("You cannot use this tool.")
+            MsgAll(tostring(ply), " ", tostring(ply:SteamID()), " tried to use the ", toolname, " tool.\n")
+
+            return false
+        end
+
         if (toolname == "hydraulic") and not ply:IsSuperAdmin() then
             ply:Notify("You cannot use this tool.")
             MsgAll(tostring(ply), " ", tostring(ply:SteamID()), " tried to use the ", toolname, " tool.\n")

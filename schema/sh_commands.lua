@@ -3,67 +3,66 @@
 ---------------------------------------------------------------------------]]--
 
 ix.command.Add("Tie", {
-	description = "Tie someone in front of you.",
-	OnCheckAccess = function(_, ply)
-		return ply:IsCombine() or ply:IsRebel()
-	end,
-	OnRun = function(itemTable, ply, self)
-		local data = {}
-		data.start = ply:GetShootPos()
-		data.endpos = data.start + ply:GetAimVector() * 96
-		data.filter = ply
-		local trace = util.TraceLine(data)
-		local target = trace.Entity
-		local tieAnim = "Buttonfront"
+    description = "Tie someone in front of you.",
+    OnCheckAccess = function(_, ply)
+        return ply:IsCombine() or ply:IsRebel()
+    end,
+    OnRun = function(self, ply)
+        local data = {}
+        data.start = ply:GetShootPos()
+        data.endpos = data.start + ply:GetAimVector() * 96
+        data.filter = ply
 
-		if IsValid(target) and (target:IsPlayer() or (IsValid(target.ixPlayer) and target.ixPlayer)) and not target:GetNetVar("tying") then
-			local targetEntity = target
-			local isRestricted = target:IsPlayer() and target:IsRestricted()
+        local trace = util.TraceLine(data)
+        local target = trace.Entity
 
-			if target.ixPlayer then
-				targetEntity = target.ixPlayer
-				isRestricted = false -- Bypass IsRestricted check for entity.ixPlayer
-			end
+        if IsValid(target) and (target:IsPlayer() or (IsValid(target.ixPlayer) and target.ixPlayer)) and not target:GetNetVar("tying") then
+            local targetEntity = target
+            local isRestricted = target:IsPlayer() and target:IsRestricted()
 
-			if not isRestricted then
-				ply:DoStaredAction(targetEntity, tieAnim, 1.5, function()
-					if IsValid(ply) and IsValid(targetEntity) then
-						ply:EmitSound("misc/cablecuff.wav")
-						ix.chat.Send(ply, "me", "ties the person in front of them.")
-						ply:SetAction("Tying, target.", 1)
-						targetEntity:SetRestricted(true)
-						targetEntity:SetNetVar("tying")
-						targetEntity:NotifyLocalized("fTiedUp")
+            if target.ixPlayer then
+                targetEntity = target.ixPlayer
+                isRestricted = false -- Bypass IsRestricted check for entity.ixPlayer
+            end
 
-						if targetEntity:IsPlayer() and targetEntity:IsCombine() then
-							local location = targetEntity:GetArea() or "unknown location"
+            if not isRestricted then
+                ply:DoStaredAction(targetEntity, "Buttonfront", 1.5, function()
+                    if IsValid(ply) and IsValid(targetEntity) then
+                        ply:EmitSound("misc/cablecuff.wav")
+                        ix.chat.Send(ply, "me", "ties the person in front of them.")
+                        ply:SetAction("Tying, target.", 1)
+                        targetEntity:SetRestricted(true)
+                        targetEntity:SetNetVar("tying", true)
+                        targetEntity:NotifyLocalized("fTiedUp")
 
-							Schema:AddCombineDisplayMessage("Downloading lost radio contact information...")
-							Schema:AddCombineDisplayMessage("WARNING! Radio contact lost for unit at " .. location .. "...", Color(255, 0, 0, 255), true)
-						end
+                        if targetEntity:IsPlayer() and targetEntity:IsCombine() then
+                            local location = targetEntity:GetArea() or "unknown location"
 
-						timer.Simple(1, function()
-							if IsValid(ply) and IsValid(targetEntity) then
-								ply:LeaveSequence()
-								targetEntity:LeaveSequence()
-								ply:SetAction()
-								targetEntity:SetAction()
-							end
-						end)
-					end
-				end)
+                            Schema:AddCombineDisplayMessage("Downloading lost radio contact information...")
+                            Schema:AddCombineDisplayMessage("WARNING! Radio contact lost for unit at " .. location .. "...", Color(255, 0, 0, 255), true)
+                        end
 
-				target:SetNetVar("tying", true)
-				if not target.ixPlayer then
-					target:SetAction("You are being tied.", 1)
-				end
-			else
-				ply:NotifyLocalized("Restricted")
-			end
-		else
-			ply:NotifyLocalized("plyNotValid")
-		end
-	end
+                        timer.Simple(1, function()
+                            if IsValid(ply) and IsValid(targetEntity) then
+                                ply:LeaveSequence()
+                                targetEntity:LeaveSequence()
+                                ply:SetAction()
+                                targetEntity:SetAction()
+                            end
+                        end)
+                    end
+                end)
+
+                if not target.ixPlayer then
+                    target:SetAction("You are being tied.", 1)
+                end
+            else
+                ply:NotifyLocalized("Restricted")
+            end
+        else
+            ply:NotifyLocalized("plyNotValid")
+        end
+    end
 })
 
 

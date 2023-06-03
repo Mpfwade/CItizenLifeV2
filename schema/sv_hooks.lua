@@ -325,7 +325,7 @@ function Schema:PlayerLoadout(ply)
 
     function Schema:PlayerLoadedCharacter(ply, char, oldChar)
         if ply:Team() == FACTION_CITIZEN then
-            char:GiveFlags("pet")
+            char:GiveFlags("e")
         end
 
         if ply:IsAdmin() then
@@ -429,6 +429,10 @@ function Schema:PlayerLoadout(ply)
     end
 
     function Schema:PlayerDeath(ply, inflictor, attacker)
+        if not IsValid(ply) then
+            return
+        end
+    
         local char = ply:GetCharacter()
         char:SetData("tied", false)
         ply:SetRestricted(false)
