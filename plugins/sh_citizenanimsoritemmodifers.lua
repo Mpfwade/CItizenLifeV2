@@ -59,7 +59,7 @@ hook.Add("PlayerUse", "DoorOpenCheck", function(client, entity)
         if entity:IsLocked() then
             -- Check if the door locked notification has already been sent to the player
             if not doorLockedNotified[entity] then
-                client:ChatNotifyLocalized("This door is locked")
+                client:ChatPrint("This door is locked")
                 doorLockedNotified[entity] = true -- Set the notification flag for this door
 
                 -- Start a timer to reset the flag after 5 seconds
