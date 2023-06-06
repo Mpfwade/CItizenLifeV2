@@ -85,7 +85,7 @@ concommand.Add("ix_selector_cca", function(ply, cmd, args)
         local CommandingName = "c17:" .. DivisionInfo.name .. "-" .. RandomNumbers
         local StandardName = "c17:" .. RankInfo.name .. "." .. RandomWords .. "-" .. RandomNumbers
 
-        local BasicWeapons = {"weapon_physgun", "gmod_tool", "ix_hands", "ix_keys"}
+        local BasicWeapons = {"ix_hands", "ix_keys"}
 
         if not (DivisionInfo.xp == nil) then
             if not (tonumber(ply:GetRP()) >= DivisionInfo.xp) then

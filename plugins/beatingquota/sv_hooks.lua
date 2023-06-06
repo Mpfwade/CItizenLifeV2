@@ -2,6 +2,10 @@ local PLUGIN = PLUGIN
 
 function PLUGIN:PlayerLoadedCharacter(client, character)
     if client:Team() == FACTION_CCA then
+        local newQuotaMax = math.random(3, 10)
+        client:SetData("quota", 0)
+        character:SetData("quotamax", newQuotaMax)
+        character:SetData("quota", 0)
         if character:GetData("quota") == nil then
             character:SetData("quota", 0)
             print(client:Nick() .. " has no quota data, setting quota data for them.")
@@ -48,23 +52,3 @@ function PLUGIN:EntityTakeDamage(target, dmginfo)
     end
 end
 
-local function ResetQuota(client)
-    local character = client:GetCharacter()
-    character:SetData("quota", 0)
-
-    -- Generate a random number within the range of 3 to 6 as the new quota maximum
-    local newQuotaMax = math.random(3, 10)
-    character:SetData("quotamax", newQuotaMax)
-end
-
-ix.command.Add("ResetQuota", {
-    description = "Reset your beating quota.",
-    OnRun = function(self, client)
-        if client:Team() == FACTION_CCA then
-            ResetQuota(client)
-            client:Notify("Your Beating Quota has been reset.")
-        else
-            client:Notify("You need to be a CCA to use this command.")
-        end
-    end
-})
