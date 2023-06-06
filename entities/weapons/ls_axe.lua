@@ -37,34 +37,3 @@ function SWEP:PrePrimaryAttack()
 	local vm = self.Owner:GetViewModel()
 	vm:SendViewModelMatchingSequence(vm:LookupSequence("misscenter1"))
 end
-
-function SWEP:MeleeHitFallback(tr)
-	if tr and tr.MatType == MAT_WOOD then
-		if self.Owner.TreeLastPos and self.Owner.TreeLastPos:DistToSqr(self.Owner:GetPos()) < 6200 then
-			self.Owner.TreeLastHP = (self.Owner.TreeLastHP or math.random(5, 8)) - 1
-
-			if self.Owner.TreeLastHP < 1 then
-				if self.Owner:CanHoldItem("util_wood") then
-					self.Owner:GiveInventoryItem("util_wood")
-					self.Owner:Notify("You have gained 1 piece of wood.")
-
-					self.Owner.TreeLastPos = self.Owner:GetPos()
-					self.Owner.TreeLastHP = math.random(5, 8)
-				else
-					self.Owner:Notify("You don't have the space to hold wood.")
-					self.Owner.TreeLastPos = self.Owner:GetPos()
-					self.Owner.TreeLastHP = 5
-				end
-			end
-		else
-			self.Owner.TreeLastPos = self.Owner:GetPos()
-			self.Owner.TreeLastHP = math.random(5, 8)
-		end
-
-		self:EmitSound("Wood.ImpactHard")
-
-		return true
-	end
-
-	return false
-end
