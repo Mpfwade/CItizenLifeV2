@@ -13,7 +13,7 @@ SWEP.HoldType = "melee2"
 
 SWEP.WorldModel = Model("models/weapons/hl2meleepack/w_axe.mdl")
 SWEP.ViewModel = Model("models/weapons/hl2meleepack/v_axe.mdl")
-SWEP.ViewModelFOV = 65
+SWEP.ViewModelFOV = 85
 
 SWEP.Slot = 0
 SWEP.SlotPos = 3
