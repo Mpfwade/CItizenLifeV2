@@ -1,3 +1,4 @@
+local PLUGIN = PLUGIN or {}
 local HumanMalePainSounds = {
     [HITGROUP_GENERIC] = {Sound("vo/npc/male01/pain01.wav"), Sound("vo/npc/male01/pain02.wav"), Sound("vo/npc/male01/pain03.wav"), Sound("vo/npc/male01/pain04.wav"), Sound("vo/npc/male01/pain05.wav"), Sound("vo/npc/male01/pain06.wav")},
     [HITGROUP_HEAD] = {Sound("vo/npc/male01/moan02.wav"), Sound("vo/npc/male01/moan04.wav"), Sound("vo/npc/male01/pain07.wav")},
@@ -25,7 +26,7 @@ local CPPainSounds = {
     [HITGROUP_GEAR] = {Sound("npc/metropolice/pain1.wav"), Sound("npc/metropolice/pain2.wav"), Sound("npc/metropolice/pain3.wav"), Sound("npc/metropolice/pain4.wav")},
 }
 
-hook.Add("ScalePlayerDamage", "BetterCombat", function(ply, hitgroup, dmginfo)
+function PLUGIN:ScalePlayerDamage(ply, hitgroup, dmginfo)
     local char = ply:GetCharacter()
 
     if SERVER then
@@ -152,7 +153,7 @@ hook.Add("ScalePlayerDamage", "BetterCombat", function(ply, hitgroup, dmginfo)
             end
         end
     end
-end)
+end
 
 local humanmaledeathSounds = {Sound("vo/npc/male01/pain07.wav"), Sound("vo/npc/male01/pain08.wav"), Sound("vo/npc/male01/pain09.wav")}
 
@@ -160,56 +161,52 @@ local humanfemaledeathSounds = {Sound("vo/npc/female01/pain07.wav"), Sound("vo/n
 
 local CPdeathSounds = {Sound("npc/metropolice/die" .. math.random(1, 4) .. ".wav"), Sound("npc/metropolice/fire_scream" .. math.random(1, 3) .. ".wav")}
 
-hook.Add("EntityTakeDamage", "Knockout", function(target, dmginfo)
-    if target:IsPlayer() then
-        if dmginfo:IsDamageType(DMG_CLUB) or dmginfo:IsDamageType(DMG_BULLET) or dmginfo:IsDamageType(DMG_SHOCK) then
-            if target:Health() < 15 and not target:GetNWBool("Ragdolled", false) then
-                target:ShouldSetRagdolled(true)
-                target:SetNWBool("Ragdolled", true)
-                target:SetNWBool("Healed", false)
+function PLUGIN:DoPlayerDeath(ply, attacker, dmginfo)
+        if ply:GetNWBool("Ragdolled", false) then
+            ply:ShouldSetRagdolled(true)
+            ply:SetNWBool("Ragdolled", true)
+            ply:SetNWBool("Healed", false)
 
-                if not target:Team() == FACTION_CA or FACTION_OTA then
-                    target:EmitSound("npc/vort/foot_hit.wav")
-                end
-
-                if target:Team() == FACTION_CCA then
-                    target:EmitSound("npc/metropolice/knockout2.wav")
-                elseif target:Team() == FACTION_OTA then
-                    target:EmitSound("npc/combine_soldier/pain2.wav")
-                end
-
-                ix.chat.Send(target, "me", "'s body crumbles to the ground.")
-
-                target:SetAction("You Are Unconscious...", 35, function()
-                    target:SetNWBool("Ragdolled", false)
-                    target:ShouldSetRagdolled(false)
-                    target:SetHealth(15)
-                    target:ChatNotify("I'm dying... I need medical, now.")
-                    if not target:GetNWBool("Dying") then
-                    target:SetNWBool("Dying", true)
-                    target:EmitSound("player/heartbeat1.wav")
-                    end
-
-                    timer.Simple(0.95, function()
-                        if target:GetWeapon("gmod_tool") then
-                            target:SelectWeapon("ix_hands")
-                        end
-                    end)
-
-                    timer.Simple(120, function()
-                        target:StopSound("player/heartbeat1.wav")
-
-                        if not target:GetNWBool("Healed", true) == true and target:GetNWBool("Dying", true) == true then
-                            target:Kill()
-                        end
-                    end)
-                end)
+            if not (ply:Team() == FACTION_CA or ply:Team() == FACTION_OTA) then
+                ply:EmitSound("npc/vort/foot_hit.wav")
             end
+
+            if ply:Team() == FACTION_CCA then
+                ply:EmitSound("npc/metropolice/knockout2.wav")
+            elseif ply:Team() == FACTION_OTA then
+                ply:EmitSound("npc/combine_soldier/pain2.wav")
+            end
+
+            ix.chat.Send(ply, "me", "'s body crumbles to the ground.")
+
+            ply:SetAction("You Are Unconscious...", 35, function()
+                ply:SetNWBool("Ragdolled", false)
+                ply:ShouldSetRagdolled(false)
+                ply:SetHealth(15)
+                ply:ChatNotify("I'm dying... I need medical, now.")
+                if not ply:GetNWBool("Dying") then
+                    ply:SetNWBool("Dying", true)
+                    ply:EmitSound("player/heartbeat1.wav")
+                end
+
+                timer.Simple(0.95, function()
+                    if ply:GetWeapon("gmod_tool") then
+                        ply:SelectWeapon("ix_hands")
+                    end
+                end)
+
+                timer.Simple(120, function()
+                    ply:StopSound("player/heartbeat1.wav")
+
+                    if not ply:GetNWBool("Healed", true) and ply:GetNWBool("Dying", true) then
+                        ply:Kill()
+                    end
+                end)
+            end)
         end
     end
-end)
 
-hook.Add("PlayerDeath", "Knockout1", function(ply, inf, attacker)
+function PLUGIN:PlayerDeath(ply, inf, attacker)
     if ply:IsPlayer() and (ply:Team() == FACTION_CITIZEN) or (ply:Team() == FACTION_CA) or (ply:Team() == FACTION_VORTIGAUNT) then
         local char = ply:GetCharacter()
 
@@ -240,4 +237,4 @@ hook.Add("PlayerDeath", "Knockout1", function(ply, inf, attacker)
         ply:SetNWBool("Dying", false)
         ply:StopSound("player/heartbeat1.wav")
     end
-end)
+end

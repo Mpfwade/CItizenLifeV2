@@ -21,8 +21,6 @@ net.Receive("ixScannerData", function(length, client)
 				receivers[#receivers + 1] = v
 				ix.util.EmitQueuedSounds(v, {
 					"npc/metropolice/vo/on1.wav",
-					"npc/overwatch/radiovoice/preparevisualdownload.wav",
-					"npc/overwatch/radiovoice/allunitsapplyforwardpressure.wav",
 					"npc/metropolice/vo/off1.wav"
 				})
 			end

@@ -64,7 +64,7 @@ hook.Add("DoPlayerDeath", "FactionCCADeath", function(victim, attacker, dmginfo)
                 local victimWeapon = victim:GetActiveWeapon()
 
                 if IsValid(victimWeapon) and CitWeapons[victimWeapon:GetClass()] then
-                    ply:ChatNotify("You have gained two rank points for amputation of an anti-citizen.")
+                    Schema:AddCombineDisplayMessage(string.upper(ply:Nick()).." has gained two rank points for amputation of an anti-citizen...", Color(155,211,221,255))
                     ply:SetRP(2 + ply:GetNWInt("ixRP"))
                 else
                     return
