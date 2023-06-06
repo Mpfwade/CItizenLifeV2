@@ -20,10 +20,9 @@ function PLUGIN:PlayerTick(ply)
             local char = ply:GetCharacter()
 
             if ( char:GetHunger() == 0 ) then
-                ply:TakeDamage(math.random(10, 20))
+                ply:TakeDamage(8)
                 ply:EmitSound("citizensounds/puking.wav")
-                ply:ChatNotify("You are dying of starvation!")
-                ply:SetRagdolled(true, 10)
+                ply:ChatNotify("I'm are dying of starvation!")
 
                 ply.ixHungerTick = CurTime() + 60
                 return false
