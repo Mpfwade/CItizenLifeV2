@@ -48,8 +48,10 @@ timer.Create("DeathTimeDecrease", decreaseInterval, 0, function()
         if not ply:IsCombine() then
             local character = ply:GetCharacter()
 
+            if character then
             if CurTime() - character:GetData("lastDeathTime", 0) >= decreaseInterval then
                 character:SetData("deathTimes", math.max(character:GetData("deathTimes", 0) - 1, 0))
+            end
             end
         end
     end

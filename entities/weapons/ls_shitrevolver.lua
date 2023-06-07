@@ -14,7 +14,7 @@ SWEP.AdminOnly = true
 
 SWEP.HoldType = "revolver"
 
-SWEP.WorldModel = "models/weapons/yurie_rustalpha/wm-revolver.mdl"
+SWEP.WorldModel = "models/weapons/w_357.mdl"
 SWEP.ViewModel = "models/weapons/yurie_rustalpha/c-vm-revolver.mdl"
 SWEP.ViewModelFOV = 75
 

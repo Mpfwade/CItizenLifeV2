@@ -14,7 +14,7 @@ SWEP.AdminOnly = true
 
 SWEP.HoldType = "shotgun"
 
-SWEP.WorldModel = "models/weapons/yurie_rustalpha/wm-pipeshotgun.mdl"
+SWEP.WorldModel = "models/weapons/w_annabelle.mdl"
 SWEP.ViewModel = "models/weapons/yurie_rustalpha/c-vm-pipeshotgun.mdl"
 SWEP.ViewModelFOV = 65
 
