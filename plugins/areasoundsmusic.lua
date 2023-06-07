@@ -72,10 +72,6 @@ local MUSIC_INFO = {
         name = "ambient/atmosphere/tone_quiet.wav",
         volume = 0.3
     },
-    ["Restricted-Block"] = {
-        name = "dispatch/disp_restrictedblock3.wav",
-        volume = 0.5
-    },
 }
 
 if SERVER then

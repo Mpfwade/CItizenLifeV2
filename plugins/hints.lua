@@ -16,7 +16,7 @@ function ix.hints.Register(message)
     table.insert(ix.hints.stored, message)
 end
 
-ix.hints.Register("Don't drink the water. They put something in it to make you forget. I don't even remember how I got here.")
+ix.hints.Register("Don't drink the water. They put something in it to make you forget.")
 ix.hints.Register("Are you bored? Try making friends with someone or creating a story for your character!")
 ix.hints.Register("The staff are here to help you. Show respect and cooperate with them.")
 ix.hints.Register("Running, jumping, and other uncivil actions can result in re-education or even an arrest if repeated enough.")
@@ -32,7 +32,6 @@ ix.hints.Register("Report crimes to officers or you might get in trouble for it.
 ix.hints.Register(".// before your message to talk out of character locally. Or try // to talk out of character globally")
 ix.hints.Register("Obey the Combine's orders, or you might get in someplace you don't want to be in.")
 ix.hints.Register("Civil Protection is protecting a civilized society, not the citizens OR you.")
-ix.hints.Register("Why don't you try making a shop as cwu and cooking something? All you need is a stove and the right ingredients.")
 ix.hints.Register("Don't enrage a local officer, or you'll find yourself being re-educated.")
 
 if ( CLIENT ) then
