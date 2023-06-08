@@ -119,7 +119,9 @@ ix.command.Add("ChangeCityCode", {
 local THRESHOLD_CCA_DEATHS = 2
 
 -- Time in seconds after which city code changes if no CCA deaths occur
-local TIME_WITHOUT_DEATHS = 5
+local TIME_WITH_DEATHS = 5
+
+local TIME_WITHOUT_CRIME = 600
 
 -- Initialize the counter for CCA deaths
 local ccaDeathsCount = 0
@@ -135,7 +137,14 @@ local function CheckCityCode()
         cityCode = cityCodes["yellow"]
         ccaDeathsCount = 0 -- Reset the counter
         PLUGIN:CivilUnrestStart()
+		print("Civil Unrest start")
     end
+
+	if ccaDeathsCount == 0 then
+		cityCode = cityCodes["blue"]
+        PLUGIN:CivilUnrestStop()
+		print("Civil Unrest stop")
+	end
 
     -- Update the city code
     ix.config.Set("cityCode", cityCode)
@@ -148,8 +157,9 @@ local function StartCityCodeTimer()
     end
 
     cityCodeTimer = "CityCodeTimer"
-    timer.Create(cityCodeTimer, TIME_WITHOUT_DEATHS, 1, function()
+    timer.Create(cityCodeTimer, TIME_WITH_DEATHS, 1, function()
         CheckCityCode()
+		print("Civil Unrest check")
     end)
 end
 
