@@ -4,7 +4,6 @@ PLUGIN.author = "DrodA (Ported from NS)"
 PLUGIN.description = "With this plugin, characters can set their mood."
 PLUGIN.schema = "Any"
 PLUGIN.version = 1.2
-
 MOOD_NONE = 0
 MOOD_RELAXED = 1
 MOOD_FRUSTRATED = 2
@@ -56,28 +55,37 @@ function meta:GetMood()
     return self:GetNWInt("mood", MOOD_NONE)
 end
 
-function meta:SetMood(mood)
-    mood = mood or MOOD_NONE
-    self:SetNWInt("mood", mood)
+if SERVER then
+    function meta:SetMood(mood)
+        mood = mood or MOOD_NONE
+        self:SetNWInt("mood", mood)
+
+        if SERVER then
+            net.Start("EmoteMoods_UpdateMood")
+            net.WriteEntity(self)
+            net.WriteInt(mood, 8)
+            net.Broadcast()
+        end
+    end
+end
+
+local MOOD_CYCLE_COOLDOWN = 1 -- Cooldown duration in seconds
+local lastMoodChangeTime = 0 -- Variable to store the time of the last mood change
+
+local function CycleMood(client)
+    local currentMood = client:GetMood()
+    local nextMood = (currentMood + 1) % (MOOD_COWER + 1)
+    client:SetMood(nextMood)
 end
 
 if CLIENT then
-    local MOOD_CYCLE_COOLDOWN = 1 -- Cooldown duration in seconds
-    local lastMoodChangeTime = 0 -- Variable to store the time of the last mood change
-
-    local function CycleMood(client)
-        local currentMood = client:GetMood()
-        local nextMood = (currentMood + 1) % (MOOD_COWER + 1)
-        client:SetMood(nextMood)
-    end
-
-    local function HandleMoodCycle()
-        local client = LocalPlayer()
-        if not IsValid(client) or not client:Alive() then return end -- Add check for player validity and alive state
-        local activeWeapon = client:GetActiveWeapon()
-        if not IsValid(activeWeapon) then return end -- Add check for active weapon validity
-        local activeWeaponClass = activeWeapon:GetClass()
-        if activeWeaponClass ~= "ix_hands" then return end -- Modify the condition to check for specific weapon classes
+local function HandleMoodCycle()
+    local client = LocalPlayer()
+    if not IsValid(client) or not client:Alive() then return end -- Add check for player validity and alive state
+    local activeWeapon = client:GetActiveWeapon()
+    if not IsValid(activeWeapon) then return end -- Add check for active weapon validity
+    local activeWeaponClass = activeWeapon:GetClass()
+    if activeWeaponClass ~= "ix_hands" then return end -- Modify the condition to check for specific weapon classes
 
         if input.IsMouseDown(MOUSE_MIDDLE) then
             if not client.moodCyclePressed and os.time() >= lastMoodChangeTime + MOOD_CYCLE_COOLDOWN then
@@ -91,10 +99,14 @@ if CLIENT then
         end
     end
 
+    net.Receive("EmoteMoods_UpdateMood", function()
+        local client = net.ReadEntity()
+        local mood = net.ReadInt(8)
+        client:SetMood(mood)
+    end)
+
     hook.Add("Think", "EmoteMoods_MoodCycle", HandleMoodCycle)
 end
-
-
 
 if SERVER or CLIENT then
     local tblWorkaround = {
