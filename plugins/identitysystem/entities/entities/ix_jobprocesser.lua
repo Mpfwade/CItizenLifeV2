@@ -13,7 +13,7 @@ if SERVER then
     util.AddNetworkString("StopJobAcceptedSound")
 
     function ENT:Initialize()
-        self:SetModel("models/props_interiors/printer.mdl")
+        self:SetModel("models/props_lab/reciever_cart.mdl")
         self:SetSolid(SOLID_VPHYSICS)
         --self:PhysicsInit(SOLID_VPHYSICS)
         self:SetUseType(SIMPLE_USE)
@@ -95,51 +95,26 @@ if SERVER then
         end
     end
 else
-    surface.CreateFont("panel_font", {
-        ["font"] = "verdana",
-        ["size"] = 12,
-        ["weight"] = 128,
-        ["antialias"] = true
-    })
-
     function ENT:Draw()
         self:DrawModel()
         local ang = self:GetAngles() + Angle(180, 0, 0)
         local pos = self:GetPos() + ang:Up() * -10 + ang:Right() * -13 + ang:Forward() * -9.75
         ang:RotateAroundAxis(ang:Forward(), -90)
-        cam.Start3D2D(pos, ang, 0.1)
-        local width, height = 155, 77
-        surface.SetDrawColor(Color(16, 16, 16))
-        surface.DrawRect(0, 0, width, height)
-        surface.SetDrawColor(Color(255, 255, 255, 16))
-        surface.DrawRect(0, height / 2 + math.sin(CurTime() * 4) * height / 2, width, 1)
-        local alpha = 191 + 64 * math.sin(CurTime() * 4)
-
-        if not self:GetNetVar("InUse", false) then
-            -- Rotate the text drawing operations by 180 degrees
-            draw.SimpleText("Processing Terminal", "panel_font", width / 2, height - 25, Color(90, 210, 255, alpha), TEXT_ALIGN_CENTER)
-            draw.SimpleText("Waiting for input", "panel_font", width / 2, 16, Color(205, 255, 180, alpha), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        else
-            draw.SimpleText(LocalPlayer():SteamID64(), "panel_font", 5, height - 36, Color(90, 210, 255, alpha))
-            draw.SimpleText("Validating Input...", "panel_font", 5, height - 46, Color(102, 255, 255, alpha))
-        end
-
-        cam.End3D2D()
     end
-end
 
-if CLIENT then
-    net.Receive("PlayJobAcceptedSound", function()
-        local user = LocalPlayer()
-        user.JobAcceptedMusicPatch = CreateSound(user, "music/hl2_song25_teleporter.mp3")
-        user.JobAcceptedMusicPatch:PlayEx(75, 100)
-    end)
+    if CLIENT then
+        net.Receive("PlayJobAcceptedSound", function()
+            local user = LocalPlayer()
+            user.JobAcceptedMusicPatch = CreateSound(user, "music/hl2_song25_teleporter.mp3")
+            user.JobAcceptedMusicPatch:PlayEx(75, 100)
+        end)
 
-    net.Receive("StopJobAcceptedSound", function()
-        local user = LocalPlayer()
+        net.Receive("StopJobAcceptedSound", function()
+            local user = LocalPlayer()
 
-        if user.JobAcceptedMusicPatch then
-            user.JobAcceptedMusicPatch:FadeOut(1)
-        end
-    end)
+            if user.JobAcceptedMusicPatch then
+                user.JobAcceptedMusicPatch:FadeOut(1)
+            end
+        end)
+    end
 end
