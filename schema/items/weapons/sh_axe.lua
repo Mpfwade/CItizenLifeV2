@@ -10,9 +10,8 @@ ITEM.model = "models/weapons/hl2meleepack/w_axe.mdl"
 ITEM.skin = 0
 
 -- Item Inventory Size Configuration
-
 ITEM.width = 1
-ITEM.height = 2
+ITEM.height = 1
 
 -- Item Custom Configuration
 

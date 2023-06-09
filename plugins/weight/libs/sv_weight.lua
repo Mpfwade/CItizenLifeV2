@@ -38,7 +38,7 @@ function ix.char.Create(data, callback)
         invQuery:Callback(function(invResult, invStats, invLastID)
             local client = player.GetBySteamID64(data.steamID)
             ix.char.RestoreVars(data, data)
-            local w, h = 100, 100
+            local w, h = 15, 15
             local character = ix.char.New(data, lastID, client, data.steamID)
             local inventory = ix.inventory.Create(w, h, invLastID)
 
@@ -124,7 +124,7 @@ function ix.char.Restore(client, callback, bNoCache, id)
                             end
 
                             if hook.Run("ShouldRestoreInventory", charID, v2.inventory_id, v2.inventory_type) ~= false then
-                                local w, h = 100, 100
+                                local w, h = 15, 15
                                 local invType
 
                                 if v2.inventory_type then
@@ -156,7 +156,7 @@ function ix.char.Restore(client, callback, bNoCache, id)
                         insertQuery:Insert("character_id", charID)
 
                         insertQuery:Callback(function(_, status, lastID)
-                            local w, h = 100, 100
+                            local w, h = 15, 15
                             local inventory = ix.inventory.Create(w, h, lastID)
                             inventory:SetOwner(charID)
 

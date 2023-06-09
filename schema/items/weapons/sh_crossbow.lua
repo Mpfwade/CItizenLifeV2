@@ -14,8 +14,8 @@ ITEM.skin = 0
 ITEM.class = "weapon_crossbow"
 ITEM.weaponCategory = "primary"
 
-ITEM.width = 3
-ITEM.height = 2
+ITEM.width = 1
+ITEM.height = 1
 
 -- Item Custom Configuration
 

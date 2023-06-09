@@ -11,8 +11,7 @@ ITEM.model = "models/weapons/yurie_rustalpha/wm-revolver.mdl"
 ITEM.skin = 0
 
 -- Item Inventory Size Configuration
-
-ITEM.width = 2
+ITEM.width = 1
 ITEM.height = 1
 
 -- Item Custom Configuration
