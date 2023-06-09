@@ -34,12 +34,12 @@ function PLUGIN:PlayerDeath(client, inflictor, attacker)
 end
 
 function PLUGIN:DoPlayerDeath(ply, attacker, dmginfo)
+    ply:ChatPrint("You do not remember what killed you or what led to your death...")
     if (dmginfo:IsDamageType(DMG_BULLET) or dmginfo:IsDamageType(DMG_BLAST) or dmginfo:IsDamageType(DMG_CLUB) or dmginfo:IsDamageType(DMG_BUCKSHOT)) and not ply:IsCombine() then
         local character = ply:GetCharacter()
         character:SetData("deathTimes", character:GetData("deathTimes", 0) + 1)
         print("[DEATHPERMA " .. character:GetData("deathTimes") .. " ]")
         character:SetData("lastDeathTime", CurTime())
-		ply:ChatPrint("You do not remember what killed you or what led to your death...")
     end
 end
 
