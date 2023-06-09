@@ -196,7 +196,7 @@ local function DrawCombineHud(ply, char)
         local value = ix.config.Get("cityCode", 0)
 
         if value == k then
-            draw.SimpleTextOutlined("<:: CITY CODE: " .. v[1] .. " ::>", "CLCHud1", ScrW() / 2, 5 + 16, v[2] or color_white, TEXT_ALIGN_CENTER, nil, 1, color_black)
+            draw.SimpleTextOutlined("<:: CIVIC POLITISTABILIZATION INDEX: " .. v[1] .. " ::>", "CLCHud1", ScrW() / 2, 5 + 16, v[2] or color_white, TEXT_ALIGN_CENTER, nil, 1, color_black)
         end
     end
 

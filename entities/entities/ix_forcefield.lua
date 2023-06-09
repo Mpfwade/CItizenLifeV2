@@ -94,11 +94,14 @@ if (SERVER) then
 		self:SetMode(MODE_ALLOW_ALL)
 	end
 
+
 	function ENT:Think()
 		if (self.nextTerminalCheck or 0) < CurTime() then
 			self:StopSound("ambient/machines/combine_shield_loop3.wav")
 			self:EmitSound("ambient/machines/combine_shield_loop3.wav", 75)
 			self.nextTerminalCheck = CurTime() + 10
+		elseif self:GetMode() == 1 then
+			self:StopSound("ambient/machines/combine_shield_loop3.wav")
 		end
 	end
 	

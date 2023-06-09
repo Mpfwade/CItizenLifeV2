@@ -121,8 +121,6 @@ local THRESHOLD_CCA_DEATHS = 2
 -- Time in seconds after which city code changes if no CCA deaths occur
 local TIME_WITH_DEATHS = 5
 
-local TIME_WITHOUT_CRIME = 600
-
 -- Initialize the counter for CCA deaths
 local ccaDeathsCount = 0
 
@@ -135,9 +133,11 @@ local function CheckCityCode()
 
     if ccaDeathsCount >= THRESHOLD_CCA_DEATHS then
         cityCode = cityCodes["yellow"]
-        ccaDeathsCount = 0 -- Reset the counter
         PLUGIN:CivilUnrestStart()
 		print("Civil Unrest start")
+		timer.Simple(100, function()
+			ccaDeathsCount = 0
+		end)
     end
 
 	if ccaDeathsCount == 0 then
@@ -161,6 +161,7 @@ local function StartCityCodeTimer()
         CheckCityCode()
 		print("Civil Unrest check")
     end)
+	
 end
 
 -- Hook into events to detect CCA deaths
