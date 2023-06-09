@@ -9,7 +9,7 @@ function PLUGIN:CivilUnrestStart()
                 ix.util.EmitQueuedSounds(v, sounds, 0, 0.2, 150)
             end
         end
-    PlayEventSound("music/destabilizing1.wav")
+    PlayEventSound("music/stingers/hl1_stinger_song27.mp3")
 	PlayTimedEventSound(9, "alarms/choreo_a1_intro_basement_alarm.mp3")
 	EmitTimedShake(9)
 	PlayTimedEventSound(13,"npc/overwatch/cityvoice/f_unrestprocedure1_spkr.wav")
@@ -45,7 +45,7 @@ function PLUGIN:CityTurmoilStart()
             end
         end
 	SetGlobalBool("ixCTStatus", true)
-    PlayEventSound("music/destabilizing2.wav")
+    PlayEventSound("music/stingers/hl1_stinger_song28.mp3")
     PlayTimedEventSound(5, "dispatch/disp_anticitizen.wav")
 	PlayTimedEventSound(6, "music/destabilizing3.wav")
     PlayTimedEventSound(10, "ambient/levels/citadel/citadel_5sirens3.wav")
