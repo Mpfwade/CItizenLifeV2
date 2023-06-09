@@ -74,7 +74,7 @@ ix.command.Add("Apply", {
             ix.chat.Send(ply, "me", "shows their relocation coupon.", false)
             ply:ConCommand("ix_act_Point")
         else
-            return ply:ChatNotifyLocalized("You need a Card!")
+            return ply:ChatNotifyLocalized("You need a card!")
         end
     end
 })

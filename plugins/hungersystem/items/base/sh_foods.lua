@@ -69,7 +69,6 @@ ITEM.functions.Consume = {
         local character = item.player:GetCharacter()
         local bSpoiled = item:GetSpoiled()
         local actiontext = "Invalid Action"
-        character:SetData("Water", false)
 
         if ply.isConsumingConsumeable == true then
             ply:ChatNotify("I can't stuff too much food down my mouth.")
@@ -98,10 +97,10 @@ ITEM.functions.Consume = {
         end
         
         if item.name == "Water Can" then
-            if character:GetData("Water", false) then
+            if not character:GetData("Water", false) then
             character:SetData("Water", true)
     
-            ply:ViewPunch(Angle(math.Rand(10, 10), math.Rand(10, 10), math.Rand(10, 10)))
+            ply:ViewPunch(Angle(math.Rand(-10, 10), math.Rand(-10, 10), math.Rand(-10, 10)))
     
             timer.Simple(3.5, function()
                 ply:ChatNotify("I feel funny...")
@@ -115,8 +114,8 @@ ITEM.functions.Consume = {
                     ply:ChatNotify("Where am I? How did I get here?")
                 end)
             end)
-        else
-            return ply:ChatNotify("Maybe I shouldn't drink another one for a second...")
+        elseif character:GetData("Water", true) then
+            return
         end
     end
 

@@ -11,7 +11,7 @@ function PLUGIN:RenderScreenspaceEffects()
             DrawMotionBlur(0.075, drunkEffect, 0.025)
         end
 
-        if character:GetData("Water", true) then
+        if character:GetData("Water", false) then
             DrawSharpen(5, 5)
         end
     end
