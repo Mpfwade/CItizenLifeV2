@@ -73,9 +73,17 @@ if CLIENT then
 
     local function CycleMood(client)
         local currentMood = client:GetMood()
-        local nextMood = (currentMood + 1) % (MOOD_COWER + 1)
+        local nextMood
+    
+        if currentMood == MOOD_COWER then
+            nextMood = MOOD_NONE
+        else
+            nextMood = (currentMood + 1) % (MOOD_COWER + 1)
+        end
+    
         client:SetMood(nextMood)
     end
+    
 
     local function HandleMoodCycle()
         local client = LocalPlayer()
