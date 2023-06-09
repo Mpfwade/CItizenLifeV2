@@ -18,16 +18,3 @@ ITEM.height = 1
 
 ITEM.class = "weapon_rpg"
 ITEM.weaponCategory = "primary"
-ITEM.functions.use = {
-    name = "Equip",
-    tip = "equipTip",
-    icon = "icon16/tick.png",
-    OnRun = function(itemTable)
-        local ply = itemTable.player
-
-        ply:Give("weapon_rpg")
-        ply:SelectWeapon( "weapon_rpg" )
-        ply:SetAmmo(0, ply:GetActiveWeapon():GetPrimaryAmmoType())
-    end
-}
-

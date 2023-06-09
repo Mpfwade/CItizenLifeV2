@@ -102,13 +102,16 @@ ITEM.functions.Equip = {
         client:ForceSequence("smgdraw", nil, 1, true)
         item:Equip(item.player)
 
+		if item.name == "Rocket Propelled Grenade" then
+			client:SetAmmo(0, client:GetActiveWeapon():GetPrimaryAmmoType())
+		end
 
         return false
     end,
     OnCanRun = function(item)
         local client = item.player
 
-        if client:Team() == FACTION_VORTIGAUNT or item.name == "Molotov" or item.name == "Rocket Propelled Grenade" then
+        if client:Team() == FACTION_VORTIGAUNT or item.name == "Molotov" then
             return false
         else
             return not IsValid(item.entity) and IsValid(client) and item:GetData("equip") ~= true and hook.Run("CanPlayerEquipItem", client, item) ~= false
