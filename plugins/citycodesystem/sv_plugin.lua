@@ -57,6 +57,8 @@ function PLUGIN:CityTurmoilStart()
     PlayTimedEventSound(15, "ambient/levels/citadel/citadel_5sirens3.wav")
     PlayTimedEventSound(18, "ambient/levels/streetwar/heli_distant1.wav")
     PlayTimedEventSound(20, "music/a1_intro_refuge.mp3")
+    PlayTimedEventSound(23, "ambient/levels/streetwar/gunship_distant1.wav")
+    PlayTimedEventSound(25, "ambient/levels/streetwar/gunship_distant2.wav")
     PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
     PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
     PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
@@ -87,15 +89,25 @@ function PLUGIN:CityTurmoilStart()
 
     timer.Simple(7, function()
         timer.Create("ixCityTurmoilAmbience", 10, 0, function()
+            local randomChance = math.random(1, 5)
+
             PlayEventSound({"ambient/levels/streetwar/marching_distant1.wav", "ambient/levels/streetwar/marching_distant2.wav", "ambient/levels/streetwar/apc_distant1.wav", "alarms/amb_c17_siren_distant_01_rs.mp3",})
         end)
     end)
+
+    for _, v in pairs(ents.FindByName("citadel")) do
+        v:Fire("SetAnimation", "open")
+    end
 end
 
 function PLUGIN:CityTurmoilStop()
     SetGlobalBool("ixCTStatus", false)
     timer.Remove("ixCityTurmoilAmbience")
     timer.Remove("ixTurmoilBuzz")
+
+    for _, v in pairs(ents.FindByName("citadel")) do
+        v:Fire("SetAnimation", "idle")
+    end
 
     local sounds = {"npc/overwatch/radiovoice/on3.wav", "npc/overwatch/radiovoice/attention.wav", "npc/overwatch/radiovoice/sociostabilizationrestored.wav", "npc/overwatch/radiovoice/off2.wav"}
 
@@ -126,203 +138,27 @@ function PLUGIN:JudgementWaiverStart()
     timer.Create("ixJWBuzz", 16, 0, function()
         PlayEventSound("loudspeaker/jw_horn.wav")
     end)
-    --[[
-	PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-    PlayEventSound("ambient/atmosphere/hole_hit"..math.random(1,5)..".wav")
-    PlayEventSound("ambient/atmosphere/terrain_rumble1.wav")
 
-    for _, v in pairs(player.GetAll()) do
-        util.ScreenShake(v:GetPos(), 5, 5, 4, 5000)
+    for _, v in pairs(ents.FindByName("citadel")) do
+        v:Fire("SetAnimation", "open")
     end
-
-	for _, v in pairs(ents.FindByName("citadel")) do
-		v:Fire("SetAnimation", "open")
-	end
-
-	PlayEventSound("npc/overwatch/cityvoice/f_protectionresponse_5_spkr.wav")
-	PlayEventSound("ambient/alarms/manhack_alert_pass1.wav")
-	PlayEventSound("doors/door_metal_large_chamber_close1.wav")
-	PlayEventSound("doors/door_metal_large_chamber_close1.wav")
-
-	timer.Simple(1, function()
-		PlayEventSound("ambient/alarms/city_siren_loop2.wav")
-		PlayEventSound("doors/door_metal_large_chamber_close1.wav")
-		PlayEventSound("doors/door_metal_large_chamber_close1.wav")
-	end)
-
-	timer.Simple(2, function()
-        PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-        PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-        PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-        PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-        PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-        PlayEventSound("ambient/atmosphere/hole_hit"..math.random(1,5)..".wav")
-        for _, v in pairs(player.GetAll()) do
-            util.ScreenShake(v:GetPos(), 5, 5, 3, 5000)
-        end
-
-		PlayEventSound("ambient/machines/wall_move1.wav")
-	end)
-
-	timer.Simple(5, function()
-        PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-		PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-		PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-		PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-		PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-		PlayEventSound("ambient/atmosphere/hole_hit"..math.random(1,5)..".wav")
-		PlayEventSound("ambient/atmosphere/terrain_rumble1.wav")
-
-		for _, v in pairs(player.GetAll()) do
-			util.ScreenShake(v:GetPos(), 5, 5, 5, 5000)
-		end
-
-		PlayEventSound("ambient/machines/wall_crash1.wav")
-		PlayEventSound("ambient/levels/streetwar/marching_distant2.wav")
-		PlayEventSound("ambient/levels/citadel/drone1lp.wav")
-		PlayEventSound("ambient/levels/streetwar/battle_1.wav")
-	end)
-
-	timer.Simple(9, function()
-        PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-        PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-        PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-        PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-        PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-        PlayEventSound("ambient/atmosphere/hole_hit"..math.random(1,5)..".wav")
-        for _, v in pairs(player.GetAll()) do
-            util.ScreenShake(v:GetPos(), 5, 5, 3, 5000)
-        end
-
-		PlayEventSound("ambient/materials/metal_big_impact_scrape1.wav")
-	end)
-
-	timer.Simple(10, function()
-		for k, v in pairs(player.GetAll()) do v:StopSound("ambient/alarms/city_siren_loop2.wav") end
-		PlayEventSound("ambient/levels/streetwar/marching_distant2.wav")
-		PlayEventSound("ambient/levels/streetwar/city_chant1.wav")
-		PlayEventSound("ambient/alarms/citadel_alert_loop2.wav")
-		timer.Create("ixJudgementWaiverAmbience", 5, 0, function()
-			PlayEventSound({
-				"ambient/levels/streetwar/city_battle1.wav",
-				"ambient/levels/streetwar/city_battle2.wav",
-				"ambient/levels/streetwar/city_battle3.wav",
-				"ambient/levels/streetwar/city_battle4.wav",
-				"ambient/levels/streetwar/city_battle5.wav",
-				"ambient/levels/streetwar/city_battle6.wav",
-				"ambient/levels/streetwar/city_battle7.wav",
-				"ambient/levels/streetwar/city_battle8.wav",
-				"ambient/levels/streetwar/city_battle9.wav",
-				"ambient/levels/streetwar/city_battle10.wav",
-				"ambient/levels/streetwar/city_battle11.wav",
-				"ambient/levels/streetwar/city_battle12.wav",
-				"ambient/levels/streetwar/city_battle13.wav",
-				"ambient/levels/streetwar/city_battle14.wav",
-				"ambient/levels/streetwar/city_battle15.wav",
-				"ambient/levels/streetwar/city_battle16.wav",
-				"ambient/levels/streetwar/city_battle17.wav",
-				"ambient/levels/streetwar/city_battle18.wav",
-				"ambient/levels/streetwar/city_battle19.wav",
-				"ambient/levels/streetwar/distant_battle_dropship01.wav",
-				"ambient/levels/streetwar/distant_battle_dropship02.wav",
-				"ambient/levels/streetwar/distant_battle_dropship03.wav",
-				"ambient/levels/streetwar/distant_battle_gunfire01.wav",
-				"ambient/levels/streetwar/distant_battle_gunfire02.wav",
-				"ambient/levels/streetwar/distant_battle_gunfire03.wav",
-				"ambient/levels/streetwar/distant_battle_gunfire04.wav",
-				"ambient/levels/streetwar/distant_battle_gunfire05.wav",
-				"ambient/levels/streetwar/distant_battle_gunfire06.wav",
-				"ambient/levels/streetwar/distant_battle_gunfire07.wav",
-				"ambient/levels/streetwar/distant_battle_shotgun01.wav",
-				"ambient/levels/streetwar/distant_battle_soldier01.wav",
-				"ambient/levels/streetwar/strider_1.wav",
-				"ambient/levels/streetwar/strider_2.wav",
-				"ambient/levels/streetwar/strider_3.wav",
-				"LiteNetwork/hl2rp/event/overhead/helicopter01.ogg",
-				"LiteNetwork/hl2rp/event/overhead/helicopter02.ogg",
-				"LiteNetwork/hl2rp/event/overhead/helicopter03.ogg",
-				"LiteNetwork/hl2rp/event/overhead/helicopter04.ogg",
-				"LiteNetwork/hl2rp/event/overhead/helicopter05.ogg",
-				"LiteNetwork/hl2rp/event/overhead/helicopter06.ogg",
-				"LiteNetwork/hl2rp/event/overhead/helicopter07.ogg",
-				"LiteNetwork/hl2rp/event/overhead/helicopter08.ogg",
-				"LiteNetwork/hl2rp/event/overhead/jet01.mp3",
-				"LiteNetwork/hl2rp/event/overhead/jet02.mp3",
-				"LiteNetwork/hl2rp/event/overhead/jet03.mp3",
-				"LiteNetwork/hl2rp/event/overhead/jet04.mp3",
-				"LiteNetwork/hl2rp/event/scary/idle_moan_wet_01.ogg",
-				"LiteNetwork/hl2rp/event/scary/idle_moan_wet_02.ogg",
-				"LiteNetwork/hl2rp/event/scary/idle_moan_wet_03.ogg",
-				"LiteNetwork/hl2rp/event/scary/idle_moan_wet_04.ogg",
-				"LiteNetwork/hl2rp/event/scary/idle_moan_wet_05.ogg",
-				"LiteNetwork/hl2rp/event/scary/idle_moan_wet_06.ogg",
-				"LiteNetwork/hl2rp/event/scary/idle_moan_wet_07.ogg",
-				"LiteNetwork/hl2rp/event/scary/idle_moan_wet_08.ogg",
-				"LiteNetwork/hl2rp/event/scary/idle_moan_wet_09.ogg",
-				"LiteNetwork/hl2rp/event/scary/idle_moan_wet_10.ogg",
-				"LiteNetwork/hl2rp/event/scary/idle_moan_wet_11.ogg",
-				"LiteNetwork/hl2rp/event/scary/idle_moan_wet_12.ogg",
-				"LiteNetwork/hl2rp/event/scary/idle_moan_wet_13.ogg",
-				"LiteNetwork/hl2rp/event/scary/idle_moan_wet_14.ogg",
-			})
-		end)
-
-		timer.Create("ixJudgementWaiverAlarm", 45, 0, function()
-			PlayEventSound("ambient/alarms/citadel_alert_loop2.wav")
-
-            PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-            PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-            PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-            PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-            PlayEventSound("ambient/levels/streetwar/building_rubble"..math.random(1,5)..".wav")
-            PlayEventSound("ambient/atmosphere/hole_hit"..math.random(1,5)..".wav")
-            for _, v in pairs(player.GetAll()) do
-                util.ScreenShake(v:GetPos(), 5, 5, 3, 5000)
-            end
-		end)
-
-		timer.Create("ixJudgementWaiverReminder", 300, 0, function()
-			PlayEventSound("npc/overwatch/cityvoice/f_protectionresponse_5_spkr.wav")
-		end)
-	end)
-
-	timer.Simple(14, function()
-		PlayEventSound("ambient/levels/streetwar/marching_distant2.wav")
-	end)]]
 end
 
 function PLUGIN:JudgementWaiverStopSilent()
     SetGlobalBool("ixJWStatus", false)
     timer.Remove("ixJWBuzz")
-    --[[for _, v in pairs(ents.FindByName("citadel")) do
-		v:Fire("SetAnimation", "idle")
-	end
 
-	for _, v in ipairs(player.GetAll()) do
-		v:StopSound("ambient/levels/citadel/drone1lp.wav")
-		v:StopSound("ambient/levels/streetwar/battle_1.wav")
-	end
-
-	SetGlobalBool("ixJWStatus", false)
-	timer.Destroy("ixJudgementWaiverAlarm")
-	timer.Destroy("ixJudgementWaiverAmbience")
-	timer.Destroy("ixJudgementWaiverReminder")]]
+    for _, v in pairs(ents.FindByName("citadel")) do
+        v:Fire("SetAnimation", "idle")
+    end
 end
 
 function PLUGIN:JudgementWaiverStop()
     SetGlobalBool("ixJWStatus", false)
     timer.Remove("ixJWBuzz")
 
-    local sounds = {"npc/overwatch/radiovoice/on3.wav", "npc/overwatch/radiovoice/attention.wav", "npc/overwatch/radiovoice/sociostabilizationrestored.wav", "npc/overwatch/radiovoice/off2.wav"}
-
-    for k, v in ipairs(player.GetAll()) do
-        if v:IsCombine() then
-            ix.util.EmitQueuedSounds(v, sounds, 0, 0.2, 150)
-        end
+    for _, v in pairs(ents.FindByName("citadel")) do
+        v:Fire("SetAnimation", "idle")
     end
 end
 
@@ -426,98 +262,89 @@ function PLUGIN:AutonomousJudgementStop()
     timer.Remove("ixAJFlasher")
     timer.Remove("ixAJAmbiencePortal")
     timer.Remove("ixAJAmbience")
+    PlayEventSound("ambient/levels/citadel/citadel_flyer1.wav")
+    PlayTimedEventSound(3, "ambient/levels/citadel/citadel_5sirens.wav")
+    PlayTimedEventSound(4, "ambient/levels/citadel/stalk_traindooropen.wav")
+    PlayTimedEventSound(6, "ambient/levels/citadel/portal_beam_shoot" .. math.random(1, 6) .. ".wav")
+    PlayTimedEventSound(8, "ambient/levels/citadel/portal_beam_shoot" .. math.random(1, 6) .. ".wav")
+    PlayTimedEventSound(9, "ambient/levels/labs/teleport_mechanism_windup5.wav")
 
-    local sounds = {"npc/overwatch/radiovoice/on3.wav", "npc/overwatch/radiovoice/attention.wav", "npc/overwatch/radiovoice/sociostabilizationrestored.wav", "npc/overwatch/radiovoice/off2.wav"}
+    timer.Simple(17, function()
+        PlayEventSound("ambient/levels/citadel/portal_beam_shoot" .. math.random(1, 6) .. ".wav")
+        PlayEventSound("ambient/levels/citadel/portal_beam_shoot" .. math.random(1, 6) .. ".wav")
+        PlayTimedEventSound(1, "ambient/levels/labs/teleport_winddown1.wav")
+        PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/atmosphere/hole_hit" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/atmosphere/terrain_rumble1.wav")
 
-    for k, v in ipairs(player.GetAll()) do
-        if v:IsCombine() then
-            ix.util.EmitQueuedSounds(v, sounds, 0, 0.2, 150)
+        for _, v in pairs(player.GetAll()) do
+            util.ScreenShake(v:GetPos(), 2, 5, 5, 5000)
         end
-    end
+
+        PlayEventSound("ambient/levels/labs/teleport_weird_voices" .. math.random(1, 2) .. ".wav")
+        PlayEventSound("ambient/levels/labs/teleport_postblast_thunder1.wav")
+
+        for _, v in pairs(player.GetAll()) do
+            v:ScreenFade(SCREENFADE.IN, color_white, 5, 0)
+        end
+
+        SetGlobalBool("ixAJStatus", false)
+
+        for _, v in ipairs(player.GetAll()) do
+            v:StopSound("ambient/levels/citadel/core_partialcontain_loop1.wav")
+            v:StopSound("ambient/levels/citadel/citadel_drone_loop1.wav")
+        end
+
+        for _, v in pairs(ents.FindByClass("prop_dynamic")) do
+            if (v:GetModel() == "models/props_combine/combine_citadelcloudcenter.mdl") or (v:GetModel() == "models/props_combine/combine_citadelcloud001c.mdl") then
+                SafeRemoveEntity(v)
+            end
+        end
+    end)
+
+    timer.Simple(6, function()
+        PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/atmosphere/hole_hit" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/atmosphere/terrain_rumble1.wav")
+
+        for _, v in pairs(player.GetAll()) do
+            util.ScreenShake(v:GetPos(), 2, 5, 5, 5000)
+        end
+
+        PlayEventSound("ambient/levels/labs/teleport_weird_voices" .. math.random(1, 2) .. ".wav")
+        PlayEventSound("ambient/levels/labs/teleport_postblast_thunder1.wav")
+
+        for _, v in pairs(player.GetAll()) do
+            v:ScreenFade(SCREENFADE.IN, color_white, 5, 0)
+        end
+    end)
+
+    timer.Simple(8, function()
+        PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/atmosphere/hole_hit" .. math.random(1, 5) .. ".wav")
+        PlayEventSound("ambient/atmosphere/terrain_rumble1.wav")
+
+        for _, v in pairs(player.GetAll()) do
+            util.ScreenShake(v:GetPos(), 2, 5, 5, 5000)
+        end
+
+        PlayEventSound("ambient/levels/labs/teleport_weird_voices" .. math.random(1, 2) .. ".wav")
+        PlayEventSound("ambient/levels/labs/teleport_postblast_thunder1.wav")
+
+        for _, v in pairs(player.GetAll()) do
+            v:ScreenFade(SCREENFADE.IN, color_white, 5, 0)
+        end
+    end)
 end
-
-PlayEventSound("ambient/levels/citadel/citadel_flyer1.wav")
-PlayTimedEventSound(3, "ambient/levels/citadel/citadel_5sirens.wav")
-PlayTimedEventSound(4, "ambient/levels/citadel/stalk_traindooropen.wav")
-PlayTimedEventSound(6, "ambient/levels/citadel/portal_beam_shoot" .. math.random(1, 6) .. ".wav")
-PlayTimedEventSound(8, "ambient/levels/citadel/portal_beam_shoot" .. math.random(1, 6) .. ".wav")
-PlayTimedEventSound(9, "ambient/levels/labs/teleport_mechanism_windup5.wav")
-
-timer.Simple(17, function()
-    PlayEventSound("ambient/levels/citadel/portal_beam_shoot" .. math.random(1, 6) .. ".wav")
-    PlayEventSound("ambient/levels/citadel/portal_beam_shoot" .. math.random(1, 6) .. ".wav")
-    PlayTimedEventSound(1, "ambient/levels/labs/teleport_winddown1.wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/atmosphere/hole_hit" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/atmosphere/terrain_rumble1.wav")
-
-    for _, v in pairs(player.GetAll()) do
-        util.ScreenShake(v:GetPos(), 2, 5, 5, 5000)
-    end
-
-    PlayEventSound("ambient/levels/labs/teleport_weird_voices" .. math.random(1, 2) .. ".wav")
-    PlayEventSound("ambient/levels/labs/teleport_postblast_thunder1.wav")
-
-    for _, v in pairs(player.GetAll()) do
-        v:ScreenFade(SCREENFADE.IN, color_white, 5, 0)
-    end
-
-    SetGlobalBool("ixAJStatus", false)
-
-    for _, v in ipairs(player.GetAll()) do
-        v:StopSound("ambient/levels/citadel/core_partialcontain_loop1.wav")
-        v:StopSound("ambient/levels/citadel/citadel_drone_loop1.wav")
-    end
-
-    for _, v in pairs(ents.FindByClass("prop_dynamic")) do
-        if (v:GetModel() == "models/props_combine/combine_citadelcloudcenter.mdl") or (v:GetModel() == "models/props_combine/combine_citadelcloud001c.mdl") then
-            SafeRemoveEntity(v)
-        end
-    end
-end)
-
-timer.Simple(6, function()
-    PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/atmosphere/hole_hit" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/atmosphere/terrain_rumble1.wav")
-
-    for _, v in pairs(player.GetAll()) do
-        util.ScreenShake(v:GetPos(), 2, 5, 5, 5000)
-    end
-
-    PlayEventSound("ambient/levels/labs/teleport_weird_voices" .. math.random(1, 2) .. ".wav")
-    PlayEventSound("ambient/levels/labs/teleport_postblast_thunder1.wav")
-
-    for _, v in pairs(player.GetAll()) do
-        v:ScreenFade(SCREENFADE.IN, color_white, 5, 0)
-    end
-end)
-
-timer.Simple(8, function()
-    PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/atmosphere/hole_hit" .. math.random(1, 5) .. ".wav")
-    PlayEventSound("ambient/atmosphere/terrain_rumble1.wav")
-
-    for _, v in pairs(player.GetAll()) do
-        util.ScreenShake(v:GetPos(), 2, 5, 5, 5000)
-    end
-
-    PlayEventSound("ambient/levels/labs/teleport_weird_voices" .. math.random(1, 2) .. ".wav")
-    PlayEventSound("ambient/levels/labs/teleport_postblast_thunder1.wav")
-
-    for _, v in pairs(player.GetAll()) do
-        v:ScreenFade(SCREENFADE.IN, color_white, 5, 0)
-    end
-end)
