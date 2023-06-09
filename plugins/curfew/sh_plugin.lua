@@ -193,7 +193,10 @@ end)
 concommand.Add("ix_rations", function(ply, cmd, args)
     if ply:IsSuperAdmin() or ply:IsAdmin() or ply:IsGamemaster() then
         SetGlobalBool("ixRationOnline", true)
-        PlayTimedEventSound(4, "loudspeaker/rations.wav")
+        PlayTimedEventSound(4, "ambient/alarms/warningbell1.wav")
+        PlayTimedEventSound(6, "ambient/alarms/warningbell1.wav")
+        PlayTimedEventSound(8, "ambient/alarms/warningbell1.wav")
+
 
         local sounds = {"npc/overwatch/radiovoice/on3.wav", "npc/overwatch/radiovoice/attention.wav", "npc/overwatch/radiovoice/allunitsat.wav", "npc/overwatch/radiovoice/distributionblock.wav", "npc/overwatch/radiovoice/respond.wav", "npc/overwatch/radiovoice/off2.wav"}
 

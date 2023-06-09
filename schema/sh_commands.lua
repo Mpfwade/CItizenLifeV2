@@ -65,7 +65,69 @@ ix.command.Add("Tie", {
     end
 })
 
+ix.command.Add("DoorBuy", {
+	description = "@cmdDoorBuy",
+	OnRun = function(self, client, arguments)
+		if client:Team() == FACTION_CCA then return end
+		if client:Team() == FACTION_OTA then return end
+		if client:Team() == FACTION_VORTIGAUNT then return end
 
+		-- Get the entity 96 units infront of the player.
+		local data = {}
+			data.start = client:GetShootPos()
+			data.endpos = data.start + client:GetAimVector() * 96
+			data.filter = client
+		local trace = util.TraceLine(data)
+		local entity = trace.Entity
+
+		-- Check if the entity is a valid door.
+		if (IsValid(entity) and entity:IsDoor() and !entity:GetNetVar("disabled")) then
+			if (!entity:GetNetVar("ownable") or entity:GetNetVar("faction") or entity:GetNetVar("class")) then
+				return "@dNotAllowedToOwn"
+			end
+
+			if (IsValid(entity:GetDTEntity(0))) then
+				return "@dOwnedBy", entity:GetDTEntity(0):Name()
+			end
+
+			entity = IsValid(entity.ixParent) and entity.ixParent or entity
+
+			-- Get the price that the door is bought for.
+			local price = entity:GetNetVar("price", ix.config.Get("doorCost"))
+			local character = client:GetCharacter()
+
+			-- Check if the player can actually afford it.
+			if (character:HasMoney(price)) then
+				-- Set the door to be owned by this player.
+				entity:SetDTEntity(0, client)
+				entity.ixAccess = {
+					[client] = DOOR_OWNER
+				}
+
+				PLUGIN:CallOnDoorChildren(entity, function(child)
+					child:SetDTEntity(0, client)
+				end)
+
+				local doors = character:GetVar("doors") or {}
+					doors[#doors + 1] = entity
+				character:SetVar("doors", doors, true)
+
+				-- Take their money and notify them.
+				character:TakeMoney(price)
+				hook.Run("OnPlayerPurchaseDoor", client, entity, true, PLUGIN.CallOnDoorChildren)
+
+				ix.log.Add(client, "buydoor")
+				return "@dPurchased", ix.currency.Get(price)
+			else
+				-- Otherwise tell them they can not.
+				return "@canNotAfford"
+			end
+		else
+			-- Tell the player the door isn't valid.
+			return "@dNotValid"
+		end
+	end
+})
 
 ix.command.Add("Kickdoor", {
 	description = "Attempt to kick a door open.",

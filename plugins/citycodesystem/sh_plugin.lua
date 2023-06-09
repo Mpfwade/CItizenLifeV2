@@ -152,13 +152,10 @@ end)
 
 local traumaThreshold = 15 -- The number of times a player needs to be hurt to trigger a city code change
 local traumaCooldown = 15 -- The cooldown (in seconds) between trauma notifications
-
 local playerTrauma = {}
 
 function PLUGIN:PlayerHurt(ply, attacker, health, damage)
-    if ply:Team() ~= FACTION_CCA then
-        return
-    end
+    if ply:Team() ~= FACTION_CCA then return end
 
     if not playerTrauma[ply] then
         playerTrauma[ply] = 0
@@ -167,7 +164,7 @@ function PLUGIN:PlayerHurt(ply, attacker, health, damage)
     playerTrauma[ply] = playerTrauma[ply] + 1
 
     if playerTrauma[ply] >= traumaThreshold then
-        ix.config.Set("cityCode", 2) -- Set city code to red (2) when trauma threshold is reached
+        StartCivilUnrest()
     end
 
     local name = string.upper(ply:Nick() or "unknown unit")
@@ -175,10 +172,10 @@ function PLUGIN:PlayerHurt(ply, attacker, health, damage)
 
     if damage > 15 then
         text = "SEVERE"
-        Schema:AddWaypoint(ply:GetPos() + Vector(0, 0, 30), "UNIT "..name.." RECEIVED "..text.." TRAUMA...", Color(200, 100, 0), 120, ply)
+        Schema:AddWaypoint(ply:GetPos() + Vector(0, 0, 30), "UNIT " .. name .. " RECEIVED " .. text .. " TRAUMA...", Color(200, 100, 0), 120, ply)
     end
 
-    Schema:AddCombineDisplayMessage("WARNING! UNIT "..name.." RECEIVED "..text.." TRAUMA...", Color(255, 0, 0, 255), text)
+    Schema:AddCombineDisplayMessage("WARNING! UNIT " .. name .. " RECEIVED " .. text .. " TRAUMA...", Color(255, 0, 0, 255), text)
 
     if health < 30 then
         ply:AddCombineDisplayMessage("WARNING! VITAL SIGNS DROPPING, SEEK IMMEDIATE MEDICAL ATTENTION", Color(255, 0, 0, 255))
@@ -188,13 +185,16 @@ function PLUGIN:PlayerHurt(ply, attacker, health, damage)
 end
 
 local function ResetPlayerTrauma(ply)
-    if ply:Team() == FACTION_CCA then
+    if ply:Team() == FACTION_CCA and not ix.config.Get("cityCode", 0) then
         playerTrauma[ply] = 0
+        StopCivilUnrest()
     end
 end
 
 timer.Create("ResetPlayerTrauma", traumaCooldown, 0, function()
-    for _, ply in ipairs(player.GetAll()) do
-        ResetPlayerTrauma(ply)
+    if not ix.config.Get("cityCode", 0) then
+        for _, ply in ipairs(player.GetAll()) do
+            ResetPlayerTrauma(ply)
+        end
     end
 end)
