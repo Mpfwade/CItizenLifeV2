@@ -102,12 +102,13 @@ ITEM.functions.Equip = {
         client:ForceSequence("smgdraw", nil, 1, true)
         item:Equip(item.player)
 
+
         return false
     end,
     OnCanRun = function(item)
         local client = item.player
 
-        if client:Team() == FACTION_VORTIGAUNT or item.name == "Molotov" then
+        if client:Team() == FACTION_VORTIGAUNT or item.name == "Molotov" or item.name == "Rocket Propelled Grenade" then
             return false
         else
             return not IsValid(item.entity) and IsValid(client) and item:GetData("equip") ~= true and hook.Run("CanPlayerEquipItem", client, item) ~= false
