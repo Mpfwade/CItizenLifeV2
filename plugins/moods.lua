@@ -55,37 +55,35 @@ function meta:GetMood()
     return self:GetNWInt("mood", MOOD_NONE)
 end
 
-if SERVER then
-    function meta:SetMood(mood)
-        mood = mood or MOOD_NONE
-        self:SetNWInt("mood", mood)
+function meta:SetMood(mood)
+    mood = mood or MOOD_NONE
+    self:SetNWInt("mood", mood)
 
-        if SERVER then
-            net.Start("EmoteMoods_UpdateMood")
-            net.WriteEntity(self)
-            net.WriteInt(mood, 8)
-            net.Broadcast()
-        end
+    if SERVER then
+        net.Start("EmoteMoods_UpdateMood")
+        net.WriteEntity(self)
+        net.WriteInt(mood, 8)
+        net.Broadcast()
     end
 end
 
-local MOOD_CYCLE_COOLDOWN = 1 -- Cooldown duration in seconds
-local lastMoodChangeTime = 0 -- Variable to store the time of the last mood change
-
-local function CycleMood(client)
-    local currentMood = client:GetMood()
-    local nextMood = (currentMood + 1) % (MOOD_COWER + 1)
-    client:SetMood(nextMood)
-end
-
 if CLIENT then
-local function HandleMoodCycle()
-    local client = LocalPlayer()
-    if not IsValid(client) or not client:Alive() then return end -- Add check for player validity and alive state
-    local activeWeapon = client:GetActiveWeapon()
-    if not IsValid(activeWeapon) then return end -- Add check for active weapon validity
-    local activeWeaponClass = activeWeapon:GetClass()
-    if activeWeaponClass ~= "ix_hands" then return end -- Modify the condition to check for specific weapon classes
+    local MOOD_CYCLE_COOLDOWN = 1 -- Cooldown duration in seconds
+    local lastMoodChangeTime = 0 -- Variable to store the time of the last mood change
+
+    local function CycleMood(client)
+        local currentMood = client:GetMood()
+        local nextMood = (currentMood + 1) % (MOOD_COWER + 1)
+        client:SetMood(nextMood)
+    end
+
+    local function HandleMoodCycle()
+        local client = LocalPlayer()
+        if not IsValid(client) or not client:Alive() then return end -- Add check for player validity and alive state
+        local activeWeapon = client:GetActiveWeapon()
+        if not IsValid(activeWeapon) then return end -- Add check for active weapon validity
+        local activeWeaponClass = activeWeapon:GetClass()
+        if activeWeaponClass ~= "ix_hands" then return end -- Modify the condition to check for specific weapon classes
 
         if input.IsMouseDown(MOUSE_MIDDLE) then
             if not client.moodCyclePressed and os.time() >= lastMoodChangeTime + MOOD_CYCLE_COOLDOWN then
