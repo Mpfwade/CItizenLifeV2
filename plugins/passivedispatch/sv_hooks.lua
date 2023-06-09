@@ -20,7 +20,7 @@ function PLUGIN:Tick()
         if curTime >= self.nextChatterEmit then
             self.nextChatterEmit = nil
 
-            local positions = {
+            local positions = { -- city 11
                 Vector(-3630, -1989, -538),
                 Vector(-3065, -136, -366),
                 Vector(-5686, -1464, -659),
