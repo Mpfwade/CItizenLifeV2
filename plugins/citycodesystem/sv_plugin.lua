@@ -57,8 +57,6 @@ function PLUGIN:CityTurmoilStart()
     PlayTimedEventSound(15, "ambient/levels/citadel/citadel_5sirens3.wav")
     PlayTimedEventSound(18, "ambient/levels/streetwar/heli_distant1.wav")
     PlayTimedEventSound(20, "music/a1_intro_refuge.mp3")
-    PlayTimedEventSound(23, "ambient/levels/streetwar/gunship_distant1.wav")
-    PlayTimedEventSound(25, "ambient/levels/streetwar/gunship_distant2.wav")
     PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
     PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
     PlayEventSound("ambient/levels/streetwar/building_rubble" .. math.random(1, 5) .. ".wav")
@@ -89,13 +87,7 @@ function PLUGIN:CityTurmoilStart()
 
     timer.Simple(7, function()
         timer.Create("ixCityTurmoilAmbience", 10, 0, function()
-            local randomChance = math.random(1, 5)
-
-            if randomChance == 2 then
-                PlayTimedEventSound(math.random(0.0, 3.0), table.Random({"npc/overwatch/cityvoice/f_anticitizenreport_spkr.wav", "npc/overwatch/cityvoice/f_anticivil1_5_spkr.wav", "npc/overwatch/cityvoice/f_anticivilevidence_3_spkr.wav", "npc/overwatch/cityvoice/f_capitalmalcompliance_spkr.wav", "npc/overwatch/cityvoice/f_sociolevel1_4_spkr.wav", "npc/overwatch/cityvoice/f_unrestprocedure1_spkr.wav",}))
-            end
-
-            PlayEventSound({"ambient/levels/streetwar/marching_distant1.wav", "ambient/levels/streetwar/marching_distant2.wav", "ambient/levels/streetwar/apc_distant1.wav", "ambient/levels/streetwar/city_scream3.wav", "alarms/amb_c17_siren_distant_01_rs.mp3",})
+            PlayEventSound({"ambient/levels/streetwar/marching_distant1.wav", "ambient/levels/streetwar/marching_distant2.wav", "ambient/levels/streetwar/apc_distant1.wav", "alarms/amb_c17_siren_distant_01_rs.mp3",})
         end)
     end)
 end

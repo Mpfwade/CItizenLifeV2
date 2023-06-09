@@ -38,7 +38,7 @@ if ( SERVER ) then
 		end
 
 		if ( activator:IsCombine() or activator:IsCA() or activator:Team() == FACTION_CWU ) then
-			activator:Notify("You are a Combine or CWU, you cannot use Citzen safeboxes!")
+			activator:Notify("You are a Combine or CWU, you cannot use Citizen safeboxes!")
 			return
 		end
 
