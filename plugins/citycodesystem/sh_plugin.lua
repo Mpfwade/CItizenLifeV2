@@ -22,6 +22,17 @@ local cityCodes = {
 	["gray"] = 4,
 }
 
+-- Track the deaths and time since last death for FACTION_CCA players
+local ccaDeaths = {}
+local lastDeathTime = 0
+
+hook.Add("PlayerDeath", "TrackCCADeaths", function(victim, _, attacker)
+	if victim:Team() == FACTION_CCA and attacker:IsPlayer() and attacker:Team() == FACTION_CCA then
+		ccaDeaths[victim] = true
+		lastDeathTime = CurTime()
+	end
+end)
+
 ix.command.Add("ChangeCityCode", {
 	description = "Change the current civic politistabilization index. (blue, yellow, red, white, gray)",
 	syntax = ix.type.string,
@@ -114,65 +125,3 @@ ix.command.Add("ChangeCityCode", {
 		end
 	end
 })
-
--- Number of CCA deaths required to change city code to yellow
-local THRESHOLD_CCA_DEATHS = 2
-
--- Time in seconds after which city code changes if no CCA deaths occur
-local TIME_WITH_DEATHS = 5
-
--- Initialize the counter for CCA deaths
-local ccaDeathsCount = 0
-
--- Timer handle for checking the city code after a certain duration
-local cityCodeTimer
-
--- Function to check and update the city code based on CCA deaths
-local function CheckCityCode()
-    local cityCode = ix.config.Get("cityCode", 0)
-
-    if ccaDeathsCount >= THRESHOLD_CCA_DEATHS then
-        cityCode = cityCodes["yellow"]
-        PLUGIN:CivilUnrestStart()
-		print("Civil Unrest start")
-		timer.Simple(100, function()
-			ccaDeathsCount = 0
-		end)
-    end
-
-	if ccaDeathsCount == 0 then
-		cityCode = cityCodes["blue"]
-        PLUGIN:CivilUnrestStop()
-		print("Civil Unrest stop")
-	end
-
-    -- Update the city code
-    ix.config.Set("cityCode", cityCode)
-end
-
--- Function to start the timer for checking city code after a certain duration
-local function StartCityCodeTimer()
-    if cityCodeTimer then
-        timer.Remove(cityCodeTimer)
-    end
-
-    cityCodeTimer = "CityCodeTimer"
-    timer.Create(cityCodeTimer, TIME_WITH_DEATHS, 1, function()
-        CheckCityCode()
-		print("Civil Unrest check")
-    end)
-	
-end
-
--- Hook into events to detect CCA deaths
-function PLUGIN:PlayerDeath(client)
-    if client:IsCombine() then
-        ccaDeathsCount = ccaDeathsCount + 1
-        StartCityCodeTimer()
-    end
-end
-
--- Start the city code timer when the plugin initializes
-function PLUGIN:Initialize()
-    StartCityCodeTimer()
-end
