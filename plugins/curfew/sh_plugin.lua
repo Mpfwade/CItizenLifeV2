@@ -183,8 +183,8 @@ concommand.Add("ix_curfew", function(ply, cmd, args, client)
             end
         end
 
+        ix.chat.Send(ply, "dispatchradio", "Attention, city-wide block search in progress. All local Protection Team units: prepare to inoculate.")
         timer.Simple(4, function()
-            ix.chat.Send(ply, "dispatchradio", "Attention, city-wide block search in progress. All local Protection Team units: prepare to inoculate.")
             ix.chat.Send(ply, "dispatch", "Citizen notice: priority identification check in progress. Please assemble in your designated inspection positions.")
         end)
     end
