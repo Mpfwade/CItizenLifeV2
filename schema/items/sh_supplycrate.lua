@@ -8,8 +8,8 @@ ITEM.skin = 0
 ITEM.noBusiness = true
 ITEM.exRender = true
 ITEM.bDropOnDeath = true
-ITEM.width = 3
-ITEM.height = 3
+ITEM.width = 1
+ITEM.height = 1
 
 ITEM.iconCam = {
     pos = Vector(1.96, 5.95, 199.77),
