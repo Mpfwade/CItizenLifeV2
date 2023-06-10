@@ -100,34 +100,47 @@ do
                     clientInfo.CalcSeqOverride = self.MoodAnimTable[mood][0] and client:LookupSequence(self.MoodAnimTable[mood][0]) or clientInfo.CalcSeqOverride
                 elseif length > 0.25 and length < 22500 then
                     clientInfo.CalcSeqOverride = self.MoodAnimTable[mood][1] and client:LookupSequence(self.MoodAnimTable[mood][1]) or clientInfo.CalcSeqOverride
+                elseif length > 22500 then
+                    client.CalcSeqOverride = self.MoodAnimTable[mood][2] and client:LookupSequence(self.MoodAnimTable[mood][2]) or clientInfo.CalcSeqOverride
                 end
             end
         end
     end
+end
 
-    local cooldown = 3 -- Adjust the cooldown duration here (in seconds)
-    local cooldowns = {}
+do
+    if SERVER then
+        local cooldown = 1 -- Adjust the cooldown duration here (in seconds)
+        local cooldowns = {}
 
-    function PLUGIN:KeyPress(client, key)
-        local tblWorkaround = {
-            ["ix_keys"] = true,
-            ["ix_hands"] = true,
-        }
+        function PLUGIN:KeyPress(client, key)
+            local char = client:GetCharacter()
 
-        if key == IN_ATTACK2 and IsValid(client:GetActiveWeapon()) and tblWorkaround[client:GetActiveWeapon():GetClass()] then
-            local currentMood = client:GetMood()
-            local nextMood = currentMood + 1
+            local tblWorkaround = {
+                ["ix_keys"] = true,
+                ["ix_hands"] = true,
+            }
 
-            if nextMood > MOOD_COWER then
-                nextMood = MOOD_NONE
-            end
+            if key == IN_ATTACK2 and IsValid(client:GetActiveWeapon()) and tblWorkaround[client:GetActiveWeapon():GetClass()] and char then
+                local currentMood = client:GetMood()
+                local nextMood = currentMood + 1
 
-            if not cooldowns[client] or os.time() >= cooldowns[client] then
-                cooldowns[client] = os.time() + cooldown
-                client:SetMood(nextMood)
-                timer.Simple(0.45, function() return client:ChatPrint("You have changed your mood to " .. PLUGIN.MoodTextTable[client:GetMood()] .. ".") end)
-            else
-                return
+                if nextMood > MOOD_COWER then
+                    nextMood = MOOD_NONE
+                end
+
+                if not cooldowns[client] or CurTime() >= cooldowns[client] then
+                    cooldowns[client] = CurTime() + cooldown
+                    client:SetMood(nextMood)
+
+                    timer.Simple(0.15, function()
+                        client:ChatPrint("You have changed your mood to " .. PLUGIN.MoodTextTable[client:GetMood()] .. ".")
+
+                        return
+                    end)
+                else
+                    return
+                end
             end
         end
     end
