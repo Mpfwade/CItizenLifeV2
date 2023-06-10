@@ -113,7 +113,7 @@ do
         local cooldown = 1 -- Adjust the cooldown duration here (in seconds)
         local cooldowns = {}
 
-        function PLUGIN:KeyPress(client, key)
+        function PLUGIN:PlayerButtonDown(client, button)
             local char = client:GetCharacter()
 
             local tblWorkaround = {
@@ -121,7 +121,7 @@ do
                 ["ix_hands"] = true,
             }
 
-            if key == IN_ATTACK2 and IsValid(client:GetActiveWeapon()) and tblWorkaround[client:GetActiveWeapon():GetClass()] and char then
+            if button == MOUSE_MIDDLE and IsValid(client:GetActiveWeapon()) and tblWorkaround[client:GetActiveWeapon():GetClass()] and char then
                 local currentMood = client:GetMood()
                 local nextMood = currentMood + 1
 
@@ -135,8 +135,6 @@ do
 
                     timer.Simple(0.15, function()
                         client:ChatPrint("You have changed your mood to " .. PLUGIN.MoodTextTable[client:GetMood()] .. ".")
-
-                        return
                     end)
                 else
                     return

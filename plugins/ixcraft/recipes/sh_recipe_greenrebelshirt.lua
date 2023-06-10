@@ -1,6 +1,6 @@
 RECIPE.name = "Green Resistance Shirt"
 RECIPE.description = "Craft a Green Resistance Shirt."
-RECIPE.model = "models/willardnetworks/clothingitems/torso_rebel02.mdl"
+RECIPE.model = "models/tnb/items/shirt_rebel1.mdl"
 RECIPE.category = "Clothing"
 
 RECIPE.base = "recipe_base"

@@ -1,6 +1,6 @@
 RECIPE.name = "Green Beanie"
 RECIPE.description = "Craft a Green Beanie."
-RECIPE.model = "models/willardnetworks/clothingitems/head_beanie_green.mdl"
+RECIPE.model = "models/props_junk/cardboard_box003b.mdl"
 RECIPE.category = "Clothing"
 
 RECIPE.base = "recipe_base"
