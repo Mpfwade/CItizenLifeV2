@@ -73,7 +73,9 @@ do
     COMMAND.description = "Set your own mood"
 
     COMMAND.arguments = {ix.type.number}
+
     COMMAND.adminOnly = false
+
     function COMMAND:OnRun(client, mood)
         mood = math.Clamp(mood, 0, MOOD_COWER)
         client:SetMood(mood)
@@ -92,7 +94,6 @@ do
         local clientInfo = client:GetTable()
         local mood = client:GetMood()
 
-
         if client and IsValid(client) and client:IsPlayer() then
             if not client:IsWepRaised() and not client:Crouching() and IsValid(client:GetActiveWeapon()) and tblWorkaround[client:GetActiveWeapon():GetClass()] and not client:InVehicle() and mood > 0 and not self.MoodBadMovetypes[client:GetMoveType()] and not client.m_bJumping and client:IsOnGround() then
                 if length < 0.25 then
@@ -103,9 +104,10 @@ do
             end
         end
     end
-end
 
-do
+    local cooldown = 3 -- Adjust the cooldown duration here (in seconds)
+    local cooldowns = {}
+
     function PLUGIN:KeyPress(client, key)
         local tblWorkaround = {
             ["ix_keys"] = true,
@@ -120,7 +122,13 @@ do
                 nextMood = MOOD_NONE
             end
 
-            client:SetMood(nextMood)
+            if not cooldowns[client] or os.time() >= cooldowns[client] then
+                cooldowns[client] = os.time() + cooldown
+                client:SetMood(nextMood)
+                timer.Simple(0.45, function() return client:ChatPrint("You have changed your mood to " .. PLUGIN.MoodTextTable[client:GetMood()] .. ".") end)
+            else
+                return
+            end
         end
     end
 end
