@@ -9,7 +9,6 @@ MOOD_RELAXED = 1
 MOOD_FRUSTRATED = 2
 MOOD_MODEST = 3
 MOOD_COWER = 4
-MOOD_HOLDINGSTUN = 5
 
 PLUGIN.MoodTextTable = {
     [MOOD_NONE] = "Default",
@@ -17,7 +16,6 @@ PLUGIN.MoodTextTable = {
     [MOOD_FRUSTRATED] = "Frustrated",
     [MOOD_MODEST] = "Modest",
     [MOOD_COWER] = "Cower",
-    [MOOD_HOLDINGSTUN] = "Holdingstun"
 }
 
 PLUGIN.MoodBadMovetypes = {
@@ -49,75 +47,44 @@ PLUGIN.MoodAnimTable = {
     }
 }
 
-local meta = FindMetaTable("Player")
+do
+    local meta = FindMetaTable("Player")
 
-function meta:GetMood()
-    return self:GetNWInt("mood", MOOD_NONE)
-end
-
-function meta:SetMood(mood)
-    mood = mood or MOOD_NONE
-    self:SetNWInt("mood", mood)
+    function meta:GetMood()
+        return self:GetNetVar("mood") or MOOD_NONE
+    end
 
     if SERVER then
-        net.Start("EmoteMoods_UpdateMood")
-        net.WriteEntity(self)
-        net.WriteInt(mood, 8)
-        net.Broadcast()
+        function meta:SetMood(int)
+            int = int or 0
+            self:SetNetVar("mood", int)
+        end
     end
 end
 
-if CLIENT then
-    local MOOD_CYCLE_COOLDOWN = 1 -- Cooldown duration in seconds
-    local lastMoodChangeTime = 0 -- Variable to store the time of the last mood change
-
-    local function CycleMood(client)
-        local currentMood = client:GetMood()
-        local nextMood
-    
-        if currentMood == MOOD_COWER then
-            nextMood = MOOD_NONE
-        else
-            nextMood = (currentMood + 1) % (MOOD_COWER + 1)
-        end
-    
-        client:SetMood(nextMood)
+if SERVER then
+    function PLUGIN:PlayerLoadedCharacter(client, character)
+        client:SetMood(MOOD_NONE)
     end
-    
+end
 
-    local function HandleMoodCycle()
-        local client = LocalPlayer()
-        if not IsValid(client) or not client:Alive() then return end -- Add check for player validity and alive state
-        local activeWeapon = client:GetActiveWeapon()
-        if not IsValid(activeWeapon) then return end -- Add check for active weapon validity
-        local activeWeaponClass = activeWeapon:GetClass()
-        if activeWeaponClass ~= "ix_hands" then return end -- Modify the condition to check for specific weapon classes
+do
+    local COMMAND = {}
+    COMMAND.description = "Set your own mood"
 
-        if input.IsMouseDown(MOUSE_MIDDLE) then
-            if not client.moodCyclePressed and os.time() >= lastMoodChangeTime + MOOD_CYCLE_COOLDOWN then
-                CycleMood(client)
-                client:ChatPrint("You have changed your idle stance.")
-                client.moodCyclePressed = true
-                lastMoodChangeTime = os.time()
-            end
-        else
-            client.moodCyclePressed = false
-        end
-    end
-
-    net.Receive("EmoteMoods_UpdateMood", function()
-        local client = net.ReadEntity()
-        local mood = net.ReadInt(8)
+    COMMAND.arguments = {ix.type.number}
+    COMMAND.adminOnly = false
+    function COMMAND:OnRun(client, mood)
+        mood = math.Clamp(mood, 0, MOOD_COWER)
         client:SetMood(mood)
-    end)
+    end
 
-    hook.Add("Think", "EmoteMoods_MoodCycle", HandleMoodCycle)
-end
+    ix.command.Add("Mood", COMMAND)
 
-if SERVER or CLIENT then
     local tblWorkaround = {
         ["ix_keys"] = true,
-        ["ix_hands"] = true
+        ["ix_hands"] = true,
+        ["ix_stunstick"] = true
     }
 
     function PLUGIN:CalcMainActivity(client, velocity)
@@ -125,16 +92,35 @@ if SERVER or CLIENT then
         local clientInfo = client:GetTable()
         local mood = client:GetMood()
 
+
         if client and IsValid(client) and client:IsPlayer() then
             if not client:IsWepRaised() and not client:Crouching() and IsValid(client:GetActiveWeapon()) and tblWorkaround[client:GetActiveWeapon():GetClass()] and not client:InVehicle() and mood > 0 and not self.MoodBadMovetypes[client:GetMoveType()] and not client.m_bJumping and client:IsOnGround() then
                 if length < 0.25 then
                     clientInfo.CalcSeqOverride = self.MoodAnimTable[mood][0] and client:LookupSequence(self.MoodAnimTable[mood][0]) or clientInfo.CalcSeqOverride
                 elseif length > 0.25 and length < 22500 then
                     clientInfo.CalcSeqOverride = self.MoodAnimTable[mood][1] and client:LookupSequence(self.MoodAnimTable[mood][1]) or clientInfo.CalcSeqOverride
-                elseif length > 22500 then
-                    clientInfo.CalcSeqOverride = self.MoodAnimTable[mood][2] and client:LookupSequence(self.MoodAnimTable[mood][2]) or clientInfo.CalcSeqOverride
                 end
             end
+        end
+    end
+end
+
+do
+    function PLUGIN:KeyPress(client, key)
+        local tblWorkaround = {
+            ["ix_keys"] = true,
+            ["ix_hands"] = true,
+        }
+
+        if key == IN_ATTACK2 and IsValid(client:GetActiveWeapon()) and tblWorkaround[client:GetActiveWeapon():GetClass()] then
+            local currentMood = client:GetMood()
+            local nextMood = currentMood + 1
+
+            if nextMood > MOOD_COWER then
+                nextMood = MOOD_NONE
+            end
+
+            client:SetMood(nextMood)
         end
     end
 end
