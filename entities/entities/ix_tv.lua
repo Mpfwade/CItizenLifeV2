@@ -32,6 +32,8 @@ if SERVER then
         local physics = self:GetPhysicsObject()
         physics:EnableMotion(false)
         physics:Sleep()
+
+        self.IsActivated = false -- Flag to track activation status
     end
 
     function ENT:SpawnFunction(ply, trace)
@@ -46,24 +48,29 @@ if SERVER then
 
     function ENT:Use(activator, caller)
         if not IsValid(caller) or not caller:IsPlayer() then return end
-        local curTime = CurTime()
 
-        if not self.NextMaterialTime or self.NextMaterialTime <= curTime then
-            -- Play the next material
-            local materialIndex = 1
-            if self.Sound then
-                -- Play the sound
-                self:EmitSound(self.Sound)
+        self.IsActivated = not self.IsActivated -- Toggle activation status
+
+        if self.IsActivated then
+            local curTime = CurTime()
+
+            if not self.NextMaterialTime or self.NextMaterialTime <= curTime then
+                -- Play the next material
+                local materialIndex = 1
+                if self.Sound then
+                    -- Play the sound
+                    self:EmitSound(self.Sound)
+                end
+
+                self.NextMaterialTime = curTime + self.MaterialDuration
             end
-
-            self.NextMaterialTime = curTime + self.MaterialDuration
         end
     end
 
     function ENT:Think()
         local curTime = CurTime()
 
-        if self.NextMaterialTime and self.NextMaterialTime <= curTime then
+        if self.IsActivated and self.NextMaterialTime and self.NextMaterialTime <= curTime then
             -- Play the next material
             local materialIndex = self.SpecialMaterialIndex or 1
             if self.Sound then
@@ -80,12 +87,6 @@ if SERVER then
         return true
     end
 else
-    surface.CreateFont("ixVendingMachine2", {
-        font = "Default",
-        size = 13,
-        weight = 800,
-        antialias = false
-    })
 
     local color_red = Color(100, 20, 20, 255)
     local color_blue = Color(0, 50, 100, 255)
@@ -94,21 +95,20 @@ else
     function ENT:Draw()
         self:DrawModel()
 
-        local pos = self:GetPos()
-        local ang = self:GetAngles()
+            local pos = self:GetPos()
+            local ang = self:GetAngles()
 
-        pos = pos + (ang:Up() * 5)
-        pos = pos + (ang:Forward() * 6.30)
-        pos = pos + (ang:Right() * 9.8)
+            pos = pos + (ang:Up() * 5)
+            pos = pos + (ang:Forward() * 6.30)
+            pos = pos + (ang:Right() * 9.8)
 
-        ang:RotateAroundAxis(self:GetAngles():Up(), 90)
-        ang:RotateAroundAxis(self:GetAngles():Right(), -90)
+            ang:RotateAroundAxis(self:GetAngles():Up(), 90)
+            ang:RotateAroundAxis(self:GetAngles():Right(), -90)
 
-        cam.Start3D2D(pos, ang, 0.07)
-            surface.SetDrawColor(Color(30, 30, 30))
-            surface.SetMaterial(self.Materials[1])
-            surface.DrawTexturedRect(10, -11, 215, 145)
-
-        cam.End3D2D()
+            cam.Start3D2D(pos, ang, 0.07)
+                surface.SetDrawColor(Color(30, 30, 30))
+                surface.SetMaterial(self.Materials[1])
+                surface.DrawTexturedRect(10, -11, 215, 145)
+            cam.End3D2D()
     end
 end
