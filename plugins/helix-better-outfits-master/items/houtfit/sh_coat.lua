@@ -1,16 +1,17 @@
 ITEM.name = "Winter Coat"
 ITEM.description = "A coat made for winter."
-ITEM.model = "models/tnb/items/pants_rebel.mdl"
-ITEM.outfitCategory = "Pants"
+ITEM.model = "models/props_junk/cardboard_box003b.mdl"
+ITEM.outfitCategory = "Shirts"
 ITEM.noResetBodyGroups = true
 ITEM.bDropOnDeath = true
 
 ITEM.bodyGroups = {
-	["legs"] = 21
+	["torso"] = 21
 }
 
 ITEM.height = 1
 ITEM.width = 1
+ITEM.category = "Clothes/Outfits"
 
 ITEM.allowedModels = {
 	"models/humans/pandafishizens/female_01.mdl",
