@@ -86,23 +86,3 @@ PLUGIN.randomLoot.rare = {
 }
 
 ix.util.Include("sv_plugin.lua")
-
-if ( CLIENT ) then
-	function PLUGIN:PopulateEntityInfo(ent, tooltip)
-		local ply = LocalPlayer()
-		local ent = ent:GetClass()
-
-		if ( ply:IsCombine() or ply:IsDispatch() ) then
-			return false
-		end
-
-		if not ( ent:find("ix_loot") ) then
-			return false
-		end
-
-		local title = tooltip:AddRow("loot")
-		title:SetText("Lootable Container")
-		title:SetImportant()
-		title:SizeToContents()
-	end
-end
