@@ -35,21 +35,26 @@ end
 
 function PLUGIN:DoPlayerDeath(ply, attacker, dmginfo)
     ply:ChatPrint("You do not remember what killed you or what led to your death...")
+
     if (dmginfo:IsDamageType(DMG_BULLET) or dmginfo:IsDamageType(DMG_BLAST) or dmginfo:IsDamageType(DMG_CLUB) or dmginfo:IsDamageType(DMG_BUCKSHOT)) and not ply:IsCombine() then
         local character = ply:GetCharacter()
-        character:SetData("deathTimes", character:GetData("deathTimes", 0) + 1)
-        print("[DEATHPERMA " .. character:GetData("deathTimes") .. " ]")
-        character:SetData("lastDeathTime", CurTime())
+
+        if character then
+            character:SetData("deathTimes", character:GetData("deathTimes", 0) + 1)
+            print("[DEATHPERMA " .. character:GetData("deathTimes") .. " ]")
+            character:SetData("lastDeathTime", CurTime())
+        end
     end
 end
+
 
 timer.Create("DeathTimeDecrease", decreaseInterval, 0, function()
     for _, ply in ipairs(player.GetAll()) do
         if not ply:IsCombine() then
             local character = ply:GetCharacter()
 
-            if IsValid(ply) and character and character:GetData("lastDeathTime") then
-                if CurTime() - character:GetData("lastDeathTime") >= decreaseInterval then
+            if character and IsValid(ply) and character:GetData("lastDeathTime") then
+                if character:GetData("deathTimes", 0) > 0 and CurTime() - character:GetData("lastDeathTime") >= decreaseInterval then
                     character:SetData("deathTimes", math.max(character:GetData("deathTimes", 0) - 1, 0))
                 end
             end
@@ -74,19 +79,19 @@ function PLUGIN:PlayerLoadout(ply)
     local character = ply:GetCharacter()
 
     if character and not ply:IsCombine() then
-		local deathTimes = character:GetData("deathTimes", 0)
+        local deathTimes = character:GetData("deathTimes", 0)
         if deathTimes == 1 then
             -- Add debuffs for the first death
             character:SetHunger(65) -- Reduced hunger value (60 instead of 100)
-			ply:SetHealth(85)
+            ply:SetHealth(85)
         elseif deathTimes == 2 then
             -- Add debuffs for the second death
             character:SetHunger(45) -- Further reduced hunger value (45 instead of 100)
             ply:SetHealth(60) -- Reduced health value (75 instead of 100)
-		elseif deathTimes == 3 then
-            -- Add debuffs for the second death
-            character:SetHunger(25) -- Further reduced hunger value (45 instead of 100)
-            ply:SetHealth(35) -- Reduced health value (75 instead of 100)
+        elseif deathTimes == 3 then
+            -- Add debuffs for the third death
+            character:SetHunger(25) -- Further reduced hunger value (25 instead of 100)
+            ply:SetHealth(35) -- Reduced health value (35 instead of 100)
         end
     end
 end
