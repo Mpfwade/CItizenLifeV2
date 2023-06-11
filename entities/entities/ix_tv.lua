@@ -12,10 +12,37 @@ ENT.bNoPersist = true
 
 ENT.Materials = {
     Material("scripted/breen_fakemonitor_1"),
-    Material("scripted/breen_fakemonitor_1"),
+    Material("perftest/dev_tvmonitor1a"),
 }
 
-ENT.MaterialDuration = 1 -- Duration for each material (in seconds)
+ENT.MaterialDuration = 190 -- Duration for each material (in seconds)
+ENT.Sound = {
+    "vo/breencast/br_instinct01.wav",
+    "vo/breencast/br_instinct02.wav",
+    "vo/breencast/br_instinct03.wav",
+    "vo/breencast/br_instinct04.wav",
+    "vo/breencast/br_instinct05.wav",
+    "vo/breencast/br_instinct06.wav",
+    "vo/breencast/br_instinct07.wav",
+    "vo/breencast/br_instinct08.wav",
+    "vo/breencast/br_instinct09.wav",
+    "vo/breencast/br_instinct10.wav",
+    "vo/breencast/br_instinct11.wav",
+    "vo/breencast/br_instinct12.wav",
+    "vo/breencast/br_instinct13.wav",
+    "vo/breencast/br_instinct14.wav",
+    "vo/breencast/br_instinct15.wav",
+    "vo/breencast/br_instinct16.wav",
+    "vo/breencast/br_instinct17.wav",
+    "vo/breencast/br_instinct18.wav",
+    "vo/breencast/br_instinct19.wav",
+    "vo/breencast/br_instinct20.wav",
+    "vo/breencast/br_instinct21.wav",
+    "vo/breencast/br_instinct22.wav",
+    "vo/breencast/br_instinct23.wav",
+    "vo/breencast/br_instinct24.wav",
+    "vo/breencast/br_instinct25.wav"
+}
 
 if SERVER then
     function ENT:Initialize()
@@ -35,6 +62,9 @@ if SERVER then
         self:SetNWBool("TV_Activated", self.IsActivated) -- Networked variable for activation status
         self:SetNWInt("TV_MaterialIndex", 1) -- Networked variable for current material index
         self.NextMaterialTime = 0 -- Time to change to the next material
+        self.SoundTimer = nil -- Timer for playing sounds
+        self.IsScreenVisible = false
+
     end
 
     function ENT:SpawnFunction(ply, trace)
@@ -49,34 +79,63 @@ if SERVER then
     function ENT:ToggleActivation()
         self.IsActivated = not self.IsActivated
         self:SetNWBool("TV_Activated", self.IsActivated)
-
+    
         if self.IsActivated then
             local curTime = CurTime()
-
+    
             if self.NextMaterialTime <= curTime then
                 local materialIndex = self:GetNWInt("TV_MaterialIndex")
                 materialIndex = materialIndex % #self.Materials + 1
                 self:SetNWInt("TV_MaterialIndex", materialIndex)
-
+    
                 local material = self.Materials[materialIndex]
-
+    
                 -- Set the material for the screen
                 local screen = self:GetNWEntity("TV_Screen")
                 if IsValid(screen) then
                     screen:SetMaterial(material)
                 end
-
+    
                 if self.Sound then
-                    -- Play the sound
-                    self:EmitSound(self.Sound)
+                    -- Play the first sound immediately with DSP effect
+                    local soundIndex = 1
+                    local soundPath = (self.Sound[soundIndex])
+                    self:EmitSound(soundPath, 60, 100, 1, CHAN_AUTO, 50, 59)
+    
+                    -- Create a timer to play the remaining sounds with DSP effect
+                    local soundCount = #self.Sound
+                    local soundDuration = SoundDuration(soundPath)
+                    self.SoundTimer = timer.Create("TV_SoundTimer_" .. self:EntIndex(), soundDuration, soundCount - 1, function()
+                        if self:IsValid() and self.IsActivated then -- Check if the TV is still activated
+                            soundIndex = soundIndex % soundCount + 1
+                            soundPath = self.Sound[soundIndex]
+                            self:EmitSound(soundPath, 60, 100, 1, CHAN_AUTO, 50, 59)
+                        end
+                    end)
                 end
-
+    
                 self.NextMaterialTime = curTime + self.MaterialDuration
             end
         else
+            -- Stop all sounds
+            self:StopAllSounds()
+    
             self:SetNWInt("TV_MaterialIndex", 1) -- Reset the material index to the first material
             self:SetNWEntity("TV_Screen", nil) -- Clear the screen entity
             self.NextMaterialTime = 0 -- Reset the material change time
+        end
+    end
+    
+
+    function ENT:StopAllSounds()
+        if self.SoundTimer then
+            timer.Remove("TV_SoundTimer_" .. self:EntIndex())
+            self.SoundTimer = nil
+        end
+            if self.Sound then
+                for _, sound in ipairs(self.Sound) do
+                    self:StopSound(sound)
+                end    
         end
     end
 
@@ -89,39 +148,22 @@ if SERVER then
 
     function ENT:Think()
         local curTime = CurTime()
-    
+
         if self.IsActivated and self.NextMaterialTime <= curTime then
             self:ToggleActivation()
         end
-    
+
         -- Refresh 3D2D display if MaterialDuration is over
         if self.IsActivated and self.MaterialDuration > 0 and self.NextMaterialTime <= curTime then
             self:RefreshDisplay()
         end
-    
+
         self:NextThink(curTime)
         return true
     end
-    
-    function ENT:RefreshDisplay()
-        if not self:IsValid() then return end
-        self.NextMaterialTime = CurTime() + self.MaterialDuration
-    
-        -- Force clients to refresh the display by updating the material index
-        local materialIndex = self:GetNWInt("TV_MaterialIndex")
-        materialIndex = materialIndex % #self.Materials + 1
-        self:SetNWInt("TV_MaterialIndex", materialIndex)
-    
-        local material = self.Materials[materialIndex]
-    
-        -- Set the material for the screen
-        local screen = self:GetNWEntity("TV_Screen")
-        if IsValid(screen) then
-            screen:SetMaterial(material)
-        end
-    end
-    
+
     function ENT:OnRemove()
+        self:StopAllSounds()
         -- Clear the material on removal
         local screen = self:GetNWEntity("TV_Screen")
         if IsValid(screen) then
@@ -129,12 +171,24 @@ if SERVER then
         end
     end
 else
-    function ENT:Initialize()
-        self.IsScreenVisible = false
-        self.NextMaterialTime = 0 -- Time to change to the next material
+    function ENT:RefreshDisplay()
+        if not self:IsValid() then return end
+        self.NextMaterialTime = CurTime() + self.MaterialDuration
+
+        -- Force clients to refresh the display by updating the material index
+        local materialIndex = self:GetNWInt("TV_MaterialIndex")
+        materialIndex = materialIndex % #self.Materials + 1
+        self:SetNWInt("TV_MaterialIndex", materialIndex)
+
+        local material = self.Materials[materialIndex]
+
+        -- Set the material for the screen
+        local screen = self:GetNWEntity("TV_Screen")
+        if IsValid(screen) then
+            screen:SetMaterial(material)
+        end
     end
-
-
+    
     function ENT:Draw()
         self:DrawModel()
 
