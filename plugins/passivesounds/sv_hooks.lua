@@ -3,21 +3,22 @@ function PLUGIN:EmitRandomChatter(player)
 
     local randomSound = randomSounds[math.random(1, #randomSounds)]
 
-    PlayEventSound(randomSound)
+    if not self:IsPlayerOutside(player) then
+        return -- Don't play the sound if the player is not outside
+    end
+
+    player:EmitSound(randomSound)
 end
 
--- Color(128, 218, 235)
-function PLUGIN:Tick()
-    for k, v in ipairs(player.GetAll()) do
-        local curTime = CurTime()
+function PLUGIN:IsPlayerOutside(player)
+    local startPos = player:GetShootPos()
+    local endPos = startPos + Vector(0, 0, 1000) -- Extend the trace line upwards
 
-        if not self.nextChatterEmit then
-            self.nextChatterEmit = curTime + math.random(100, 300)
-        end
+    local trace = util.TraceLine({
+        start = startPos,
+        endpos = endPos,
+        mask = MASK_SOLID_BRUSHONLY -- Only check against world geometry
+    })
 
-        if curTime >= self.nextChatterEmit then
-            self.nextChatterEmit = nil
-            self:EmitRandomChatter(v)
-        end
-    end
+    return not trace.HitSky -- Return true if the trace doesn't hit the sky
 end
