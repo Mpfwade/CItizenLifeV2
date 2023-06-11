@@ -10,7 +10,7 @@ ITEM.bodyGroups = {
 	["bag"] = 1
 }
 
-ITEM.height = 2
+ITEM.height = 1
 ITEM.width = 1
 ITEM.category = "Clothes/Outfits"
 

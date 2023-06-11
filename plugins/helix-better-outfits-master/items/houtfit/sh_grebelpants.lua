@@ -11,8 +11,8 @@ ITEM.bodyGroups = {
 	["legs"] = 12,
 }
 
-ITEM.height = 2
-ITEM.width = 2
+ITEM.height = 1
+ITEM.width = 1
 ITEM.category = "Armor Items"
 
 ITEM.allowedModels = {

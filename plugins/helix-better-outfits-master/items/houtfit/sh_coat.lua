@@ -1,18 +1,16 @@
-ITEM.name = "Blue Resistance Pants"
-ITEM.description = "A pair of blue long pants, with armor pads on it."
+ITEM.name = "Winter Coat"
+ITEM.description = "A coat made for winter."
 ITEM.model = "models/tnb/items/pants_rebel.mdl"
 ITEM.outfitCategory = "Pants"
 ITEM.noResetBodyGroups = true
 ITEM.bDropOnDeath = true
-ITEM.fitData = "bluerebpants1"
 
 ITEM.bodyGroups = {
-	["legs"] = 14
+	["legs"] = 21
 }
 
 ITEM.height = 1
 ITEM.width = 1
-ITEM.category = "Armor Items"
 
 ITEM.allowedModels = {
 	"models/humans/pandafishizens/female_01.mdl",
@@ -44,14 +42,3 @@ ITEM.allowedModels = {
 
 
 }
-
-ITEM.fitArmor = 15
-
-function ITEM:PopulateTooltip(tooltip)
-	local illitem = tooltip:AddRow("illitem")
-	illitem:SetBackgroundColor(Color(255, 0, 0))
-	illitem:SetText("69, possession of resources (CONTRABAND).")
-	illitem:SetFont("DermaDefault")
-	illitem:SetExpensiveShadow(0.5)
-	illitem:SizeToContents()
-end
