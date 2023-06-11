@@ -11,7 +11,7 @@ ENT.bNoPersist = true
 
 ENT.Materials = {Material("perftest/dev_tvmonitor1a"), Material("scripted/breen_fakemonitor_1"), Material("effects/breenscreen_static01_"), Material("effects/tvscreen_noise001a")}
 
-ENT.MaterialDuration = 15 -- Duration for each material (in seconds)
+ENT.MaterialDuration = math.random(5, 20) -- Duration for each material (in seconds)
 
 ENT.TVSoundinstinct = {"vo/breencast/br_instinct01.wav", "vo/breencast/br_instinct02.wav", "vo/breencast/br_instinct03.wav", "vo/breencast/br_instinct04.wav", "vo/breencast/br_instinct05.wav", "vo/breencast/br_instinct06.wav", "vo/breencast/br_instinct07.wav", "vo/breencast/br_instinct08.wav", "vo/breencast/br_instinct09.wav", "vo/breencast/br_instinct10.wav", "vo/breencast/br_instinct11.wav", "vo/breencast/br_instinct12.wav", "vo/breencast/br_instinct13.wav", "vo/breencast/br_instinct14.wav", "vo/breencast/br_instinct15.wav", "vo/breencast/br_instinct16.wav", "vo/breencast/br_instinct17.wav", "vo/breencast/br_instinct18.wav", "vo/breencast/br_instinct19.wav", "vo/breencast/br_instinct20.wav", "vo/breencast/br_instinct21.wav", "vo/breencast/br_instinct22.wav", "vo/breencast/br_instinct23.wav", "vo/breencast/br_instinct24.wav", "vo/breencast/br_instinct25.wav"}
 
@@ -54,7 +54,6 @@ if SERVER then
     
         if self.IsActivated then
             self:EmitSound("buttons/lightswitch2.wav", 75, 100)
-    
             local curTime = CurTime()
     
             if self.NextMaterialTime <= curTime then
@@ -62,44 +61,40 @@ if SERVER then
                 materialIndex = materialIndex % #self.Materials + 1
                 self:SetNWInt("TV_MaterialIndex", materialIndex)
                 local material = self.Materials[materialIndex]
-    
                 -- Set the material for the screen
                 local screen = self:GetNWEntity("TV_Screen")
+    
                 if IsValid(screen) then
                     screen:SetMaterial(material)
                 end
     
-                local soundTable
-                local additionalDuration = 0
+                local soundTable = self.TVSoundinstinct
+                local additionalDuration = 2
     
-                if materialIndex % 2 == 1 then
-                    soundTable = self.TVSoundinstinct
-                else
+                if math.random(2) == 1 then
                     soundTable = self.TVSoundwelcome
                     additionalDuration = 5
                 end
     
                 if soundTable then
+    
+                    -- Play the first sound immediately with DSP effect
+                    local soundIndex = 1
+                    local soundPath = soundTable[soundIndex]
+                    local soundDuration = SoundDuration(soundPath) + additionalDuration
+                    self:EmitSound(soundPath, 60, 100, 1, CHAN_AUTO, 0, 59)
+    
+                    -- Create a timer to play the remaining sounds with DSP effect
                     local soundCount = #soundTable
-    
-                    if soundCount > 0 then
-                        -- Play the first sound immediately with DSP effect
-                        local soundIndex = 1
-                        local soundPath = soundTable[soundIndex]
-                        local soundDuration = SoundDuration(soundPath) + additionalDuration
-                        self:EmitSound(soundPath, 60, 100, 1, CHAN_AUTO, 0, 59)
-    
-                        -- Create a timer to play the remaining sounds with DSP effect
-                        self.SoundTimer = timer.Create("TV_SoundTimer_" .. self:EntIndex(), soundDuration, soundCount - 1, function()
-                            -- Check if the TV is still activated
-                            if self:IsValid() and self.IsActivated then
-                                soundIndex = soundIndex % soundCount + 1
-                                soundPath = soundTable[soundIndex]
-                                soundDuration = SoundDuration(soundPath) + additionalDuration
-                                self:EmitSound(soundPath, 60, 100, 1, CHAN_AUTO, 0, 59)
-                            end
-                        end)
-                    end
+                    self.SoundTimer = timer.Create("TV_SoundTimer_" .. self:EntIndex(), soundDuration, soundCount - 1, function()
+                        -- Check if the TV is still activated
+                        if self:IsValid() and self.IsActivated then
+                            soundIndex = soundIndex % soundCount + 1
+                            soundPath = soundTable[soundIndex]
+                            soundDuration = SoundDuration(soundPath) + additionalDuration
+                            self:EmitSound(soundPath, 60, 100, 1, CHAN_AUTO, 0, 59)
+                        end
+                    end)
                 end
     
                 self.NextMaterialTime = curTime + self.MaterialDuration
@@ -118,7 +113,6 @@ if SERVER then
             self.NextMaterialTime = 0 -- Reset the material change time
         end
     end
-    
     
     function ENT:StopAllSounds()
         if self.SoundTimer then
@@ -139,6 +133,14 @@ if SERVER then
         if soundTable then
             for _, sound in ipairs(soundTable) do
                 self:StopSound(sound)
+            end
+
+            soundTable = self.TVSoundwelcome and self.TVSoundinstinct
+
+            if soundTable then
+                for _, sound in ipairs(soundTable) do
+                    self:StopSound(sound)
+                end
             end
         end
     end
