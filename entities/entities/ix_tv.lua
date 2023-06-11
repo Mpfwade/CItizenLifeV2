@@ -100,7 +100,7 @@ if SERVER then
                     -- Play the first sound immediately with DSP effect
                     local soundIndex = 1
                     local soundPath = (self.Sound[soundIndex])
-                    self:EmitSound(soundPath, 75, 100, 1, CHAN_AUTO, 0, 59)
+                    self:EmitSound(soundPath, 60, 100, 1, CHAN_AUTO, 0, 59)
     
                     -- Create a timer to play the remaining sounds with DSP effect
                     local soundCount = #self.Sound
@@ -109,7 +109,7 @@ if SERVER then
                         if self:IsValid() and self.IsActivated then -- Check if the TV is still activated
                             soundIndex = soundIndex % soundCount + 1
                             soundPath = self.Sound[soundIndex]
-                            self:EmitSound(soundPath, 75, 100, 1, CHAN_AUTO, 0, 59)
+                            self:EmitSound(soundPath, 60, 100, 1, CHAN_AUTO, 0, 59)
                         end
                     end)
                 end
