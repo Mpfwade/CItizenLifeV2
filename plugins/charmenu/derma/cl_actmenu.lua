@@ -163,6 +163,15 @@ local function ixActMenu()
         Perso:SetSize(36, 20)
         left:AddItem(Perso)
 
+        local Perso = vgui.Create("DLabel", frame)
+        Perso:Dock(TOP)
+        Perso:DockMargin(8, 0, 0, 0)
+        Perso:SetFont("AdminChatFont")
+        Perso:SetText("Warmth : " .. LocalPlayer():GetCharacter():GetWarmth())
+        Perso:SetSize(36, 20)
+        left:AddItem(Perso)
+        
+
     local but = vgui.Create("DButton", frame)
     but:SetText("Apply")
     but:SetFont("ixMonoMediumFont")
@@ -174,7 +183,20 @@ local function ixActMenu()
         RunConsoleCommand("say", "/apply")
     end
 
-    left:AddItem(but)
+
+local but = vgui.Create("DButton", frame)
+but:SetText("Apply")
+but:SetFont("ixMonoMediumFont")
+but:SetSize(36, 50)
+but:Dock(TOP)
+
+but.DoClick = function()
+    frame:Close()
+    RunConsoleCommand("say", "/apply")
+end
+
+left:AddItem(but)
+
 
 
 local mat = vgui.Create("Material", frame)
