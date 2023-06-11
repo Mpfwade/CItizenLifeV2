@@ -11,7 +11,7 @@ ENT.bNoPersist = true
 
 ENT.Materials = {Material("perftest/dev_tvmonitor1a"), Material("scripted/breen_fakemonitor_1"), Material("effects/breenscreen_static01_"), Material("effects/tvscreen_noise001a")}
 
-ENT.MaterialDuration = math.random(5, 8) -- Duration for each material (in seconds)
+ENT.MaterialDuration = math.random(3, 9) -- Duration for each material (in seconds)
 
 ENT.TVSoundinstinct = {"vo/breencast/br_instinct01.wav", "vo/breencast/br_instinct02.wav", "vo/breencast/br_instinct03.wav", "vo/breencast/br_instinct04.wav", "vo/breencast/br_instinct05.wav", "vo/breencast/br_instinct06.wav", "vo/breencast/br_instinct07.wav", "vo/breencast/br_instinct08.wav", "vo/breencast/br_instinct09.wav", "vo/breencast/br_instinct10.wav", "vo/breencast/br_instinct11.wav", "vo/breencast/br_instinct12.wav", "vo/breencast/br_instinct13.wav", "vo/breencast/br_instinct14.wav", "vo/breencast/br_instinct15.wav", "vo/breencast/br_instinct16.wav", "vo/breencast/br_instinct17.wav", "vo/breencast/br_instinct18.wav", "vo/breencast/br_instinct19.wav", "vo/breencast/br_instinct20.wav", "vo/breencast/br_instinct21.wav", "vo/breencast/br_instinct22.wav", "vo/breencast/br_instinct23.wav", "vo/breencast/br_instinct24.wav", "vo/breencast/br_instinct25.wav"}
 
