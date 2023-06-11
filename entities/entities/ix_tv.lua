@@ -54,7 +54,7 @@ if SERVER then
 
         if physics:IsValid() then
             physics:Wake()
-            physics:SetMass(70)
+            physics:SetMass(10)
         end
 
         self:StartMotionController()

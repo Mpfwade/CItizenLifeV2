@@ -21,10 +21,6 @@ and then add `ITEM.bDropOnDeath = true` to any item that you want to be placed i
 ]]
 PLUGIN.hardCorpseMax = 64
 
-ix.lang.AddTable("english", {
-    searchingCorpse = "Searching corpse..."
-})
-
 ix.config.Add("persistentCorpses", true, "Whether or not corpses remain on the map after a player dies and respawns.", nil, {
     category = "Persistent Corpses"
 })
@@ -42,18 +38,6 @@ ix.config.Add("corpseDecayTime", 60, "How long it takes for a corpse to decay in
         min = 0,
         max = 1800
     },
-    category = "Persistent Corpses"
-})
-
-ix.config.Add("corpseSearchTime", 1, "How long it takes to search a corpse.", nil, {
-    data = {
-        min = 0,
-        max = 60
-    },
-    category = "Persistent Corpses"
-})
-
-ix.config.Add("dropItemsOnDeath", false, "Whether or not to drop specific items on death.", nil, {
     category = "Persistent Corpses"
 })
 
@@ -97,20 +81,9 @@ if SERVER then
         end
     end
 
-    function PLUGIN:RemoveEquippableItem(client, item)
-        if item.Unequip then
-            item:Unequip(client)
-        elseif item.RemoveOutfit then
-            item:RemoveOutfit(client)
-        elseif item.RemovePart then
-            item:RemovePart(client)
-        end
-    end
-
-	function PLUGIN:DoPlayerDeath(client, attacker, damageinfo)
-		if not ix.config.Get("persistentCorpses", true) then return end
-		if hook.Run("ShouldSpawnPlayerCorpse") == false then return end
-
+    function PLUGIN:DoPlayerDeath(client, attacker, damageinfo)
+        if not ix.config.Get("persistentCorpses", true) then return end
+        if hook.Run("ShouldSpawnPlayerCorpse") == false then return end
         -- remove old corpse if we've hit the limit
         local maxCorpses = ix.config.Get("corpseMax", 8)
         if maxCorpses == 0 then return end
@@ -171,26 +144,8 @@ if SERVER then
         hook.Run("OnPlayerCorpseCreated", client, entity)
     end
 
-	function PLUGIN:OnPlayerCorpseCreated(client, entity)
-		if not ix.config.Get("dropItemsOnDeath", false) or not client:GetCharacter() then return end
-		client:SetLocalVar("ragdoll", entity:EntIndex())
-		local character = client:GetCharacter()
-		local charInventory = character:GetInventory()
-	
-		if ix.config.Get("dropItemsOnDeath") then
-			for _, slot in pairs(charInventory.slots) do
-				for _, item in pairs(slot) do
-					if item.bDropOnDeath then
-						if item:GetData("equip") then
-							self:RemoveEquippableItem(client, item)
-						end
-	
-						ix.item.Spawn(item.uniqueID, client:GetPos() + Vector(0, 0, 40), nil, client:GetAngles())
-						item:Remove() -- Remove the item from the inventory
-					end
-				end
-			end
-		end
-	end
+    function PLUGIN:OnPlayerCorpseCreated(client, entity)
+        if not ix.config.Get("dropItemsOnDeath", false) or not client:GetCharacter() then return end
+        client:SetLocalVar("ragdoll", entity:EntIndex())
+    end
 end
-	
