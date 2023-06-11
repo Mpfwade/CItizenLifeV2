@@ -119,12 +119,10 @@ function PLUGIN:HUDPaint()
 	local position = LocalPlayer():GetPos()
 	local angle = LocalPlayer():GetAimVector():Angle()
 	local zone = LocalPlayer():GetArea() or "unknown"
-	local char = LocalPlayer():GetCharacter()
 
 	draw.SimpleText("POS ("..math.floor(position[1])..", "..math.floor(position[2])..", "..math.floor(position[3])..")", "ixScannerFont", x + 8, y + 8, color_white)
 	draw.SimpleText("ANG ("..math.floor(angle[1])..", "..math.floor(angle[2])..", "..math.floor(angle[3])..")", "ixScannerFont", x + 8, y + 24, color_white)
 	draw.SimpleText("NAME  ("..LocalPlayer():Name()..")", "ixScannerFont", x + 8, y + 40, color_white)
-	draw.SimpleText("CID  ("..	char:GetData("cid", "00000")..")", "ixScannerFont", x + 8, y + 103, color_white)
 	draw.SimpleText("ZM  ("..(math.Round(zoom / 40, 2) * 100).."%)", "ixScannerFont", x + 8, y + 56, color_white)
 	draw.SimpleText("ZONE("..(zone)..")", "ixScannerFont", x + 8, y + 88, color_white)
 
