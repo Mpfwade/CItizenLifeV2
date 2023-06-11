@@ -795,3 +795,17 @@ if SERVER then
         if move:GetImpulseCommand() == 103 then return true end -- The impulse command for "+mmm" is 103 -- Return true to block the command
     end)
 end
+
+netstream.Hook("PlayerChatTextChanged", function(client, key)
+	if (client:IsCombine() and !client.bTypingBeep) then
+		client:EmitSound("hlacomvoice/beepboops/combine_radio_on_09.wav")
+		client.bTypingBeep = true
+	end
+end)
+
+netstream.Hook("PlayerFinishChat", function(client)
+	if (client:IsCombine() and client.bTypingBeep) then
+		client:EmitSound("hlacomvoice/beepboops/combine_radio_off_06.wav")
+		client.bTypingBeep = nil
+	end
+end)

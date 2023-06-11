@@ -67,7 +67,7 @@ ix.command.Add("Apply", {
 
         if (ply:Team() == FACTION_CITIZEN) and char:GetInventory():HasItem("cid") then
             ply:EmitSound("physics/cardboard/cardboard_box_impact_soft7.wav")
-            ix.chat.Send(ply, "me", "shows their identification card showing: (Name: " .. ply:Nick() .. " | CID: " .. char:GetData("cid", "00000") .. " | Apartment: " .. char:GetData("employment", "Homeless") .. ") ", false)
+            ix.chat.Send(ply, "me", "shows their identification card showing: (Name: " .. ply:Nick() .. " | CID: " .. char:GetData("cid", "00000") .. ") ", false)
             ply:ConCommand("ix_act_Point")
         elseif (ply:Team() == FACTION_CITIZEN) and char:GetInventory():HasItem("transfer_papers") then
             ply:EmitSound("physics/cardboard/cardboard_box_impact_soft7.wav")

@@ -3,6 +3,19 @@
 ---------------------------------------------------------------------------]]
 --
 
+
+function Schema:ChatTextChanged(text)
+	if (LocalPlayer():IsCombine()) then
+		netstream.Start("PlayerChatTextChanged", text)
+	end
+end
+
+
+function Schema:FinishChat()
+	netstream.Start("PlayerFinishChat")
+end
+
+
 function Schema:ShouldDrawCrosshair()
     return ix.option.Get("Crosshair")
 end

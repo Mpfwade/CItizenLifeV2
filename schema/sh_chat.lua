@@ -39,11 +39,6 @@ ix.chat.Register("radio", {
 		if not (listener:IsCombine() or listener:IsCA() or listener:IsDispatch()) then
 			return false
 		else 
-			if (listener:Team() == FACTION_OTA) then
-				speaker:EmitSound("hlacomvoice/beepboops/combine_radio_off_09.wav")
-			else
-				listener:EmitSound("hlacomvoice/beepboops/combine_radio_off_11.wav", 40, math.random(90,110), 0.3)
-			end
 			return true
 		end
 	end,
@@ -73,12 +68,6 @@ ix.chat.Register("ptradio", {
             if listener:GetNetVar("squad") ~= speaker:GetNetVar("squad") then
                 return false
             end
-
-            if listener:Team() == FACTION_OTA then
-                speaker:EmitSound("hlacomvoice/beepboops/combine_radio_off_09.wav")
-            else
-                listener:EmitSound("hlacomvoice/beepboops/combine_radio_off_11.wav", 40, math.random(90, 110), 0.3)
-            end
             return true
         end
     end,
@@ -106,11 +95,7 @@ ix.chat.Register("importantradio", {
 		if not (listener:IsCombine() or listener:IsCA() or listener:IsDispatch()) then
 			return false
 		else
-			if (listener:Team() == FACTION_OTA) then
-				speaker:EmitSound("hlacomvoice/beepboops/combine_radio_off_09.wav")
-			else
-				listener:EmitSound("hlacomvoice/beepboops/combine_radio_off_11.wav", 40, math.random(90,110), 0.3)
-			end
+
 			listener:EmitSound("buttons/combine_button_locked.wav", 40, math.random(90,110))
 			return true
 		end
@@ -138,11 +123,7 @@ ix.chat.Register("commandradio", {
 		if not listener:IsCombineCommand() then
 			return false
 		else
-			if (listener:Team() == FACTION_OTA) then
-				speaker:EmitSound("hlacomvoice/beepboops/combine_radio_off_09.wav")
-			else
-				listener:EmitSound("hlacomvoice/beepboops/combine_radio_off_11.wav", 40, math.random(90,110), 0.3)
-			end
+
 			return true
 		end
 	end,
@@ -169,11 +150,6 @@ ix.chat.Register("dispatchradio", {
 		if not (listener:IsCombine() or listener:IsCA() or listener:IsDispatch()) then
 			return false
 		else
-			if (speaker:Team() == FACTION_OTA) then
-				speaker:EmitSound("hlacomvoice/beepboops/combine_radio_off_09.wav")
-			else
-				listener:EmitSound("hlacomvoice/beepboops/combine_radio_off_11.wav")
-			end
 			return true
 		end
 	end,
@@ -216,11 +192,6 @@ ix.chat.Register("dispatchradioforce", {
 		if not (listener:IsCombine() or listener:IsCA() or listener:IsDispatch()) then
 			return false
 		else
-			if (speaker:Team() == FACTION_OTA) then
-				speaker:EmitSound("hlacomvoice/beepboops/combine_radio_off_09.wav")
-			else
-				listener:EmitSound("hlacomvoice/beepboops/combine_radio_off_11.wav")
-			end
 			return true
 		end
 	end,
@@ -258,20 +229,14 @@ function Schema:InitializedChatClasses()
 			local color = self:GetColor(speaker, text, info)
 			local name = anonymous and L"someone" or hook.Run("GetCharacterName", speaker, "ic") or (IsValid(speaker) and speaker:Name() or "Console")
 
-			if ( speaker.ixBandanaEquipped ) then
+			if (speaker.ixBandanaEquipped) then
 				name = "Masked Person"
 			end
 
-			if ( speaker.ixGasmaskEquipped ) then
+			if (speaker.ixGasmaskEquipped) then
 				name = "Masked Person"
 			end
 
-			if ( speaker:Team() == FACTION_OTA ) then 
-				speaker:EmitSound("hlacomvoice/beepboops/combine_radio_off_09.wav")
-            end
-			if ( speaker:Team() == FACTION_CCA ) then 
-				speaker:EmitSound("hlacomvoice/beepboops/combine_radio_off_11.wav")
-			end 
 
 			-- to you - inspired by willard networks
 			local lookingAt = speaker:GetEyeTraceNoCursor().Entity == LocalPlayer()
@@ -280,6 +245,7 @@ function Schema:InitializedChatClasses()
 		end,
 		CanHear = ix.config.Get("chatRange", 280)
 	})
+
 
 	ix.chat.Register("w", {
 		format = " \"%s\"",
