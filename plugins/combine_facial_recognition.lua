@@ -38,7 +38,7 @@ if CLIENT then
 	})
 
 	function PLUGIN:HUDPaint()
-		if not LocalPlayer():IsCombine() then
+		if not LocalPlayer():Team() == FACTION_CCA then
 			return
 		end
 

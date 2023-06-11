@@ -54,6 +54,7 @@ if SERVER then
     
         if self.IsActivated then
             self:EmitSound("buttons/lightswitch2.wav", 75, 100)
+    
             local curTime = CurTime()
     
             if self.NextMaterialTime <= curTime then
@@ -61,40 +62,44 @@ if SERVER then
                 materialIndex = materialIndex % #self.Materials + 1
                 self:SetNWInt("TV_MaterialIndex", materialIndex)
                 local material = self.Materials[materialIndex]
+    
                 -- Set the material for the screen
                 local screen = self:GetNWEntity("TV_Screen")
-    
                 if IsValid(screen) then
                     screen:SetMaterial(material)
                 end
     
-                local soundTable = self.TVSoundinstinct
+                local soundTable
                 local additionalDuration = 0
     
-                if math.random(2) == 1 then
+                if materialIndex % 2 == 1 then
+                    soundTable = self.TVSoundinstinct
+                else
                     soundTable = self.TVSoundwelcome
                     additionalDuration = 5
                 end
     
                 if soundTable then
-    
-                    -- Play the first sound immediately with DSP effect
-                    local soundIndex = 1
-                    local soundPath = soundTable[soundIndex]
-                    local soundDuration = SoundDuration(soundPath) + additionalDuration
-                    self:EmitSound(soundPath, 60, 100, 1, CHAN_AUTO, 0, 59)
-    
-                    -- Create a timer to play the remaining sounds with DSP effect
                     local soundCount = #soundTable
-                    self.SoundTimer = timer.Create("TV_SoundTimer_" .. self:EntIndex(), soundDuration, soundCount - 1, function()
-                        -- Check if the TV is still activated
-                        if self:IsValid() and self.IsActivated then
-                            soundIndex = soundIndex % soundCount + 1
-                            soundPath = soundTable[soundIndex]
-                            soundDuration = SoundDuration(soundPath) + additionalDuration
-                            self:EmitSound(soundPath, 60, 100, 1, CHAN_AUTO, 0, 59)
-                        end
-                    end)
+    
+                    if soundCount > 0 then
+                        -- Play the first sound immediately with DSP effect
+                        local soundIndex = 1
+                        local soundPath = soundTable[soundIndex]
+                        local soundDuration = SoundDuration(soundPath) + additionalDuration
+                        self:EmitSound(soundPath, 60, 100, 1, CHAN_AUTO, 0, 59)
+    
+                        -- Create a timer to play the remaining sounds with DSP effect
+                        self.SoundTimer = timer.Create("TV_SoundTimer_" .. self:EntIndex(), soundDuration, soundCount - 1, function()
+                            -- Check if the TV is still activated
+                            if self:IsValid() and self.IsActivated then
+                                soundIndex = soundIndex % soundCount + 1
+                                soundPath = soundTable[soundIndex]
+                                soundDuration = SoundDuration(soundPath) + additionalDuration
+                                self:EmitSound(soundPath, 60, 100, 1, CHAN_AUTO, 0, 59)
+                            end
+                        end)
+                    end
                 end
     
                 self.NextMaterialTime = curTime + self.MaterialDuration
@@ -113,6 +118,7 @@ if SERVER then
             self.NextMaterialTime = 0 -- Reset the material change time
         end
     end
+    
     
     function ENT:StopAllSounds()
         if self.SoundTimer then
@@ -133,14 +139,6 @@ if SERVER then
         if soundTable then
             for _, sound in ipairs(soundTable) do
                 self:StopSound(sound)
-            end
-
-            soundTable = self.TVSoundwelcome and self.TVSoundinstinct
-
-            if soundTable then
-                for _, sound in ipairs(soundTable) do
-                    self:StopSound(sound)
-                end
             end
         end
     end
