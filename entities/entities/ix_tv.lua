@@ -17,7 +17,7 @@ ENT.Materials = {
     Material("effects/tvscreen_noise001a")
 }
 
-ENT.MaterialDuration = 5 -- Duration for each material (in seconds)
+ENT.MaterialDuration = 15 -- Duration for each material (in seconds)
 ENT.TVSound = {
     "vo/breencast/br_instinct01.wav",
     "vo/breencast/br_instinct02.wav",
@@ -153,7 +153,7 @@ if SERVER then
         self:EmitSound("buttons/lightswitch2.wav", 75, 100)
         self:ToggleActivation()
     end
-    
+
     function ENT:RefreshDisplay()
         if not self:IsValid() then return end
         self.NextMaterialTime = CurTime() + self.MaterialDuration
