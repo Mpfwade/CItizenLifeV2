@@ -96,7 +96,7 @@ function PLUGIN:WarmthTick(client, character, delta)
 	local newWarmth = math.Clamp(warmth - scale * (delta / ix.config.Get("warmthLossTime", 5)), 0, 100)
 
 	-- Increase the warmth value by 1 if it exceeds 99
-	if newWarmth > 0.99 then
+	if newWarmth > 0.99 and warmth <= 99 then
 		newWarmth = newWarmth + 1
 	end
 

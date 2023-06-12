@@ -73,6 +73,8 @@ concommand.Add("ix_selector_cwu", function(ply, cmd, args)
                 if item:GetData("equip") and item.category == "Clothing" or item.category == "Cloths/Outfits" then
                     -- Unequip the item
                     item:RemoveOutfit(ply)
+					item:SetData("equip", false)
+					item:OnUnequipped()
                 elseif item.category == "Armor Items" or item.category == "Weapons" or item.category == "Weapons" and item.category == "Armor Items" then
                     ply:ChatPrint("You cannot change your job while having illegal items!")
 					return false

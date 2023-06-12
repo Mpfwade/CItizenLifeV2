@@ -8,8 +8,19 @@ Description: No Job.]],
     xp = 0,
     class = CLASS_CITIZEN,
     loadout = function(ply)
-        ply:SetBodygroup(2, 1)
-        ply:SetBodygroup(3, 1)
+        ply:SetBodygroup(1, 0)
+        ply:SetBodygroup(2, 0)
+        ply:SetBodygroup(3, 0)
+        ply:SetBodygroup(4, 0)
+        ply:SetBodygroup(5, 0)
+        ply:SetBodygroup(6, 0)
+        ply:SetBodygroup(7, 0)
+        ply:SetBodygroup(8, 0)
+        ply:SetBodygroup(9, 0)
+        ply:SetBodygroup(10, 0)
+        ply:SetBodygroup(11, 0)
+        ply:SetBodygroup(12, 0)
+        ply:SetBodygroup(13, 0)
     end,
 }
 
