@@ -137,7 +137,7 @@ function PLUGIN:PlayerDeath(victim, inflictor, attacker)
     if victim:Team() == FACTION_CCA then
         ccaDeaths = ccaDeaths + 1
 
-        if not ccaDeathTimer and ix.config.Get("cityCode", 0) then
+        if not ccaDeathTimer and ix.config.Get("cityCode", 0) == 0 then
             StartCivilUnrest()
             ccaDeathTimer = timer.Create("CCADEATHCHECK", 300, 1, StopCivilUnrest)
         end
@@ -145,12 +145,12 @@ function PLUGIN:PlayerDeath(victim, inflictor, attacker)
 end
 
 timer.Create("CCADEATHCHECK", 300, 0, function()
-    if ccaDeaths == 0 and ccaDeathTimer and ix.config.Get("cityCode", 1) then
+    if ccaDeaths == 0 and ccaDeathTimer and ix.config.Get("cityCode", 1) == 1 then
         StopCivilUnrest()
     end
 end)
 
-local traumaThreshold = 15 -- The number of times a player needs to be hurt to trigger a city code change
+local traumaThreshold = 5 -- The number of times a player needs to be hurt to trigger a city code change
 local traumaCooldown = 15 -- The cooldown (in seconds) between trauma notifications
 local playerTrauma = {}
 
@@ -163,7 +163,7 @@ function PLUGIN:PlayerHurt(ply, attacker, health, damage)
 
     playerTrauma[ply] = playerTrauma[ply] + 1
 
-    if playerTrauma[ply] >= traumaThreshold then
+    if playerTrauma[ply] >= traumaThreshold and ix.config.Get("cityCode", 0) == 0 and not ccaDeathTimer then
         StartCivilUnrest()
     end
 
@@ -185,14 +185,14 @@ function PLUGIN:PlayerHurt(ply, attacker, health, damage)
 end
 
 local function ResetPlayerTrauma(ply)
-    if ply:Team() == FACTION_CCA and not ix.config.Get("cityCode", 0) then
+    if ply:Team() == FACTION_CCA and ix.config.Get("cityCode", 1) == 1 and not ccaDeathTimer then
         playerTrauma[ply] = 0
         StopCivilUnrest()
     end
 end
 
-timer.Create("ResetPlayerTrauma", traumaCooldown, 0, function()
-    if not ix.config.Get("cityCode", 0) then
+timer.Create("ResetPlayerTrauma", 300, 0, function()
+    if ix.config.Get("cityCode", 1) == 1 then
         for _, ply in ipairs(player.GetAll()) do
             ResetPlayerTrauma(ply)
         end
