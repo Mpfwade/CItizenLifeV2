@@ -72,10 +72,33 @@ function PLUGIN:WarmthTick(client, character, delta)
 		end
 	end
 
+	local equippedItems = {
+		["coat"] = -0.10,
+		["bluebeanie"] = -0.3,
+		["greenbeanie"] = -0.3,
+		["gloves"] = -0.1,
+		-- Add more items and their corresponding scale values here
+	}
+
+	if character:GetInventory() then
+		for itemID, itemScale in pairs(equippedItems) do
+			local item = character:GetInventory():GetItemsByUniqueID(itemID)[1]
+			if item and item:GetData("equip") == true then
+				-- Decrease the time it takes for the player to get cold based on the number of equipped items
+				scale = scale * itemScale
+			end
+		end
+	end
+
 	-- update character warmth
 	local health = client:Health()
 	local warmth = character:GetWarmth()
 	local newWarmth = math.Clamp(warmth - scale * (delta / ix.config.Get("warmthLossTime", 5)), 0, 100)
+
+	-- Increase the warmth value by 1 if it exceeds 99
+	if newWarmth > 0.99 then
+		newWarmth = newWarmth + 1
+	end
 
 	character:SetWarmth(newWarmth)
 
@@ -83,7 +106,7 @@ function PLUGIN:WarmthTick(client, character, delta)
 		local damage = ix.config.Get("warmthDamage", 2)
 
 		if (damage > 0 and health > 5) then
-			-- damage the player if we've ran out of warmth
+			-- damage the player if we've run out of warmth
 			client:SetHealth(math.max(5, client:Health() - damage))
 		elseif (newWarmth == 0 and ix.config.Get("warmthKill", false)) then
 			-- kill the player if necessary

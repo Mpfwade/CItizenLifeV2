@@ -35,20 +35,7 @@ function ITEM:RemoveOutfit(client)
     local fitArmor = self.fitArmor or 0
     self:SetData("equip", false)
 
-    if client.isEquipingOutfit == true then
-        client:ChatPrint("I can only put on take off one peice of clothing at a time.")
-
-        return false
-    end
-
     client:EmitSound("npc/combine_soldier/zipline_clothing" .. math.random(1, 2) .. ".wav")
-    client:ForceSequence("photo_react_startle", nil, 0.85, false)
-    client.isEquipingOutfit = true
-
-    timer.Simple(0.85, function()
-        client:ForceSequence()
-        client.isEquipingOutfit = false
-    end)
 
     if character:GetData("oldModel" .. self.outfitCategory) then
         character:SetModel(character:GetData("oldModel" .. self.outfitCategory))
@@ -151,7 +138,7 @@ ITEM.functions.EquipUn = {
     OnCanRun = function(item)
         local client = item.player
 
-        return not IsValid(item.entity) and IsValid(client) and item:GetData("equip") == true and hook.Run("CanPlayerUnequipItem", client, item) ~= false and item.invID == client:GetCharacter():GetInventory():GetID()
+        return not IsValid(item.entity) and IsValid(client) and item:GetData("equip") == true and hook.Run("CanPlayerUnequipItem", client, item) ~= false and item.invID == client:GetCharacter():GetInventory():GetID() 
     end
 }
 
@@ -176,7 +163,7 @@ ITEM.functions.Equip = {
         client.isEquipingOutfit = true
 
         timer.Simple(0.85, function()
-            client:ForceSequence()
+            client:LeaveSequence()
             client.isEquipingOutfit = false
         end)
 
@@ -291,7 +278,10 @@ end
 function ITEM:OnRemoved()
     if self.invID ~= 0 and self:GetData("equip") then
         self.player = self:GetOwner()
-        self:RemoveOutfit(self.player)
+        local character = self.player:GetCharacter()
+        local fitArmor = self.fitArmor or 0
+        unarmorPlayer(self.player, self.player, fitArmor)
+        character:SetData(self.fitData, self.player:Armor() - fitArmor)
         self.player = nil
     end
 end
@@ -303,7 +293,7 @@ function ITEM:OnUnequipped()
 end
 
 function ITEM:CanEquipOutfit()
-    return true
+        return true
 end
 
 if SERVER then
