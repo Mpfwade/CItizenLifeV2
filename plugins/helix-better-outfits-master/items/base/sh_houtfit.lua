@@ -7,7 +7,6 @@ ITEM.height = 1
 ITEM.outfitCategory = "model"
 ITEM.pacData = {}
 
--- ITEM.fitData = "dataOutfit"
 local function armorPlayer(client, target, amount)
     if client:Alive() and target:Alive() then
         target:SetArmor(amount)
@@ -153,7 +152,7 @@ ITEM.functions.Equip = {
         local items = char:GetInventory():GetItems()
 
         if client.isEquipingOutfit == true then
-            client:ChatPrint("I can only put on one peice of clothing at a time.")
+            client:ChatPrint("I can only put on one piece of clothing at a time.")
 
             return false
         end
@@ -248,6 +247,7 @@ ITEM.functions.Equip = {
         if item.fitArmor then
             armorPlayer(item.player, item.player, item.fitArmor + client:Armor())
             char:SetData(item.fitData, item.fitArmor + client:Armor())
+            char:SetData("armor", math.Clamp(item.player:Armor(), 0, item.fitArmor))
         end
 
         if item.name == "Bandana" then
@@ -278,10 +278,7 @@ end
 function ITEM:OnRemoved()
     if self.invID ~= 0 and self:GetData("equip") then
         self.player = self:GetOwner()
-        local character = self.player:GetCharacter()
-        local fitArmor = self.fitArmor or 0
-        unarmorPlayer(self.player, self.player, fitArmor)
-        character:SetData(self.fitData, self.player:Armor() - fitArmor)
+        self:RemoveOutfit(self.player)
         self.player = nil
     end
 end
@@ -293,7 +290,7 @@ function ITEM:OnUnequipped()
 end
 
 function ITEM:CanEquipOutfit()
-        return true
+    return true
 end
 
 if SERVER then
@@ -304,4 +301,10 @@ if SERVER then
     net.Receive("ixBandanaUnEquip", function()
         LocalPlayer().ixBandanaEquipped = nil
     end)
+end
+
+function ITEM:OnLoadout()
+    if self:GetData("equip") then
+        self:SetData("equip", false)
+    end
 end
