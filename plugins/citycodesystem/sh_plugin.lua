@@ -139,18 +139,18 @@ function PLUGIN:PlayerDeath(victim, inflictor, attacker)
 
         if not ccaDeathTimer and ix.config.Get("cityCode", 0) == 0 then
             StartCivilUnrest()
-            ccaDeathTimer = timer.Create("CCADEATHCHECK", 300, 1, StopCivilUnrest)
+            ccaDeathTimer = timer.Create("CCADEATHCHECK", 480, 1, StopCivilUnrest)
         end
     end
 end
 
-timer.Create("CCADEATHCHECK", 300, 0, function()
+timer.Create("CCADEATHCHECK", 480, 0, function()
     if ccaDeaths == 0 and ccaDeathTimer and ix.config.Get("cityCode", 1) == 1 then
         StopCivilUnrest()
     end
 end)
 
-local traumaThreshold = 5 -- The number of times a player needs to be hurt to trigger a city code change
+local traumaThreshold = 3 -- The number of times a player needs to be hurt to trigger a city code change
 local traumaCooldown = 15 -- The cooldown (in seconds) between trauma notifications
 local playerTrauma = {}
 
@@ -161,9 +161,12 @@ function PLUGIN:PlayerHurt(ply, attacker, health, damage)
         playerTrauma[ply] = 0
     end
 
+    if ix.config.Get("cityCode", 0) == 0 then
     playerTrauma[ply] = playerTrauma[ply] + 1
+    end
 
     if playerTrauma[ply] >= traumaThreshold and ix.config.Get("cityCode", 0) == 0 and not ccaDeathTimer then
+        playerTrauma[ply] = 0
         StartCivilUnrest()
     end
 
@@ -185,13 +188,12 @@ function PLUGIN:PlayerHurt(ply, attacker, health, damage)
 end
 
 local function ResetPlayerTrauma(ply)
-    if ply:Team() == FACTION_CCA and ix.config.Get("cityCode", 1) == 1 and not ccaDeathTimer then
-        playerTrauma[ply] = 0
+    if ply:Team() == FACTION_CCA and ix.config.Get("cityCode", 1) == 1 and playerTrauma[ply] == 0 and ccaDeaths == 0 then
         StopCivilUnrest()
     end
 end
 
-timer.Create("ResetPlayerTrauma", 300, 0, function()
+timer.Create("ResetPlayerTrauma", 480, 0, function()
     if ix.config.Get("cityCode", 1) == 1 then
         for _, ply in ipairs(player.GetAll()) do
             ResetPlayerTrauma(ply)

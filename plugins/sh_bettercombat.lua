@@ -1,4 +1,4 @@
-local PLUGIN = PLUGIN or {}
+ local PLUGIN = PLUGIN or {}
 local HumanMalePainSounds = {
     [HITGROUP_GENERIC] = {Sound("vo/npc/male01/pain01.wav"), Sound("vo/npc/male01/pain02.wav"), Sound("vo/npc/male01/pain03.wav"), Sound("vo/npc/male01/pain04.wav"), Sound("vo/npc/male01/pain05.wav"), Sound("vo/npc/male01/pain06.wav")},
     [HITGROUP_HEAD] = {Sound("vo/npc/male01/moan02.wav"), Sound("vo/npc/male01/moan04.wav"), Sound("vo/npc/male01/pain07.wav")},
@@ -185,8 +185,8 @@ function PLUGIN:EntityTakeDamage(target, dmginfo)
                     target:SetNWBool("Ragdolled", false)
                     target:ShouldSetRagdolled(false)
                     target:SetHealth(15)
-                    target:ChatNotify("I'm dying... I need medical, now.")
                     if not target:GetNWBool("Dying") then
+                    target:ChatNotify("I'm dying... I need medical, now.")
                     target:SetNWBool("Dying", true)
                     target:EmitSound("player/heartbeat1.wav")
                     end

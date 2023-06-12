@@ -30,7 +30,7 @@ local MUSIC_INFO = {
     },
     ["Sector-1"] = {
         name = "music/a1_intro_world_2.mp3",
-        volume = 0.5
+        volume = 0.2
     },
     ["Sector-2"] = {
         name = "music/hl2_song1.mp3",
@@ -104,7 +104,7 @@ else -- CLIENT
         if musicName and musicName ~= "" and (ix.option.Get("area-music", true) or musicName == MUSIC_INFO["404 Zone"].name) and ix.config.Get("cityCode") < 1 then
             local volume = net.ReadFloat()
             currentMusic = CreateSound(LocalPlayer(), musicName)
-            currentMusic:SetSoundLevel(volume)
+            currentMusic:ChangeVolume(volume)
             currentMusic:Play()
         end
     end)
