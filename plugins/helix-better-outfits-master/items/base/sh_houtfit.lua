@@ -33,7 +33,6 @@ function ITEM:RemoveOutfit(client)
     local character = client:GetCharacter()
     local fitArmor = self.fitArmor or 0
     self:SetData("equip", false)
-
     client:EmitSound("npc/combine_soldier/zipline_clothing" .. math.random(1, 2) .. ".wav")
 
     if character:GetData("oldModel" .. self.outfitCategory) then
@@ -137,7 +136,7 @@ ITEM.functions.EquipUn = {
     OnCanRun = function(item)
         local client = item.player
 
-        return not IsValid(item.entity) and IsValid(client) and item:GetData("equip") == true and hook.Run("CanPlayerUnequipItem", client, item) ~= false and item.invID == client:GetCharacter():GetInventory():GetID() 
+        return not IsValid(item.entity) and IsValid(client) and item:GetData("equip") == true and hook.Run("CanPlayerUnequipItem", client, item) ~= false and item.invID == client:GetCharacter():GetInventory():GetID()
     end
 }
 
@@ -304,7 +303,14 @@ if SERVER then
 end
 
 function ITEM:OnLoadout()
-    if self:GetData("equip") then
-        self:SetData("equip", false)
+    local char = self.player:GetCharacter()
+    if char:GetInventory() then
+        local equippedItems = char:GetInventory():GetItems()
+
+        for _, item in ipairs(equippedItems) do
+            if item.Category == "Armor Items" and item:GetData("equip") == true then
+                armorPlayer(self.player, self.player, item.fitArmor + self.player:Armor())
+            end
+        end
     end
 end

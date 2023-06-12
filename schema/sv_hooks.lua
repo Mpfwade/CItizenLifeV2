@@ -234,7 +234,6 @@ function Schema:CanPlayerSpawnContainer(ply)
 end
 
 function Schema:PlayerUse(ply, entity)
-    local tieAnim = "Buttonfront"
 
     if ply and IsValid(ply) then
         if ply:IsCombine() and entity:IsDoor() and IsValid(entity.ixLock) and ply:KeyDown(IN_SPEED) then
@@ -243,17 +242,15 @@ function Schema:PlayerUse(ply, entity)
             return false
         end
 
-        if not ply:IsRestricted() and ply:IsCombine() and ply:KeyDown(IN_SPEED) and entity:IsPlayer() and entity:IsRestricted() and not entity.ixPlayer or entity:GetNetVar("untying") then
+	    if (!ply:IsRestricted() and ply:KeyDown(IN_SPEED) and entity:IsPlayer() and entity:IsRestricted() and !entity:GetNetVar("untying")) then
             local tarchar = entity:GetCharacter()
             entity:SetAction("You are being untied.", 1)
             entity:SetNetVar("untying", true)
-            ply:ForceSequence(tieAnim, nil, 0.5, true)
             ply:EmitSound("physics/plastic/plastic_box_impact_bullet5.wav")
             ply:SetAction("Untying.", 1)
             ix.chat.Send(ply, "me", "unties the person in front of them.")
 
             ply:DoStaredAction(entity, function()
-                ply:LeaveSequence()
                 ply.ixArrestedTarget = nil
                 entity.ixArrestedBy = nil
                 entity:SetRestricted(false)
@@ -433,6 +430,8 @@ function Schema:PlayerLoadout(ply)
         local char = ply:GetCharacter()
         char:SetData("tied", false)
         ply:SetRestricted(false)
+        ply:SetNetVar("tying", false)
+        ply:SetNetVar("untying", false)
         ply:ConCommand("Stopsound")
         ply.ixJailState = nil
 

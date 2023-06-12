@@ -201,7 +201,10 @@ function PLUGIN:EntityTakeDamage(target, dmginfo)
                         target:StopSound("player/heartbeat1.wav")
 
                         if not target:GetNWBool("Healed", true) == true and target:GetNWBool("Dying", true) == true then
+                            local tarchar = target:GetCharacter()
                             target:Kill()
+                            tarchar:SetData("tied", false)
+                            target:SetRestricted(false)
                         end
                     end)
                 end)
@@ -240,5 +243,6 @@ function PLUGIN:PlayerDeath(ply, inf, attacker)
         char:SetData("ixBrokenLegs", false)
         ply:SetNWBool("Dying", false)
         ply:StopSound("player/heartbeat1.wav")
+
     end
 end
