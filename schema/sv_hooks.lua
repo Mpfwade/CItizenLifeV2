@@ -429,45 +429,42 @@ function Schema:PlayerLoadout(ply)
     end
 
     function Schema:PlayerDeath(ply, inflictor, attacker)
-        if not IsValid(ply) then
-            return
-        end
-    
+        if not IsValid(ply) then return end
         local char = ply:GetCharacter()
         char:SetData("tied", false)
         ply:SetRestricted(false)
         ply:ConCommand("Stopsound")
         ply.ixJailState = nil
-    
+
         if ply:IsCombine() then
             local location = ply:GetArea()
-    
+
             if location == "" then
                 location = "unknown location"
             end
-    
+
             local combineName = string.upper(ply:Nick() or "unknown unit")
-    
+
             local sounds = {"npc/overwatch/radiovoice/on3.wav", "npc/overwatch/radiovoice/attention.wav", "npc/overwatch/radiovoice/lostbiosignalforunit.wav", "npc/overwatch/radiovoice/off4.wav", "hl1/fvox/_comma.wav", "npc/overwatch/radiovoice/on1.wav", "npc/overwatch/radiovoice/unitdownat.wav", "npc/overwatch/radiovoice/404zone.wav", "npc/overwatch/radiovoice/reinforcementteamscode3.wav", "npc/overwatch/radiovoice/investigateandreport.wav", "npc/overwatch/radiovoice/off2.wav",}
-    
+
             for k, v in ipairs(player.GetAll()) do
                 if v:IsCombine() then
                     ix.util.EmitQueuedSounds(v, sounds, 3, 0.2, 40)
                 end
             end
-    
+
             ply:SetNWBool("CPRespawn", true)
             ply:SetNWBool("AlreadyaRank", false)
-    
+
             if ply:GetSquad() then
                 ply:SetNetVar("squadleader", nil)
                 ply:SetNetVar("squad", nil)
             end
-    
+
             timer.Simple(math.random(4.00, 5.00), function()
                 ix.chat.Send(ply, "dispatchradioforce", "Attention, lost biosignal for protection team unit " .. combineName .. ".", false)
                 Schema:AddCombineDisplayMessage("Downloading lost biosignal...")
-    
+
                 timer.Simple(math.random(4.00, 5.00), function()
                     ix.chat.Send(ply, "dispatchradioforce", "Unit down at, " .. location .. " reinforcement teams code 3. Investigate and report.", false)
                     Schema:AddCombineDisplayMessage("WARNING! Biosignal lost for protection team unit " .. combineName .. " at " .. location .. "...", Color(255, 0, 0, 255))
@@ -475,21 +472,25 @@ function Schema:PlayerLoadout(ply)
                 end)
             end)
         end
-    
+
         if attacker:IsNPC() and (attacker:GetClass() == "npc_headcrab" or attacker:GetClass() == "npc_headcrab_fast") then
             local headCrab = ents.Create("npc_zombie")
-    
+
             if attacker:GetClass() == "npc_headcrab_fast" then
                 headCrab = ents.Create("npc_fastzombie")
             end
-    
+
             headCrab:SetPos(ply:GetPos())
             headCrab:SetAngles(ply:GetAngles())
             headCrab:Spawn()
             attacker:Remove()
             ply:Notify("A Headcrab has latched on to your body and is now taking control of it!")
         end
-    
+
+        if ply:Team() == FACTION_CITIZEN and char then
+            char:SetClass(CLASS_CITIZEN)
+        end
+
         if ply:Team() == FACTION_CITIZEN and char and ply:GetCharacter():GetClass() == CLASS_CITIZEN then
             ply:SetBodygroup(1, 0)
             ply:SetBodygroup(2, 0)
@@ -756,33 +757,22 @@ function Schema:PlayerSpawnVehicle(ply)
 end
 
 function Schema:CanPlayerUseCharacter(client, character)
-	local banned = character:GetData("banned")
+    local banned = character:GetData("banned")
 
-	if (banned) then
-		if (isnumber(banned)) then
-			if (banned < os.time()) then
-				return
-			end
+    if banned then
+        if isnumber(banned) then
+            if banned < os.time() then return end
 
-			return false, "@charBannedTemp"
-		end
+            return false, "@charBannedTemp"
+        end
 
-		return false, "@charBanned"
-	end
-
-    if client:GetNWBool("ixActiveBOL") then
-        return false, "You cannot change characters while you have a BOL!"
+        return false, "@charBanned"
     end
 
-
-	local bHasWhitelist = client:HasWhitelist(character:GetFaction())
-
-	if (!bHasWhitelist) then
-		return false, "@noWhitelist"
-	end
+    if client:GetNWBool("ixActiveBOL") then return false, "You cannot change characters while you have a BOL!" end
+    local bHasWhitelist = client:HasWhitelist(character:GetFaction())
+    if not bHasWhitelist then return false, "@noWhitelist" end
 end
-
-
 
 if SERVER then
     concommand.Add("+mmm", function(ply, cmd, args)
@@ -797,15 +787,15 @@ if SERVER then
 end
 
 netstream.Hook("PlayerChatTextChanged", function(client, key)
-	if (client:IsCombine() and !client.bTypingBeep) then
-		client:EmitSound("hlacomvoice/beepboops/combine_radio_on_09.wav")
-		client.bTypingBeep = true
-	end
+    if client:IsCombine() and not client.bTypingBeep then
+        client:EmitSound("hlacomvoice/beepboops/combine_radio_on_09.wav")
+        client.bTypingBeep = true
+    end
 end)
 
 netstream.Hook("PlayerFinishChat", function(client)
-	if (client:IsCombine() and client.bTypingBeep) then
-		client:EmitSound("hlacomvoice/beepboops/combine_radio_off_06.wav")
-		client.bTypingBeep = nil
-	end
+    if client:IsCombine() and client.bTypingBeep then
+        client:EmitSound("hlacomvoice/beepboops/combine_radio_off_06.wav")
+        client.bTypingBeep = nil
+    end
 end)
