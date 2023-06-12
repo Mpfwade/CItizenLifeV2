@@ -69,7 +69,7 @@ if SERVER then
                 end
     
                 local soundTable = self.TVSoundinstinct
-                local additionalDuration = 3
+                local additionalDuration = 2.05
     
                 if math.random(2) == 1 then
                     soundTable = self.TVSoundwelcome
