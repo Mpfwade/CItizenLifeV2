@@ -49,6 +49,8 @@ function PLUGIN:PlayerDeath(client)
 	end
 end
 
+local currentTemperature = ix.config.Get("warmthDefaultTemp", 20)
+
 function PLUGIN:WarmthTick(client, character, delta)
 	if (!client:Alive() or
 		client:GetMoveType() == MOVETYPE_NOCLIP or
@@ -58,6 +60,21 @@ function PLUGIN:WarmthTick(client, character, delta)
 	end
 
 	local scale = 1
+
+	if self:IsRaining() then
+		local rainTemperatureDecrease = ix.config.Get("warmthRainTempDecrease", 5)
+		currentTemperature = currentTemperature - rainTemperatureDecrease
+	end
+
+	-- Check the current temperature against the player's clothing requirements
+	local requiredTemperature = ix.config.Get("warmthRequiredTemp", 5)
+
+	if currentTemperature < requiredTemperature then
+		-- Adjust the scale based on the temperature difference
+		local temperatureDifference = requiredTemperature - currentTemperature
+		scale = scale - temperatureDifference * ix.config.Get("warmthTempScale", 0.1)
+	end
+
 
 	if (self:PlayerIsInside(client)) then
 		scale = -ix.config.Get("warmthRecoverScale", 0.5)
@@ -73,14 +90,14 @@ function PLUGIN:WarmthTick(client, character, delta)
 	end
 
 	local equippedItems = {
-		["coat"] = -0.10,
-		["bluebeanie"] = -0.3,
-		["greenbeanie"] = -0.3,
-		["gloves"] = -0.1,
+		["coat"] = -1,
+		["bluebeanie"] = -0.55,
+		["greenbeanie"] = -0.55,
+		["gloves"] = -0.50,
 		-- Add more items and their corresponding scale values here
 	}
-
-	if character:GetInventory() then
+	
+	if currentTemperature < requiredTemperature then
 		for itemID, itemScale in pairs(equippedItems) do
 			local item = character:GetInventory():GetItemsByUniqueID(itemID)[1]
 			if item and item:GetData("equip") == true then
@@ -89,6 +106,7 @@ function PLUGIN:WarmthTick(client, character, delta)
 			end
 		end
 	end
+	
 
 	-- update character warmth
 	local health = client:Health()
@@ -115,3 +133,10 @@ function PLUGIN:WarmthTick(client, character, delta)
 		end
 	end
 end
+
+function PLUGIN:IsRaining()
+    local conVarValue = GetConVar("sw_rain", "Rain") or GetConVar("sw_thunderstorm", "Thunderstorm") or GetConVar("sw_heavystorm", "Heavy Storm") -- Get the value of the ConVar "sw_rain"
+
+    return conVarValue == 1 -- Return true if the value is 1 (indicating rain), false otherwise
+end
+
