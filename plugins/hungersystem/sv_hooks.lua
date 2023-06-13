@@ -34,7 +34,7 @@ function PLUGIN:PlayerTick(ply)
 
             ply.ixHungerTick = CurTime() + ix.config.Get("hungerTime", 120)
 
-            if newHunger <= 35 and newHunger > 0 then
+            if newHunger <= 35 and newHunger > 15 then
                 if ply.ixLastHungerPrint == nil or CurTime() > ply.ixLastHungerPrint + 155 then
                     ply:ChatNotify("I need something to eat or drink soon...")
                     ply.ixLastHungerPrint = CurTime()

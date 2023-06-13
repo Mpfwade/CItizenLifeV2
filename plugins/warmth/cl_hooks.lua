@@ -19,14 +19,6 @@ function PLUGIN:WarmthEnabled()
         if character then
 			local warmth = character:GetWarmth()
 
-			if warmth <= 45 then
-                -- Display a chat notification
-                    LocalPlayer():ChatNotify("I'm getting cold!")
-
-                -- Shake the screen for 3 seconds
-                util.ScreenShake(LocalPlayer():GetPos(), 3, 5, 1, 1)
-			end
-
             return warmth / 100, self:GetWarmthText(warmth)
         end
 

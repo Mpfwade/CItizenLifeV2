@@ -105,50 +105,50 @@ if (SERVER) then
 		if (!ix.config.Get("persistentCorpses", true)) then
 			return
 		end
-
+	
 		if (hook.Run("ShouldSpawnPlayerCorpse") == false) then
 			return
 		end
-
+	
 		-- remove old corpse if we've hit the limit
 		local maxCorpses = ix.config.Get("corpseMax", 8)
-
+	
 		if (maxCorpses == 0) then
 			return
 		end
-
+	
 		local entity = IsValid(client.ixRagdoll) and client.ixRagdoll or client:CreateServerRagdoll()
 		local decayTime = ix.config.Get("corpseDecayTime", 60)
 		local uniqueID = "ixCorpseDecay" .. entity:EntIndex()
-
+	
 		entity:RemoveCallOnRemove("fixer")
 		entity:CallOnRemove("ixPersistentCorpse", function(ragdoll)
 			if (ragdoll.ixInventory) then
 				ix.storage.Close(ragdoll.ixInventory)
 			end
-
+	
 			if (IsValid(client) and !client:Alive()) then
 				client:SetLocalVar("ragdoll", nil)
 			end
-
+	
 			local index
-
+	
 			for k, v in ipairs(PLUGIN.corpses) do
 				if (v == ragdoll) then
 					index = k
 					break
 				end
 			end
-
+	
 			if (index) then
 				table.remove(PLUGIN.corpses, index)
 			end
-
+	
 			if (timer.Exists(uniqueID)) then
 				timer.Remove(uniqueID)
 			end
 		end)
-
+	
 		-- start decay process only if we have a time set
 		if (decayTime > 0) then
 			timer.Create(uniqueID, decayTime, 1, function()
@@ -159,22 +159,22 @@ if (SERVER) then
 				end
 			end)
 		end
-
+	
 		-- remove reference to ragdoll so it isn't removed on spawn when SetRagdolled is called
 		client.ixRagdoll = nil
 		-- remove reference to the player so no more damage can be dealt
 		entity.ixPlayer = nil
-
+	
 		self.corpses[#self.corpses + 1] = entity
-
+	
 		-- clean up old corpses after we've added this one
 		if (#self.corpses >= maxCorpses) then
 			self:CleanupCorpses(maxCorpses)
 		end
-
+	
 		hook.Run("OnPlayerCorpseCreated", client, entity)
 	end
-
+	
 	function PLUGIN:OnPlayerCorpseCreated(client, entity)
 		if (!ix.config.Get("dropItemsOnDeath", false) or !client:GetCharacter()) then
 			return
