@@ -49,8 +49,6 @@ function PLUGIN:PlayerDeath(client)
 	end
 end
 
-local currentTemperature = ix.config.Get("warmthDefaultTemp", 20)
-
 function PLUGIN:WarmthTick(client, character, delta)
 	if (!client:Alive() or
 		client:GetMoveType() == MOVETYPE_NOCLIP or
@@ -64,6 +62,10 @@ function PLUGIN:WarmthTick(client, character, delta)
 	if self:IsRaining() then
 		local rainTemperatureDecrease = ix.config.Get("warmthRainTempDecrease", 5)
 		currentTemperature = currentTemperature - rainTemperatureDecrease
+
+		-- Increase the scale when it's raining
+		local rainScaleIncrease = 5
+		scale = scale + rainScaleIncrease
 	end
 
 	-- Check the current temperature against the player's clothing requirements
@@ -72,7 +74,7 @@ function PLUGIN:WarmthTick(client, character, delta)
 	if currentTemperature < requiredTemperature then
 		-- Adjust the scale based on the temperature difference
 		local temperatureDifference = requiredTemperature - currentTemperature
-		scale = scale - temperatureDifference * ix.config.Get("warmthTempScale", 0.1)
+		scale = scale + temperatureDifference * ix.config.Get("warmthTempScale", 0.1)
 	end
 
 
@@ -80,7 +82,7 @@ function PLUGIN:WarmthTick(client, character, delta)
 		scale = -ix.config.Get("warmthRecoverScale", 0.5)
 	end
 
-	-- check to see if the player is near any warmth-generating entities
+	-- Check to see if the player is near any warmth-generating entities
 	local entities = ents.FindInSphere(client:GetPos(), self.warmthEntityDistance)
 
 	for _, v in ipairs(entities) do
@@ -89,26 +91,29 @@ function PLUGIN:WarmthTick(client, character, delta)
 		end
 	end
 
+	-- Calculate the counteracting scale based on equipped items
 	local equippedItems = {
-		["coat"] = -1,
-		["bluebeanie"] = -0.55,
-		["greenbeanie"] = -0.55,
-		["gloves"] = -0.50,
+		["coat"] = 1.95,
+		["bluebeanie"] = 0.55,
+		["greenbeanie"] = 0.55,
+		["gloves"] = 0.50,
 		-- Add more items and their corresponding scale values here
 	}
-	
-	if currentTemperature < requiredTemperature then
-		for itemID, itemScale in pairs(equippedItems) do
-			local item = character:GetInventory():GetItemsByUniqueID(itemID)[1]
-			if item and item:GetData("equip") == true then
-				-- Decrease the time it takes for the player to get cold based on the number of equipped items
-				scale = scale * itemScale
-			end
+
+	local counteractingScale = 0
+
+	for itemID, itemScale in pairs(equippedItems) do
+		local item = character:GetInventory():GetItemsByUniqueID(itemID)[1]
+		if item and item:GetData("equip") == true then
+			-- Accumulate the counteracting scale based on equipped items
+			counteractingScale = counteractingScale + itemScale
 		end
 	end
-	
 
-	-- update character warmth
+	-- Apply the counteracting scale to reduce the overall scale
+	scale = scale - counteractingScale
+
+	-- Update character warmth
 	local health = client:Health()
 	local warmth = character:GetWarmth()
 	local newWarmth = math.Clamp(warmth - scale * (delta / ix.config.Get("warmthLossTime", 5)), 0, 100)
@@ -124,10 +129,10 @@ function PLUGIN:WarmthTick(client, character, delta)
 		local damage = ix.config.Get("warmthDamage", 2)
 
 		if (damage > 0 and health > 5) then
-			-- damage the player if we've run out of warmth
+			-- Damage the player if we've run out of warmth
 			client:SetHealth(math.max(5, client:Health() - damage))
 		elseif (newWarmth == 0 and ix.config.Get("warmthKill", false)) then
-			-- kill the player if necessary
+			-- Kill the player if necessary
 			client:NotifyLocalized("warmthDied")
 			client:Kill()
 		end
@@ -139,4 +144,3 @@ function PLUGIN:IsRaining()
 
     return conVarValue == 1 -- Return true if the value is 1 (indicating rain), false otherwise
 end
-
