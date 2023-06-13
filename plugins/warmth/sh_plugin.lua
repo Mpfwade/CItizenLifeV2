@@ -61,10 +61,11 @@ ix.config.Add("warmthKill", false, "Whether or not to kill characters if they re
 	category = "warmth"
 })
 
-ix.config.Add("warmthRequiredTemp", 5, "The required temperature in celsius for players to maintain warmth.", nil, {
-	data = {min = -40, max = 40, decimals = 1},
+ix.config.Add("warmthRainScale", 5, "The scale at which warmth decreases when it's raining.", nil, {
+	data = {min = 0.01, max = 10, decimals = 2},
 	category = "warmth"
 })
+
 
 
 ix.char.RegisterVar("warmth", {
