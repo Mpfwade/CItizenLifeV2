@@ -185,20 +185,9 @@ local function DrawCombineHud(ply, char)
     draw.SimpleTextOutlined("SPS CHARGE: " .. ply:Armor() .. "% ::>", "CLCHud1", ScrW() - 10, 58, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
     draw.SimpleTextOutlined("BIOSIGNAL GRID: " .. grid .. " ::>", "CLCHud1", ScrW() - 10, 74, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
     draw.SimpleTextOutlined("BIOSIGNAL ZONE: " .. zone .. " ::>", "CLCHud1", ScrW() - 10, 90, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
-    draw.SimpleTextOutlined("// ACTIVE BOLS ::>", "CLCHud1", ScrW() - 10, 210, Color( 0,138,216 ), TEXT_ALIGN_RIGHT, nil, 1, color_black)
     
     if quota then
         draw.SimpleTextOutlined("BEATING QUOTA: " .. quota .. " ::>", "CLCHud1", ScrW() - 10, 109, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
-    end
-
-    local y = 16
-
-
-    for k, v in pairs(player.GetAll()) do
-        if v:GetNWBool("ixActiveBOL", false) == true then
-            draw.SimpleTextOutlined(string.upper(v:Nick()) .. " ::>", "CLCHud1", ScrW() - 10, 210 + y, Color( 0,138,216 ) or color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
-            y = y + 16
-        end
     end
 
     local y = 16
@@ -263,7 +252,7 @@ local function DrawCombineHud(ply, char)
             end
         end
 
-        draw.SimpleTextOutlined("<:: LOCAL WEAPONRY //", "CLCHud1", ScrW() - 195, 133, team.GetColor(ply:Team()), nil, nil, 1, color_black)
+        draw.SimpleTextOutlined("<:: LOCAL WEAPONRY //", "CLCHud1", ScrW() - 195, 133, Color( 0,138,216 ), nil, nil, 1, color_black)
         draw.SimpleTextOutlined("<:: FIREARM: " .. string.upper(weaponName), "CLCHud1", ScrW() - 195, 155, color_white, nil, nil, 1, color_black)
         draw.SimpleTextOutlined("<:: AM: [ " .. weaponAmmo1 .. " ] / [ " .. weaponAmmo2 .. " ]", "CLCHud1", ScrW() - 195, 177, weaponprimarycolor, nil, nil, 1, color_black)
     end

@@ -182,12 +182,6 @@ else
 				local x = 0
 				local y = (i - 1) * 34
 	
-				surface.SetDrawColor(color_black)
-				surface.DrawOutlinedRect(x, y, width, height)
-	
-				surface.SetDrawColor(color_black)
-				surface.DrawRect(x + 1, y + 1, width - 2, height - 2)
-	
 				surface.SetDrawColor(color_red)
 	
 				if (itemInfo) then
