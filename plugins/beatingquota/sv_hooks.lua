@@ -39,7 +39,7 @@ function PLUGIN:EntityTakeDamage(target, dmginfo)
             -- Generate a random number within the range of 3 to 6 as the new quota maximum
             local newQuotaMax = math.random(3, 10)
             character:SetData("quotamax", newQuotaMax)
-            ply:SetRP(1 + ply:GetNWInt("ixRP"))
+            attacker:SetRP(1 + attacker:GetNWInt("ixRP"))
             attacker:Notify("Your Beating Quota is done.")
 
             timer.Create("ResetQuotaTimer", 900, 1, function()

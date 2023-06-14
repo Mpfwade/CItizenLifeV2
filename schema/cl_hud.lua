@@ -142,11 +142,11 @@ function Schema:Think()
 end
 
 local combatWeapons = {
-    ["ls_pistol"] = "USP MATCH PISTOL",
+    ["ls_pistol"] = "USP MATCH",
     ["ls_smg"] = "smg",
-    ["ls_357mag"] = "357 REVOLVER",
-    ["ix_spas12"] = "SPAS-12 SHOTGUN",
-    ["ix_ar2"] = "OSIPR",
+    ["ls_357mag"] = "357",
+    ["ix_spas12"] = "SPAS-12",
+    ["ls_ar2"] = "OSIPR",
 }
 
 local function DrawCombineHud(ply, char)
@@ -196,7 +196,7 @@ local function DrawCombineHud(ply, char)
 
     for k, v in pairs(player.GetAll()) do
         if v:GetNWBool("ixActiveBOL", false) == true then
-            draw.SimpleTextOutlined(string.upper(v:Nick()) .. " ::>", CLCHud1, ScrW() - 10, 210 + y, Color( 0,138,216 ) or color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
+            draw.SimpleTextOutlined(string.upper(v:Nick()) .. " ::>", "CLCHud1", ScrW() - 10, 210 + y, Color( 0,138,216 ) or color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
             y = y + 16
         end
     end

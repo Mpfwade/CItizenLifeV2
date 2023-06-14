@@ -15,11 +15,6 @@ netstream.Hook("ixViewData", function(target, cid, data)
 	ix.gui.record:Build(target, cid, data)
 end)
 
-netstream.Hook("ixDataPad", function(target, cid, data)
-	if(!target) then
-		return
-	end
-	
-	ix.gui.record = vgui.Create("ixMPFTerminal")
-	ix.gui.record:Build(target, cid, data)
+netstream.Hook("OpenDataMenu", function(data)
+	vgui.Create("ixMPFTerminal")
 end)
