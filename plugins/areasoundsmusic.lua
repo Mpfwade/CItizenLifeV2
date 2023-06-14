@@ -84,7 +84,13 @@ if SERVER then
             net.Start("AreaMusic")
             net.WriteString(musicInfo.name)
             net.WriteFloat(musicInfo.volume)
-            net.Send(client)
+
+            -- Check if the client is on the FACTION_CITIZEN or FACTION_VORTIGAUNT team
+            if client:Team() == FACTION_CITIZEN or client:Team() == FACTION_VORTIGAUNT then
+                net.Send(client) -- Send the music data only to the eligible client
+            else
+                net.SendOmit(client) -- Exclude non-eligible clients from receiving the music data
+            end
         else
             net.Start("AreaMusic")
             net.Send(client)

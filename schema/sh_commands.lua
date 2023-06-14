@@ -1,7 +1,7 @@
 --[[---------------------------------------------------------------------------
 	Initializing Extra Command Classes
----------------------------------------------------------------------------]]--
-
+---------------------------------------------------------------------------]]
+--
 ix.command.Add("Tie", {
     description = "Tie someone in front of you.",
     OnCheckAccess = function(_, ply)
@@ -12,59 +12,77 @@ ix.command.Add("Tie", {
         data.start = ply:GetShootPos()
         data.endpos = data.start + ply:GetAimVector() * 96
         data.filter = ply
-
         local trace = util.TraceLine(data)
         local target = trace.Entity
+		local tieAnim = "Buttonfront"
 
-        if IsValid(target) and (target:IsPlayer() or (IsValid(target.ixPlayer) and target.ixPlayer)) and not target:GetNetVar("tying") then
+        if IsValid(target) and ((target:IsPlayer() and target:GetCharacter()) or (IsValid(target.ixPlayer) and target.ixPlayer:GetCharacter())) then
             local targetEntity = target
-            local isRestricted = target:IsPlayer() and target:IsRestricted()
 
-            if target.ixPlayer then
+            if IsValid(target.ixPlayer) then
                 targetEntity = target.ixPlayer
-                isRestricted = false -- Bypass IsRestricted check for entity.ixPlayer
             end
 
-            if not isRestricted then
-                ply:DoStaredAction(targetEntity, "Buttonfront", 1.5, function()
-                    if IsValid(ply) and IsValid(targetEntity) then
-                        ply:EmitSound("misc/cablecuff.wav")
-                        ix.chat.Send(ply, "me", "ties the person in front of them.")
-                        ply:SetAction("Tying, target.", 1)
+            if not targetEntity:GetNetVar("tying") and not targetEntity:IsRestricted() then
+                ply:SetAction("You are tying " .. targetEntity:Nick(), 3)
+				ply:ForceSequence(tieAnim, nil, 0.75, true)
+
+                if IsValid(target.ixPlayer) then
+					ply:EmitSound("misc/cablecuff.wav")
+
+                    -- Skip DoStaredAction for ixPlayer, execute tying logic directly
+                    if SERVER then
+                        targetEntity:Freeze(true)
+                    end
+
+                    targetEntity:SetRestricted(true)
+                    targetEntity:SetNetVar("tying")
+                    targetEntity:NotifyLocalized("fTiedUp")
+
+                    if targetEntity:IsCombine() then
+                        local location = targetEntity:GetArea() or "unknown location"
+                        Schema:AddCombineDisplayMessage("Downloading lost radio contact information...")
+                        Schema:AddCombineDisplayMessage("WARNING! Radio contact lost for unit at " .. location .. "...", Color(255, 0, 0, 255), true)
+                    end
+
+                    ply:SetAction()
+                    targetEntity:SetAction()
+                else
+                    -- Execute tying logic with DoStaredAction for regular player
+                    ply:DoStaredAction(targetEntity, function()
+						ply:EmitSound("misc/cablecuff.wav")
+
+                        if SERVER then
+                            targetEntity:Freeze(true)
+                        end
                         targetEntity:SetRestricted(true)
-                        targetEntity:SetNetVar("tying", true)
+                        targetEntity:SetNetVar("tying")
                         targetEntity:NotifyLocalized("fTiedUp")
 
-                        if targetEntity:IsPlayer() and targetEntity:IsCombine() then
+                        if targetEntity:IsCombine() then
                             local location = targetEntity:GetArea() or "unknown location"
-
                             Schema:AddCombineDisplayMessage("Downloading lost radio contact information...")
                             Schema:AddCombineDisplayMessage("WARNING! Radio contact lost for unit at " .. location .. "...", Color(255, 0, 0, 255), true)
                         end
-
-                        timer.Simple(1, function()
-                            if IsValid(ply) and IsValid(targetEntity) then
-                                ply:LeaveSequence()
-                                targetEntity:LeaveSequence()
-                                ply:SetAction()
-                                targetEntity:SetAction()
-                            end
-                        end)
-                    end
-                end)
-
-                if not target.ixPlayer then
-                    target:SetAction("You are being tied.", 1)
+                    end, 3, function()
+                        ply:SetAction()
+                        targetEntity:SetAction()
+                        targetEntity:SetNetVar("tying")
+						
+                    end)
                 end
+
+                targetEntity:SetNetVar("tying", true)
+                targetEntity:SetAction("You are being tied by " .. ply:Nick(), 3)
             else
-                ply:NotifyLocalized("Restricted")
+                ply:NotifyLocalized("plyNotValid")
             end
-        else
-            ply:NotifyLocalized("plyNotValid")
         end
     end
 })
 
+	
+	
 ix.command.Add("DoorBuy", {
 	description = "@cmdDoorBuy",
 	OnRun = function(self, client, arguments)

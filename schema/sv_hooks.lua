@@ -193,8 +193,6 @@ function Schema:Move(ply, mv)
         elseif ply:IsRestricted() then
             walkPenalty = 3
             runPenalty = 75
-        elseif ply:GetLocalVar("stm", 100) == 0 then
-            runPenalty = 80
         end
     end
 
@@ -244,6 +242,7 @@ function Schema:PlayerUse(ply, entity)
 
 	    if (!ply:IsRestricted() and ply:KeyDown(IN_SPEED) and entity:IsPlayer() and entity:IsRestricted() and !entity:GetNetVar("untying")) then
             local tarchar = entity:GetCharacter()
+            entity:SetNetVar("tying", false)
             entity:SetAction("You are being untied.", 1)
             entity:SetNetVar("untying", true)
             ply:EmitSound("physics/plastic/plastic_box_impact_bullet5.wav")

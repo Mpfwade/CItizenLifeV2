@@ -87,14 +87,17 @@ function PLUGIN:WarmthTick(client, character, delta)
     end
 
     -- Update character warmth
-    local health = client:Health()
+    local health = client:Health() 
     local warmth = character:GetWarmth()
     local newWarmth = math.Clamp(warmth - scale * (delta / ix.config.Get("warmthLossTime", 5)), 0, 100)
+    if not (client:Team() == FACTION_CITIZEN or client:Team() == FACTION_VORTIGAUNT) then
+        return false
+    end    
+
     character:SetWarmth(newWarmth)
 
     if newWarmth <= 40 and warmth > 0 then
-        timer.Create("shiver", 75, 0, function()
-            client:ChatNotify("I'm getting cold!")
+        timer.Create("shiver", 35, 0, function()
             util.ScreenShake(client:GetPos(), 5, 5, 3, 500)
 			RunConsoleCommand("say", "/me starts to shiver aggressively") -- Make the player say the text in chat
         end)
@@ -110,7 +113,6 @@ function PLUGIN:WarmthTick(client, character, delta)
             client:SetHealth(math.max(5, client:Health() - damage))
         elseif newWarmth == 0 and ix.config.Get("warmthKill", false) then
             -- Kill the player if necessary
-            client:NotifyLocalized("warmthDied")
             client:Kill()
         end
     end

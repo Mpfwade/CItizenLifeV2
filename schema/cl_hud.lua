@@ -78,27 +78,6 @@ local function DrawHud(ply, char)
     surface.DrawText("Don't have this weapon out in RP.")
     surface.SetTextPos(10, text02position)
     surface.DrawText("You may be punished for this.")
-
-    -- Stamina Bar
-    local stamina = ply:GetLocalVar("stm", 100) -- Assuming the stamina data is stored as "stamina" in the character data table
-    local barX = 10 -- X position of the stamina bar
-    local barY = 60 -- Y position of the stamina bar
-    local barWidth = 200 -- Width of the stamina bar
-    local barHeight = 10 -- Height of the stamina bar
-    local barPadding = 2 -- Padding between the stamina bar and its background
-    local backgroundColor = Color(0, 0, 0, 150) -- Background color of the stamina bar
-    local fillColor = Color(0, 255, 0) -- Fill color of the stamina bar
-
-    -- Draw the background of the stamina bar
-    surface.SetDrawColor(backgroundColor)
-    surface.DrawRect(barX, barY, barWidth, barHeight)
-
-    -- Calculate the width of the filled portion of the stamina bar
-    local fillWidth = math.Clamp(stamina / 100, 0, 1) * (barWidth - barPadding * 2)
-
-    -- Draw the filled portion of the stamina bar
-    surface.SetDrawColor(fillColor)
-    surface.DrawRect(barX + barPadding, barY + barPadding, fillWidth, barHeight - barPadding * 2)
 end
 
 
@@ -163,9 +142,9 @@ function Schema:Think()
 end
 
 local combatWeapons = {
-    ["ix_usp"] = "USP MATCH PISTOL",
-    ["ix_smg"] = "smg",
-    ["ix_357"] = "357 REVOLVER",
+    ["ls_pistol"] = "USP MATCH PISTOL",
+    ["ls_smg"] = "smg",
+    ["ls_357mag"] = "357 REVOLVER",
     ["ix_spas12"] = "SPAS-12 SHOTGUN",
     ["ix_ar2"] = "OSIPR",
 }
@@ -279,15 +258,14 @@ local function DrawCombineHud(ply, char)
             weaponprimarycolor = Color(255, 0, 0)
 
             if (ply.nextAmmoWarn or 0) < CurTime() then
-                ix.gui.AddCombineDisplayMessage("LOW ON DAGGERS.. RELOAD IMMEDIATELY!", weaponprimarycolor, true)
+                ix.gui.AddCombineDisplayMessage("LOW ON AMMO.. RELOAD.", weaponprimarycolor, true)
                 ply.nextAmmoWarn = CurTime() + 20
             end
         end
 
-        draw.SimpleTextOutlined("<:: LOCAL WEAPONRY //", "CLCHud1", 10, (5 + 16 * 12) + y, team.GetColor(ply:Team()), nil, nil, 1, color_black)
-        draw.SimpleTextOutlined("<:: FIREARM: " .. string.upper(weaponName), "CLCHud1", 10, (5 + 16 * 13) + y, color_white, nil, nil, 1, color_black)
-        draw.SimpleTextOutlined("<:: AM: [ " .. weaponAmmo1 .. " ] / [ " .. weaponAmmo2 .. " ]", "CLCHud1", 10, (5 + 16 * 14) + y, weaponprimarycolor, nil, nil, 1, color_black)
-        draw.SimpleTextOutlined("<:: SC: [ " .. weaponAmmo3 .. " ]", "CLCHud1", 10, (5 + 16 * 15) + y, color_white, nil, nil, 1, color_black)
+        draw.SimpleTextOutlined("<:: LOCAL WEAPONRY //", "CLCHud1", ScrW() - 195, 133, team.GetColor(ply:Team()), nil, nil, 1, color_black)
+        draw.SimpleTextOutlined("<:: FIREARM: " .. string.upper(weaponName), "CLCHud1", ScrW() - 195, 155, color_white, nil, nil, 1, color_black)
+        draw.SimpleTextOutlined("<:: AM: [ " .. weaponAmmo1 .. " ] / [ " .. weaponAmmo2 .. " ]", "CLCHud1", ScrW() - 195, 177, weaponprimarycolor, nil, nil, 1, color_black)
     end
 end
 
