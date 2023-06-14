@@ -139,12 +139,12 @@ function PLUGIN:PlayerDeath(victim, inflictor, attacker)
 
         if not ccaDeathTimer and ix.config.Get("cityCode", 0) == 0 then
             StartCivilUnrest()
-            ccaDeathTimer = timer.Create("CCADEATHCHECK", 480, 1, StopCivilUnrest)
+            ccaDeathTimer = timer.Create("CCADEATHCHECK", 300, 1, StopCivilUnrest)
         end
     end
 end
 
-timer.Create("CCADEATHCHECK", 480, 0, function()
+timer.Create("CCADEATHCHECK", 300, 0, function()
     if ccaDeaths == 0 and ccaDeathTimer and ix.config.Get("cityCode", 1) == 1 then
         StopCivilUnrest()
     end
@@ -193,7 +193,7 @@ local function ResetPlayerTrauma(ply)
     end
 end
 
-timer.Create("ResetPlayerTrauma", 480, 0, function()
+timer.Create("ResetPlayerTrauma", 300, 0, function()
     if ix.config.Get("cityCode", 1) == 1 then
         for _, ply in ipairs(player.GetAll()) do
             ResetPlayerTrauma(ply)
