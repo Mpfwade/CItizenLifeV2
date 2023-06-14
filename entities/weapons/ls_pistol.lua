@@ -16,7 +16,7 @@ SWEP.HoldType = "revolver"
 
 SWEP.WorldModel = "models/weapons/w_pistol.mdl"
 SWEP.ViewModel = "models/weapons/c_pistol.mdl"
-SWEP.ViewModelFOV = 60
+SWEP.ViewModelFOV = 70
 
 SWEP.LowerAngles = Angle(5, -5, -5)
 SWEP.LowerAngles2 = Angle(5, -5, -5)
