@@ -258,6 +258,13 @@ local function DrawCombineHud(ply, char)
     end
 end
 
+function Schema:CanDrawAmmoHUD(weapon)
+	if combatWeapons[weapon:GetClass()] and LocalPlayer():IsCombine() then
+		return false
+	end
+end
+
+
 local function DrawEffects(ply, char)
     surface.SetDrawColor(Color(255, 0, 0, 0))
 

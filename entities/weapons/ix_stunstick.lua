@@ -125,27 +125,27 @@ end
 
 function SWEP:PrimaryAttack()
     self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
-    if not self.Owner:IsWepRaised() then return end
+    if not self:GetOwner():IsWepRaised() then return end
 
-    if self.Owner:KeyDown(IN_WALK) then
+    if self:GetOwner():KeyDown(IN_WALK) then
         if SERVER then
             self:SetActivated(not self:GetActivated())
             local state = self:GetActivated()
 
             if state then
-                self.Owner:EmitSound("Weapon_StunStick.Activate")
+                self:GetOwner():EmitSound("Weapon_StunStick.Activate")
 
                 if CurTime() < self.lastRaiseTime + 1.5 then
-                    self.Owner:AddCombineDisplayMessage("Preparing civil judgement administration protocols...")
+                    self:GetOwner():AddCombineDisplayMessage("Preparing civil judgement administration protocols...")
                 end
             else
-                self.Owner:EmitSound("Weapon_StunStick.Deactivate")
+                self:GetOwner():EmitSound("Weapon_StunStick.Deactivate")
             end
 
-            local model = string.lower(self.Owner:GetModel())
+            local model = string.lower(self:GetOwner():GetModel())
 
             if ix.anim.GetModelClass(model) == "metrocop" then
-                self.Owner:ForceSequence(state and "activatebaton" or "deactivatebaton", nil, nil, true)
+                self:GetOwner():ForceSequence(state and "activatebaton" or "deactivatebaton", nil, nil, true)
             end
         end
 
@@ -160,15 +160,16 @@ function SWEP:PrimaryAttack()
         damage = 5
     end
 
-    self.Owner:SetAnimation(PLAYER_ATTACK1)
-    self.Owner:ViewPunch(Angle(1, 0, 0.125))
-    self.Owner:LagCompensation(true)
+    self:GetOwner():SetAnimation(PLAYER_ATTACK1)
+    self:GetOwner():ViewPunch(Angle(1, 0, 0.125))
+    self:GetOwner():LagCompensation(true)
     local data = {}
-    data.start = self.Owner:GetShootPos()
-    data.endpos = data.start + self.Owner:GetAimVector() * 72
-    data.filter = self.Owner
-    local trace = util.TraceLine(data)
-    self.Owner:LagCompensation(false)
+    data.start = self:GetOwner():GetShootPos()
+    data.endpos = data.start + self:GetOwner():GetAimVector() * 72
+    data.filter = self:GetOwner()
+    data.mins = Vector(-6, -6, -20) -- Adjusted hitbox size (lowered further)
+    data.maxs = Vector(6, 6, -10) -- Adjusted hitbox size (lowered further)
+    local trace = util.TraceHull(data)
 
     if SERVER and trace.Hit then
         if self:GetActivated() then
@@ -179,32 +180,22 @@ function SWEP:PrimaryAttack()
             util.Effect("StunstickImpact", effect, true, true)
         end
 
-        self.Owner:EmitSound("Weapon_StunStick.Melee_HitWorld")
+        self:GetOwner():EmitSound("Weapon_StunStick.Melee_HitWorld")
         local entity = trace.Entity
 
         if IsValid(entity) then
             if entity:IsPlayer() then
-                if self:GetActivated() then
-                    entity.ixStuns = (entity.ixStuns or 0) + 1
+                entity.ixStuns = (entity.ixStuns or 0) + 1
 
-                    timer.Simple(10, function()
-                        entity.ixStuns = math.max(entity.ixStuns - 1, 0)
-                    end)
-                end
-
-                entity:ViewPunch(Angle(-20, math.random(-15, 15), math.random(-10, 10)))
-
-                if self:GetActivated() and entity.ixStuns > 1 then
+                if entity.ixStuns >= math.random(2, 5) then
+                    entity.ixStuns = 0
                     entity:ShouldSetRagdolled(true)
                     entity:SetNWBool("Ragdolled", true)
                     ix.chat.Send(entity, "me", "'s body crumbles to the ground.")
-                    entity.ixStuns = 0
 
-                    if not entity:Team() == FACTION_CA or FACTION_OTA then
+                    if entity:Team() == FACTION_CITIZEN then
                         entity:EmitSound("npc/vort/foot_hit.wav")
-                    end
-
-                    if entity:Team() == FACTION_CCA then
+                    elseif entity:Team() == FACTION_CCA then
                         entity:EmitSound("npc/metropolice/knockout2.wav")
                     elseif entity:Team() == FACTION_OTA then
                         entity:EmitSound("npc/combine_soldier/pain2.wav")
@@ -213,56 +204,49 @@ function SWEP:PrimaryAttack()
                     entity:SetAction("You Are Unconscious...", 35, function()
                         entity:SetNWBool("Ragdolled", false)
                         entity:ShouldSetRagdolled(false)
-
-                        timer.Simple(0.95, function()
-                            if entity:GetWeapon("gmod_tool") then
-                                entity:SelectWeapon("ix_hands")
-                            end
-                        end)
                     end)
-
-                    return
                 end
-            elseif entity:IsRagdoll() then
-                damage = self:GetActivated() and 2 or 10
+            entity:ViewPunch(Angle(-20, math.random(-15, 15), math.random(-10, 10)))
             end
-
-            local damageInfo = DamageInfo()
-            damageInfo:SetAttacker(self.Owner)
-            damageInfo:SetInflictor(self)
-            damageInfo:SetDamage(damage)
-            damageInfo:SetDamageType(DMG_CLUB)
-            damageInfo:SetDamagePosition(trace.HitPos)
-            damageInfo:SetDamageForce(self.Owner:GetAimVector() * 10000)
-            entity:DispatchTraceAttack(damageInfo, data.start, data.endpos)
+        elseif entity:IsRagdoll() then
+            damage = self:GetActivated() and 2 or 10
         end
+
+        local damageInfo = DamageInfo()
+        damageInfo:SetAttacker(self:GetOwner())
+        damageInfo:SetInflictor(self)
+        damageInfo:SetDamage(damage)
+        damageInfo:SetDamageType(DMG_CLUB)
+        damageInfo:SetDamagePosition(trace.HitPos)
+        damageInfo:SetDamageForce(self:GetOwner():GetAimVector() * 10000)
+        entity:DispatchTraceAttack(damageInfo, data.start, data.endpos)
     end
 end
 
 function SWEP:SecondaryAttack()
-    self.Owner:LagCompensation(true)
+    self:GetOwner():LagCompensation(true)
     local data = {}
-    data.start = self.Owner:GetShootPos()
-    data.endpos = data.start + self.Owner:GetAimVector() * 72
-    data.filter = self.Owner
+    data.start = self:GetOwner():GetShootPos()
+    data.endpos = data.start + self:GetOwner():GetAimVector() * 72
+    data.filter = self:GetOwner()
     data.mins = Vector(-8, -8, -30)
     data.maxs = Vector(8, 8, 10)
     local trace = util.TraceHull(data)
     local entity = trace.Entity
-    self.Owner:LagCompensation(false)
+    self:GetOwner():LagCompensation(false)
 
     if SERVER and IsValid(entity) then
         local bPushed = false
 
         if entity:IsDoor() then
-            if hook.Run("PlayerCanKnockOnDoor", self.Owner, entity) == false then return end
-            self.Owner:ViewPunch(Angle(-1.3, 1.8, 0))
-            self.Owner:EmitSound("physics/wood/wood_crate_impact_hard3.wav")
-            self.Owner:SetAnimation(PLAYER_ATTACK1)
+            if hook.Run("PlayerCanKnockOnDoor", self:GetOwner(), entity) == false then return end
+            self:GetOwner():ViewPunch(Angle(-1.3, 1.8, 0))
+            self:GetOwner():EmitSound("physics/wood/wood_crate_impact_hard3.wav")
+            self:GetOwner():SetAnimation(PLAYER_ATTACK1)
             self:SetNextSecondaryFire(CurTime() + 0.4)
             self:SetNextPrimaryFire(CurTime() + 1)
         elseif entity:IsPlayer() then
-            local direction = self.Owner:GetAimVector() * (300 + (self.Owner:GetCharacter():GetAttribute("str", 0) * 3))
+            local direction = self:GetOwner():GetAimVector() * (300 + (self:GetOwner():GetCharacter():GetAttribute("str", 0) * 3))
             direction.z = 0
             entity:SetVelocity(direction)
             bPushed = true
@@ -270,7 +254,7 @@ function SWEP:SecondaryAttack()
             local physObj = entity:GetPhysicsObject()
 
             if IsValid(physObj) then
-                physObj:SetVelocity(self.Owner:GetAimVector() * 180)
+                physObj:SetVelocity(self:GetOwner():GetAimVector() * 180)
             end
 
             bPushed = true
@@ -279,11 +263,11 @@ function SWEP:SecondaryAttack()
         if bPushed then
             self:SetNextSecondaryFire(CurTime() + 1.5)
             self:SetNextPrimaryFire(CurTime() + 1.5)
-            self.Owner:EmitSound("Weapon_Crossbow.BoltHitBody")
-            local model = string.lower(self.Owner:GetModel())
+            self:GetOwner():EmitSound("Weapon_Crossbow.BoltHitBody")
+            local model = string.lower(self:GetOwner():GetModel())
 
             if ix.anim.GetModelClass(model) == "metrocop" then
-                self.Owner:ForceSequence("pushplayer")
+                self:GetOwner():ForceSequence("pushplayer")
             end
         end
     end

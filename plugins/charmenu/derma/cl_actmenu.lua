@@ -39,9 +39,7 @@ local function ixActMenu()
     Perso:SetText("Name : " .. LocalPlayer():GetCharacter():GetName())
     Perso:SetSize(36, 21)
     left:AddItem(Perso)
-
     local faction = ix.faction.indices[LocalPlayer():GetCharacter():GetFaction()]
-
     local Perso = vgui.Create("DLabel", frame)
     Perso:Dock(TOP)
     Perso:DockMargin(8, 0, 0, 0)
@@ -49,7 +47,6 @@ local function ixActMenu()
     Perso:SetText("Faction : " .. faction.name)
     Perso:SetSize(36, 20)
     left:AddItem(Perso)
-
     local Perso = vgui.Create("DLabel", frame)
     Perso:Dock(TOP)
     Perso:DockMargin(8, 0, 0, 0)
@@ -57,7 +54,6 @@ local function ixActMenu()
     Perso:SetText("Tokens : " .. ix.currency.Get(LocalPlayer():GetCharacter():GetMoney()))
     Perso:SetSize(36, 20)
     left:AddItem(Perso)
-
     local Perso = vgui.Create("DLabel", frame)
     local healthText = "I feel Healthy"
     local health = LocalPlayer():Health()
@@ -152,17 +148,14 @@ local function ixActMenu()
 
     Perso:SetText("Hunger : " .. hungerText)
 
-    
     if LocalPlayer():Team() == FACTION_CITIZEN then
-
         local Perso = vgui.Create("DLabel", frame)
         Perso:Dock(TOP)
         Perso:DockMargin(8, 0, 0, 0)
         Perso:SetFont("AdminChatFont")
-        Perso:SetText("Loyalty Points : " .. LocalPlayer():GetLP ())
+        Perso:SetText("Loyalty Points : " .. LocalPlayer():GetLP())
         Perso:SetSize(36, 20)
         left:AddItem(Perso)
-
         local Perso = vgui.Create("DLabel", frame)
         Perso:Dock(TOP)
         Perso:DockMargin(8, 0, 0, 0)
@@ -170,113 +163,109 @@ local function ixActMenu()
         Perso:SetText("Warmth : " .. LocalPlayer():GetCharacter():GetWarmth())
         Perso:SetSize(36, 20)
         left:AddItem(Perso)
+        local but = vgui.Create("DButton", frame)
+        but:SetText("Apply")
+        but:SetFont("ixMonoMediumFont")
+        but:SetSize(36, 50)
+        but:Dock(TOP)
 
-local but = vgui.Create("DButton", frame)
-but:SetText("Apply")
-but:SetFont("ixMonoMediumFont")
-but:SetSize(36, 50)
-but:Dock(TOP)
+        but.DoClick = function()
+            frame:Close()
+            RunConsoleCommand("say", "/apply")
+        end
 
-but.DoClick = function()
-    frame:Close()
-    RunConsoleCommand("say", "/apply")
+        left:AddItem(but)
+        local mat = vgui.Create("Material", frame)
+        local modelPic = "citizenlifestuff/male04silhouette.png"
+        local model = LocalPlayer():GetCharacter():GetFaction()
+        mat:SetPos(0, 210)
+        mat:SetSize(295, 255)
+        left:AddItem(mat)
+        mat:SetMaterial(modelPic)
+        mat.AutoSize = false
+    end
+
+    if LocalPlayer():IsCombine() then
+        local Perso = vgui.Create("DLabel", frame)
+        Perso:Dock(TOP)
+        Perso:DockMargin(8, 0, 0, 0)
+        Perso:SetFont("AdminChatFont")
+        Perso:SetText("Rank Points : " .. LocalPlayer():GetRP())
+        Perso:SetSize(36, 20)
+        left:AddItem(Perso)
+        local bot = vgui.Create("DButton", frame)
+        bot:SetText("Tie")
+        bot:SetFont("ixMonoMediumFont")
+        bot:SetSize(36, 50)
+        bot:Dock(TOP)
+
+        bot.DoClick = function()
+            frame:Close()
+            RunConsoleCommand("say", "/tie")
+        end
+
+        left:AddItem(bot)
+        local bot = vgui.Create("DButton", frame)
+        bot:SetText("Search")
+        bot:SetFont("ixMonoMediumFont")
+        bot:SetSize(36, 50)
+        bot:Dock(TOP)
+
+        bot.DoClick = function()
+            frame:Close()
+            RunConsoleCommand("say", "/Search")
+        end
+
+        left:AddItem(bot)
+        local code3 = vgui.Create("DButton", frame)
+        code3:SetText("Code 3")
+        code3:SetFont("ixMonoMediumFont")
+        code3:SetSize(36, 50)
+        code3:Dock(TOP)
+
+        code3.DoClick = function()
+            frame:Close()
+            RunConsoleCommand("say", "/code3")
+        end
+
+        left:AddItem(code3)
+        local code2 = vgui.Create("DButton", frame)
+        code2:SetText("Code 2")
+        code2:SetFont("ixMonoMediumFont")
+        code2:SetSize(36, 50)
+        code2:Dock(TOP)
+
+        code2.DoClick = function()
+            frame:Close()
+            RunConsoleCommand("say", "/code2")
+        end
+
+        left:AddItem(code2)
+        local code2 = vgui.Create("DButton", frame)
+        code2:SetText("Data Interface")
+        code2:SetFont("ixMonoMediumFont")
+        code2:SetSize(36, 50)
+        code2:Dock(TOP)
+
+        code2.DoClick = function()
+            frame:Close()
+            RunConsoleCommand("say", "/datapad")
+        end
+
+        left:AddItem(code2)
+        local butt = vgui.Create("DButton", frame)
+        butt:SetText("Team Menu")
+        butt:SetFont("ixMonoMediumFont")
+        butt:SetSize(36, 50)
+        butt:Dock(TOP)
+
+        butt.DoClick = function()
+            frame:Close()
+            RunConsoleCommand("say", "/squadmenu")
+        end
+
+        left:AddItem(butt)
+    end
 end
-
-left:AddItem(but)
-
-
-
-local mat = vgui.Create("Material", frame)
-    local modelPic = "citizenlifestuff/male04silhouette.png"
-    local model = LocalPlayer():GetCharacter():GetFaction()
-    mat:SetPos(0, 210)
-    mat:SetSize(295, 255)
-    left:AddItem(mat)
-
-    mat:SetMaterial(modelPic)
-
-    mat.AutoSize = false
-
-end
-
-
-if LocalPlayer():IsCombine() then
-local Perso = vgui.Create("DLabel", frame)
-Perso:Dock(TOP)
-Perso:DockMargin(8, 0, 0, 0)
-Perso:SetFont("AdminChatFont")
-Perso:SetText("Rank Points : " .. LocalPlayer():GetRP())
-Perso:SetSize(36, 20)
-left:AddItem(Perso)
-
-local bot = vgui.Create("DButton", frame)
-bot:SetText("Tie")
-bot:SetFont("ixMonoMediumFont")
-bot:SetSize(36, 50)
-bot:Dock(TOP)
-
-bot.DoClick = function()
-        frame:Close()
-        RunConsoleCommand("say", "/tie")
-    end
-
-    left:AddItem(bot)
-
-local bot = vgui.Create("DButton", frame)
-bot:SetText("Search")
-bot:SetFont("ixMonoMediumFont")
-bot:SetSize(36, 50)
-bot:Dock(TOP)
-
-bot.DoClick = function()
-        frame:Close()
-        RunConsoleCommand("say", "/Search")
-    end
-
-    left:AddItem(bot)
-
-
-local butt = vgui.Create("DButton", frame)
-butt:SetText("Team Menu")
-butt:SetFont("ixMonoMediumFont")
-butt:SetSize(36, 50)
-butt:Dock(TOP)
-
-butt.DoClick = function()
-        frame:Close()
-        RunConsoleCommand("say", "/squadmenu")
-    end
-
-    left:AddItem(butt)
-
-    local code3 = vgui.Create("DButton", frame)
-    code3:SetText("Code 3")
-    code3:SetFont("ixMonoMediumFont")
-    code3:SetSize(36, 50)
-    code3:Dock(TOP)
-
-    code3.DoClick = function()
-        frame:Close()
-        RunConsoleCommand("say", "/code3")
-    end
-
-    left:AddItem(code3)
-
-    local code2 = vgui.Create("DButton", frame)
-    code2:SetText("Code 2")
-    code2:SetFont("ixMonoMediumFont")
-    code2:SetSize(36, 50)
-    code2:Dock(TOP)
-
-    code2.DoClick = function()
-        frame:Close()
-        RunConsoleCommand("say", "/code2")
-    end
-
-    left:AddItem(code2)
-end
-end
-
-
 
 usermessage.Hook("ixActMenu", ixActMenu)
