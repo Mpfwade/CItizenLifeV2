@@ -176,113 +176,99 @@ if CLIENT then
 
     local function DrawCombineHud()
         local ply = LocalPlayer()
-        local char = ply:GetCharacter()
         local pos = ply:GetPos()
         local grid = math.Round(pos.x / 100) .. " / " .. math.Round(pos.y / 100)
         local zone = ply:GetPlayerInArea() or "<UNDOCUMENTED ZONE>"
         local quota = ply:GetData("quota")
-        local quotamax = ply:GetData("quotamax")
-    
-        for i, msgData in ipairs(ix.gui.CombineHudMessages) do
+        local font = "CLCHud1"
+        surface.SetFont(font)
+
+        for i, msgData in pairs(ix.gui.CombineHudMessages) do
             msgData.y = msgData.y or 0
-            surface.SetFont("CLCHud1")
-            local _, h = surface.GetTextSize(msgData.message)
-            local x, y = 10, (i - 1) * h + 5
+            local w, h = surface.GetTextSize(msgData.message)
+            local x, y = 10, ((i - 1) * h) + 5
             msgData.y = Lerp(0.07, msgData.y, y)
-            draw.SimpleTextOutlined(msgData.message, "CLCHud1", x, msgData.y, msgData.bgCol or color_white, nil, nil, 1, color_black)
+            draw.SimpleTextOutlined(msgData.message, font, x, msgData.y, msgData.bgCol or color_white, nil, nil, 1, color_black)
         end
-    
+
         -- City Codes
-        draw.SimpleTextOutlined([[<:: // LOCAL INFORMATION ASSET \\ ::>]], "CLCHud1", ScrW() / 2, 5, Color(0, 138, 216), TEXT_ALIGN_CENTER, nil, 1, color_black)
-    
+        draw.SimpleTextOutlined([[<:: // LOCAL INFORMATION ASSET \\ ::>]], font, ScrW() / 2, 5, Color(0, 138, 216), TEXT_ALIGN_CENTER, nil, 1, color_black)
         local value = ix.config.Get("cityCode", 0)
-        local cityCode = ix.cityCodes[value]
-    
-        if cityCode then
-            draw.SimpleTextOutlined("<:: CIVIC POLITISTABILIZATION INDEX: " .. cityCode[1] .. " ::>", "CLCHud1", ScrW() / 2, 5 + 16, cityCode[2] or color_white, TEXT_ALIGN_CENTER, nil, 1, color_black)
+        local cityCodes = ix.cityCodes[value]
+
+        if cityCodes then
+            draw.SimpleTextOutlined("<:: CIVIC POLITISTABILIZATION INDEX: " .. cityCodes[1] .. " ::>", font, ScrW() / 2, 5 + 16, cityCodes[2] or color_white, TEXT_ALIGN_CENTER, nil, 1, color_black)
         end
-    
+
         -- Top Right
-        draw.SimpleTextOutlined("// LOCAL ASSET ::>", "CLCHud1", ScrW() - 10, 5, Color(0, 138, 216), TEXT_ALIGN_RIGHT, nil, 1, color_black)
-        draw.SimpleTextOutlined("VITALS: " .. ply:Health() .. "% ::>", "CLCHud1", ScrW() - 10, 42, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
-        draw.SimpleTextOutlined("SPS CHARGE: " .. ply:Armor() .. "% ::>", "CLCHud1", ScrW() - 10, 58, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
-        draw.SimpleTextOutlined("BIOSIGNAL GRID: " .. grid .. " ::>", "CLCHud1", ScrW() - 10, 74, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
-        draw.SimpleTextOutlined("BIOSIGNAL ZONE: " .. zone .. " ::>", "CLCHud1", ScrW() - 10, 90, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
-    
+        draw.SimpleTextOutlined("// LOCAL ASSET ::>", font, ScrW() - 10, 5, Color(0, 138, 216), TEXT_ALIGN_RIGHT, nil, 1, color_black)
+        draw.SimpleTextOutlined("VITALS: " .. ply:Health() .. "% ::>", font, ScrW() - 10, 42, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
+        draw.SimpleTextOutlined("SPS CHARGE: " .. ply:Armor() .. "% ::>", font, ScrW() - 10, 58, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
+        draw.SimpleTextOutlined("BIOSIGNAL GRID: " .. grid .. " ::>", font, ScrW() - 10, 74, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
+        draw.SimpleTextOutlined("BIOSIGNAL ZONE: " .. zone .. " ::>", font, ScrW() - 10, 90, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
+
         if quota then
-            draw.SimpleTextOutlined("BEATING QUOTA: " .. quota .. " ::>", "CLCHud1", ScrW() - 10, 109, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
+            draw.SimpleTextOutlined("BEATING QUOTA: " .. quota .. " ::>", font, ScrW() - 10, 109, color_white, TEXT_ALIGN_RIGHT, nil, 1, color_black)
         end
-    
+
         local y = 16
-    
-        if ix.option.Get("showLocalAssets", true) then
+        local showLocalAssets = ix.option.Get("showLocalAssets", true)
+
+        if showLocalAssets then
             local squad = ply:GetSquad() or "NONE"
-            draw.SimpleTextOutlined("<:: PATROL TEAM: " .. squad .. " //", "CLCHud1", 10, 200, Color(0, 138, 216), nil, nil, 1, color_black)
-    
-            for _, v in ipairs(player.GetAll()) do
-                if (v:Team() == FACTION_CCA and v:GetNetVar("squad")) and (ply:Team() == FACTION_CCA) then
-                    if not v:Alive() then
-                        squad = "<BIOSIGNAL LOST>"
-                    end
-    
-                    draw.SimpleTextOutlined("<:: UNIT: " .. string.upper(v:Nick()), "CLCHud1", 10, 210 + y, color_white, nil, nil, 1, color_black)
+            draw.SimpleTextOutlined("<:: PATROL TEAM: " .. squad .. " //", font, 10, 200, Color(0, 138, 216), nil, nil, 1, color_black)
+
+            for _, v in pairs(player.GetAll()) do
+                if v:Team() == FACTION_CCA and v:GetNetVar("squad") and ply:Team() == FACTION_CCA then
+                    local unitText = "<:: UNIT: " .. string.upper(v:Nick())
+                    local healthText = v:Alive() and " | VITALS: " .. v:Health() or "<BIOSIGNAL LOST>"
+                    draw.SimpleTextOutlined(unitText, font, 10, 210 + y, color_white, nil, nil, 1, color_black)
+                    draw.SimpleTextOutlined(healthText, font, 250, 210 + y, color_white, nil, nil, 1, color_black)
                     y = y + 16
-                elseif (v:Team() == FACTION_OTA) and (ply:Team() == FACTION_OTA) then
-                    local health = v:Health() .. "%"
-    
-                    if not v:Alive() then
-                        health = "<BIOSIGNAL LOST>"
-                    end
-    
-                    draw.SimpleTextOutlined("<:: UNIT: " .. string.upper(v:Nick()), "CLCHud1", 10, 210 + y, color_white, nil, nil, 1, color_black)
-                    draw.SimpleTextOutlined(" | VITALS: " .. v:Health(), "CLCHud1", 250, 210 + y, color_white, nil, nil, 1, color_black)
+                elseif v:Team() == FACTION_OTA and ply:Team() == FACTION_OTA then
+                    local unitText = "<:: UNIT: " .. string.upper(v:Nick())
+                    local healthText = v:Alive() and " | VITALS: " .. v:Health() or "<BIOSIGNAL LOST>"
+                    draw.SimpleTextOutlined(unitText, font, 10, 210 + y, color_white, nil, nil, 1, color_black)
+                    draw.SimpleTextOutlined(healthText, font, 250, 210 + y, color_white, nil, nil, 1, color_black)
                     y = y + 16
                 end
             end
         end
-    
-        if IsValid(ply:GetActiveWeapon()) and combatWeapons[ply:GetActiveWeapon():GetClass()] then
-            local weapon = ply:GetActiveWeapon()
-            local weaponName = weapon:GetPrintName()
-            local weaponAmmo1 = weapon:Clip1()
-            local weaponAmmo2 = ply:GetAmmoCount(weapon:GetPrimaryAmmoType())
-            local weaponAmmo3 = ply:GetAmmoCount(weapon:GetSecondaryAmmoType())
+
+        local activeWeapon = ply:GetActiveWeapon()
+
+        if IsValid(activeWeapon) and combatWeapons[activeWeapon:GetClass()] then
+            local weaponName = activeWeapon:GetPrintName()
+            local weaponAmmo1 = activeWeapon:Clip1()
+            local weaponAmmo2 = ply:GetAmmoCount(activeWeapon:GetPrimaryAmmoType())
+            local weaponAmmo3 = ply:GetAmmoCount(activeWeapon:GetSecondaryAmmoType())
             local weaponprimarycolor = color_white
-    
-            if weaponAmmo1 == 0 then
-                weaponAmmo1 = "N/A"
+            weaponAmmo1 = weaponAmmo1 > 0 and weaponAmmo1 or "N/A"
+            weaponAmmo2 = weaponAmmo2 > 0 and weaponAmmo2 or "N/A"
+            weaponAmmo3 = weaponAmmo3 > 0 and weaponAmmo3 or "N/A"
+
+            if combatWeapons[activeWeapon:GetClass()] then
+                weaponName = combatWeapons[activeWeapon:GetClass()]
             end
-    
-            if weaponAmmo2 == 0 then
-                weaponAmmo2 = "N/A"
-            end
-    
-            if weaponAmmo3 == 0 then
-                weaponAmmo3 = "N/A"
-            end
-    
-            if combatWeapons[weapon:GetClass()] then
-                weaponName = combatWeapons[weapon:GetClass()]
-            end
-    
-            if weapon:Clip1() < weapon:GetMaxClip1() / 4 then
+
+            if activeWeapon:Clip1() < activeWeapon:GetMaxClip1() / 4 then
                 weaponprimarycolor = Color(255, 0, 0)
-    
+
                 if (ply.nextAmmoWarn or 0) < CurTime() then
                     ix.gui.AddCombineDisplayMessage("LOW ON AMMO.. RELOAD.", weaponprimarycolor, true)
                     ply.nextAmmoWarn = CurTime() + 20
                 end
             end
-    
-            draw.SimpleTextOutlined("<:: LOCAL WEAPONRY //", "CLCHud1", ScrW() - 195, 133, Color(0, 138, 216), nil, nil, 1, color_black)
-            draw.SimpleTextOutlined("<:: FIREARM: " .. string.upper(weaponName), "CLCHud1", ScrW() - 195, 155, color_white, nil, nil, 1, color_black)
-            draw.SimpleTextOutlined("<:: AM: [ " .. weaponAmmo1 .. " ] / [ " .. weaponAmmo2 .. " ]", "CLCHud1", ScrW() - 195, 177, weaponprimarycolor, nil, nil, 1, color_black)
+
+            draw.SimpleTextOutlined("<:: LOCAL WEAPONRY //", font, ScrW() - 195, 133, Color(0, 138, 216), nil, nil, 1, color_black)
+            draw.SimpleTextOutlined("<:: FIREARM: " .. string.upper(weaponName), font, ScrW() - 195, 155, color_white, nil, nil, 1, color_black)
+            draw.SimpleTextOutlined("<:: AM: [ " .. weaponAmmo1 .. " ] / [ " .. weaponAmmo2 .. " ]", font, ScrW() - 195, 177, weaponprimarycolor, nil, nil, 1, color_black)
         end
     end
-    
+
     function PLUGIN:CanDrawAmmoHUD(weapon)
         if combatWeapons[weapon:GetClass()] and LocalPlayer():IsCombine() then return false end
-    end    
+    end
 
     local function DrawEffects(ply, char)
         surface.SetDrawColor(Color(255, 0, 0, 0))
