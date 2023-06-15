@@ -110,7 +110,7 @@ function PANEL:Init()
     dock.text:Dock(FILL)
 
     function dock.text:PerformLayout()
-        self:SetFontInternal("Trebuchet24")
+        self:SetFontInternal("RadioFont")
     end
 
     function dock.text:SetInfo(ent)
@@ -122,7 +122,6 @@ function PANEL:Init()
         local character = ent:GetCharacter()
         local desc = character:GetDescription()
         self:AppendText("Physical Description:\n" .. desc .. "\n\n")
-
         local bol = ent:GetNWBool("ixActiveBOL")
 
         if bol then
@@ -173,7 +172,7 @@ function PANEL:Init()
         end
 
         local textCol = Color(self.textCol, self.textCol, self.textCol, self.textCol)
-        draw.SimpleText(self:GetText(), "Trebuchet24", w / 2, h / 2, textCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self:GetText(), "RadioFont", w / 2, h / 2, textCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
         return true
     end
@@ -182,270 +181,8 @@ function PANEL:Init()
         local par = self:GetParent():GetParent()
         local ent = par.selectedEnt
         if not par.selected then return end
-        RunConsoleCommand("say", "/viewdata "..ent:GetName().."")
+        RunConsoleCommand("say", "/viewdata " .. ent:GetName() .. "")
         surface.PlaySound("ui/buttonclick.wav")
-    end
-
-    local function nRecordRequest()
-        local record = net.ReadTable()
-        local ent = Entity(net.ReadUInt(8))
-        local panel = vgui.Create("DFrame")
-        panel:SetSize(ScrW() / 2, ScrH() / 2)
-        panel:Center()
-        panel:MakePopup()
-        panel:SetTitle(ent:GetName() .. "'s Record")
-        local pW, pH = panel:GetSize()
-        local list = vgui.Create("DListView", panel)
-        list:Dock(FILL)
-        list:SetDataHeight(pH / 18)
-        list:AddColumn("Type"):SetFixedWidth(pW / 8)
-        list:AddColumn("Points"):SetFixedWidth(pW / 16)
-        list:AddColumn("Reason")
-
-        function list:Paint(w, h)
-            surface.SetDrawColor(35, 35, 35, 245)
-            surface.DrawRect(0, 0, w, h)
-        end
-
-        for i, v in ipairs(list.Columns) do
-            function v.Header:Paint(w, h)
-                surface.SetDrawColor(120, 120, 120)
-                surface.DrawRect(2, 2, w - 4, h - 4)
-            end
-        end
-
-        list.records = {}
-
-        for i, v in ipairs(record) do
-            list:AddLine(v.type, v.points, v.reason)
-            list.records[i] = v
-        end
-
-        function list:OnRowSelected(ind, row)
-            panel.selected = ind
-
-            for i, v in ipairs(self:GetLines()) do
-                v.selected = false
-            end
-
-            row.selected = true
-        end
-
-        local function PaintRecord()
-            for i, v in ipairs(list:GetLines()) do
-                function v:Paint(w, h)
-                    surface.SetDrawColor(90, 90, 90)
-                    surface.DrawRect(2, 2, w - 4, h - 2)
-                    self.alpha = self.alpha or 0
-                    self.mult = self.mult or 0
-
-                    if self:IsHovered() or self.selected then
-                        self.alpha = Lerp(0.02, self.alpha, 255)
-                        self.mult = Lerp(0.02, self.mult, 1)
-                    else
-                        self.alpha = Lerp(0.02, self.alpha, 0)
-                        self.mult = Lerp(0.02, self.mult, 0)
-                    end
-
-                    surface.SetDrawColor(col.r, col.g, col.b, self.alpha)
-                    surface.DrawRect(2, (h - h / 8) + 2, (w * self.mult) - 4, h / 6)
-                end
-
-                for i2, v2 in pairs(v.Columns) do
-                    v2:SetFont("Trebuchet24")
-                    v2:SetTextColor(Color(255, 255, 255, 20))
-
-                    function v2:Think()
-                        self.alpha = self.alpha or 20
-
-                        if self:GetParent():IsHovered() or self:GetParent().selected then
-                            self.alpha = Lerp(0.02, self.alpha, 255)
-                        else
-                            self.alpha = Lerp(0.02, self.alpha, 20)
-                        end
-
-                        self:SetTextColor(Color(255, 255, 255, self.alpha))
-                    end
-                end
-            end
-        end
-
-        PaintRecord()
-        local addRecord = vgui.Create("DButton", panel)
-        addRecord:SetSize(0, pH / 18)
-        addRecord:SetText("Add Record")
-        addRecord:DockMargin(0, 0, 0, 15)
-        addRecord:Dock(BOTTOM)
-
-        function addRecord:DoClick()
-            self.record = {}
-            local frame = vgui.Create("DFrame")
-            frame:SetSize(ScrW() / 3, ScrH() / 1.75)
-            frame:MakePopup()
-            frame:Center()
-            frame:SetTitle("Add Record")
-            local info = vgui.Create("Panel", frame)
-            info:DockMargin(0, 0, 0, 5)
-            info:SetSize(0, 30)
-            info:Dock(TOP)
-
-            function info:Paint(w, h)
-                surface.SetDrawColor(55, 55, 55)
-                surface.DrawRect(0, 0, w, h)
-                draw.SimpleText("Input Record Detials", "Trebuchet24", 5, h / 2, Color(255, 255, 255), nil, TEXT_ALIGN_CENTER)
-            end
-
-            local input = vgui.Create("DTextEntry", frame)
-            input:Dock(FILL)
-            input:SetPaintBackground(false)
-            input:SetMultiline(true)
-            input:SetTextColor(Color(255, 255, 255))
-            input:SetFont("Trebuchet24")
-            local oldPaint = input.Paint
-
-            function input:Paint(w, h)
-                self.col = self.col or 55
-
-                if self:HasFocus() then
-                    self.col = Lerp(0.02, self.col, 120)
-                else
-                    self.col = Lerp(0.02, self.col, 55)
-                end
-
-                surface.SetDrawColor(self.col, self.col, self.col, 245)
-                surface.DrawRect(0, 0, w, h)
-                oldPaint(self, w, h)
-            end
-
-            local finish = vgui.Create("DButton", frame)
-            finish:SetText("Add Record")
-            finish:Dock(BOTTOM)
-
-            function finish:Paint(w, h)
-                surface.SetDrawColor(20, 20, 20)
-                surface.DrawRect(0, 0, w, h)
-            end
-
-            local type = vgui.Create("DComboBox", frame)
-            type:DockMargin(0, 10, 0, 10)
-            type:Dock(BOTTOM)
-            type:AddChoice("Loyalty")
-            type:AddChoice("Violation")
-            type:SetValue("Select Record Type")
-            type:SetTextColor(Color(0, 0, 0))
-
-            function type:Paint(w, h)
-                surface.SetDrawColor(255, 255, 255)
-                surface.DrawRect(0, 0, w, h)
-            end
-
-            local points = vgui.Create("DNumberWang", frame)
-            points:DockMargin(0, 10, 0, 10)
-            points:SetSize(0, h / 48)
-            points:Dock(BOTTOM)
-
-            function finish.DoClick()
-                local sType = type:GetSelected()
-                local sReason = input:GetText()
-                local sPoints = points:GetValue()
-                sReason = string.Trim(sReason, " ")
-                if not sType then return end
-
-                if sPoints < 0 then
-                    LocalPlayer():Notify("You cannot use negative amount of points, set type instead.")
-
-                    return
-                end
-
-                net.Start("nRecordEdit")
-                net.WriteUInt(ent:EntIndex(), 8)
-                net.WriteBool(false)
-                net.WriteString(sType)
-                net.WriteString(sReason)
-                net.WriteUInt(sPoints, 8)
-                net.SendToServer()
-                frame:Remove()
-                list:AddLine(sType, sPoints, sReason)
-                -- The paint methods assigned to records are only called on panel creation
-                -- This just re-assigns it to all the new ones
-                PaintRecord()
-                local info = dock.text
-                local oldNotes = info.curNotes or "N/A"
-
-                -- Short timer to make sure data is updated
-                timer.Simple(0.25, function()
-                    if IsValid(info) then
-                        info:SetInfo(ent, oldNotes)
-                    end
-                end)
-            end
-        end
-
-        local removeRecord = vgui.Create("DButton", panel)
-        removeRecord:SetSize(0, pH / 18)
-        removeRecord:SetText("Remove Record")
-        removeRecord:DockMargin(0, 0, 0, 15)
-        removeRecord:Dock(BOTTOM)
-
-        function removeRecord.DoClick()
-            local selectedInd
-
-            for i, v in ipairs(list:GetLines()) do
-                if v.selected then
-                    selectedInd = i
-                end
-            end
-
-            if not selectedInd then return end
-            net.Start("nRecordEdit")
-            net.WriteUInt(ent:EntIndex(), 8)
-            net.WriteBool(true)
-            net.WriteUInt(selectedInd, 8)
-            net.SendToServer()
-            list:RemoveLine(selectedInd)
-            local info = dock.text
-            local oldNotes = info.curNotes or "N/A"
-
-            -- Short timer to make sure data is updated
-            timer.Simple(0.25, function()
-                if IsValid(info) then
-                    info:SetInfo(ent, oldNotes)
-                end
-            end)
-        end
-
-        local viewRecord = vgui.Create("DButton", panel)
-        viewRecord:SetSize(0, pH / 18)
-        viewRecord:SetText("View Details")
-        viewRecord:DockMargin(0, 15, 0, 15)
-        viewRecord:Dock(BOTTOM)
-
-        function viewRecord:DoClick()
-            if not panel.selected then return end
-            local view = vgui.Create("DFrame")
-            view:SetSize(ScrW() / 6, ScrH() / 3)
-            view:MakePopup()
-            view:Center()
-            view:SetTitle("Record Details")
-            local data = vgui.Create("RichText", view)
-            data:Dock(FILL)
-
-            function data:PerformLayout()
-                self:SetFontInternal("Trebuchet24")
-            end
-
-            local details = list.records[panel.selected]
-
-            if details.type == "Loyalty" then
-                data:InsertColorChange(0, 220, 0, 255)
-            else
-                data:InsertColorChange(220, 0, 0, 255)
-            end
-
-            data:AppendText("Record Type: " .. details.type .. "\n\n")
-            data:InsertColorChange(255, 255, 255, 255)
-            data:AppendText("Points: " .. details.points .. "\n\n" .. "Reason:\n" .. details.reason)
-        end
     end
 
     net.Receive("nRecordRequest", nRecordRequest)
@@ -483,7 +220,7 @@ function PANEL:Init()
         end
 
         local textCol = Color(self.textCol, self.textCol, self.textCol, self.textCol)
-        draw.SimpleText(self:GetText(), "Trebuchet24", w / 2, h / 2, textCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self:GetText(), "RadioFont", w / 2, h / 2, textCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
         return true
     end
@@ -530,7 +267,7 @@ function PANEL:Init()
         end
 
         local textCol = Color(self.textCol, self.textCol, self.textCol, self.textCol)
-        draw.SimpleText(self:GetText(), "Trebuchet24", w / 2, h / 2, textCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(self:GetText(), "RadioFont", w / 2, h / 2, textCol, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
         return true
     end
@@ -543,29 +280,21 @@ function PANEL:Init()
         surface.PlaySound("ui/buttonclick.wav")
     end
 
-    self.close = vgui.Create( "DButton", self )
-    self.close:SetSize(h/64, h/64)
-    self.close:SetPos( (w - h/64) - 5, 5 )
-  
-    local mat = Material( "icon16/cross.png" )
-  
-    function self.close:Paint( w, h )
-      surface.SetMaterial( mat )
-      surface.SetDrawColor( 255, 255, 255 )
-      surface.DrawTexturedRect( 0, 0, w, h )
-  
-      return true
-    end
-  
+    self.close = vgui.Create("DButton", self)
+    self.close:SetFont("ixSmallFont")
+    self.close:SetSize(16, 16)
+    self.close:SetPos((w - h / 64) - 5, 5)
+    self.close:SetText("X")
+
     -- Using a dot instead of colon so self isn't overriden
     function self.close.DoClick()
-      self:Remove()
+        surface.PlaySound("ui/buttonclick.wav")
+        self:Remove()
     end
-  
+
     self:PopulateCitizens()
-  
-    CursorStop( self )
-  end
+    CursorStop(self)
+end
 
 function PANEL:PopulateCitizens()
     self.list.ents = {}
@@ -599,7 +328,7 @@ function PANEL:PopulateCitizens()
         end
 
         for i2, v2 in pairs(v.Columns) do
-            v2:SetFont("Trebuchet24")
+            v2:SetFont("RadioFont")
             v2:SetTextColor(Color(255, 255, 255, 20))
 
             function v2:Think()

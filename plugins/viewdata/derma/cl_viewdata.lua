@@ -5,17 +5,26 @@
 local PLUGIN = PLUGIN
 local PANEL = {}
 
+local function CursorStop(pan)
+    pan:SetCursor("blank")
+
+    for i, v in pairs(pan:GetChildren()) do
+        CursorStop(v)
+    end
+end
+
 -- Called when the panel is first initialized.
 function PANEL:Init()
     if IsValid(ix.gui.menu) then
         ix.gui.menu:Remove()
     end
 
+    CursorStop(self)
     self:SetBackgroundBlur(true)
     self:ShowCloseButton(false)
     self:Center()
     self:MakePopup()
-    self:SetTitle("Exit")
+    self:SetTitle("")
     self:SetAlpha(0)
     self.exitButton = self:Add("DButton")
     self.exitButton:SetFont("ixSmallFont")
@@ -24,6 +33,8 @@ function PANEL:Init()
     self.exitButton:SetText("X")
 
     function self.exitButton:DoClick()
+        surface.PlaySound("ui/buttonclick.wav")
+
         ix.gui.record:SendToServer(VIEWDATA_UPDATEVAR, {
             var = "note",
             info = ix.gui.record.note.textEntry:GetText()
@@ -31,15 +42,6 @@ function PANEL:Init()
 
         ix.gui.record:Remove()
     end
-end
-
-function PANEL:Paint()
-    surface.SetMaterial(ix.util.GetMaterial("cable/cable"))
-    surface.SetDrawColor(255, 255, 255, 255)
-    surface.DrawTexturedRect(0, 0, 512, 512)
-    surface.SetMaterial(ix.util.GetMaterial("dev/dev_prisontvoverlay002"))
-    surface.SetDrawColor(255, 255, 255, 150)
-    surface.DrawTexturedRect(0, 0, 512, 512)
 end
 
 -- Called each frame of the panel being open.
@@ -85,7 +87,6 @@ function PANEL:Build(target, cid, record)
     self.recordTable = record
     self.content = self:AddStage("Home")
     self.content:SetPaintBackground(false)
-    self.content:Add(self:BuildLabel("Civil Protection Datapad", true))
     self:BuildCID()
     self.record = self:AddStage("Record", "ixCombineViewDataRecord")
     self.note = self:AddStage("Note", "ixCombineViewDataViewNote")
@@ -94,6 +95,7 @@ function PANEL:Build(target, cid, record)
     self:SetStage("Home")
     self:AlphaTo(255, 0.5)
     self:BuildButtons()
+    CursorStop(self)
 end
 
 function PANEL:GetRecord()
@@ -110,7 +112,7 @@ function PANEL:BuildCID()
     self.cid:Dock(TOP)
     self.cid:DockMargin(0, 8, 0, 8)
     self.cid:SetTall(196)
-    self.cid:SetPaintBackground(false) 
+    self.cid:SetPaintBackground(false)
     self.modelBackground = self.cid:Add(self:DrawCharacter())
     self.rightDock = self.cid:Add("DPanel")
     self.rightDock:Dock(FILL)
@@ -118,6 +120,7 @@ function PANEL:BuildCID()
     self.rightDock:SetPaintBackground(false)
     self.name = self.rightDock:Add(self:BuildLabel("Name : " .. self.character:GetName() or "Error", false, 4))
     self.cid = self.rightDock:Add(self:BuildLabel("CID : " .. self.cidValue or "ERROR", false, 4))
+    CursorStop(self)
 end
 
 function PANEL:BuildButtons()
@@ -169,6 +172,7 @@ function PANEL:BuildLabel(text, title, align, overrideFont)
     label:Dock(TOP)
     label:SizeToContents()
     label:SetExpensiveShadow(3)
+    CursorStop(self)
 
     return label
 end
@@ -180,6 +184,7 @@ function PANEL:AddStageButton(name, parent)
 
     function button.DoClick()
         ix.gui.record:SetStage(parent)
+        surface.PlaySound("ui/buttonclick.wav")
     end
 
     return button
@@ -201,13 +206,33 @@ function PANEL:AddBackHeader(callback)
 
     function back.DoClick()
         if not callback then
+            surface.PlaySound("ui/buttonclick.wav")
             ix.gui.record:SetStage("Home")
         else
+            surface.PlaySound("ui/buttonclick.wav")
             callback()
         end
     end
 
     return header
+end
+
+function PANEL:PaintCursor(mat)
+    local x, y = self:LocalCursorPos()
+    surface.SetDrawColor(255, 255, 255, 255)
+    surface.SetMaterial(mat)
+    surface.DrawTexturedRect(x, y, 25, 25)
+end
+
+local cursMat = Material("vgui/cursors/arrow")
+
+function PANEL:Paint(w, h)
+    surface.SetDrawColor(40, 40, 40, 245)
+    surface.DrawRect(0, 0, w, h)
+end
+
+function PANEL:PaintOver(w, h)
+    self:PaintCursor(cursMat)
 end
 
 function PANEL:SendToServer(message, data)
