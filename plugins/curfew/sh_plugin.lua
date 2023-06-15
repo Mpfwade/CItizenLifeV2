@@ -87,8 +87,14 @@ function PLUGIN:GetEvent()
         end
     end
 
-    if ix.config.Get("cityCode") > 0 then
-        SetGlobalString("ixCurrentEvent", "PATROL, PROTECT")
+    if ix.config.Get("cityCode") == 1 then
+        SetGlobalString("ixCurrentEvent", "PRESSURE, SWORD, STERILIZE")
+    elseif ix.config.Get("cityCode") == 2 then
+        SetGlobalString("ixCurrentEvent", "ASSEMBLE, ADMINISTER, CONTAIN")
+    elseif ix.config.Get("cityCode") == 3 then
+        SetGlobalString("ixCurrentEvent", "FLINT, INSPECT, EXTIRPATE")
+    elseif ix.config.Get("cityCode") == 4 then
+        SetGlobalString("ixCurrentEvent", "AMPUTATE, ZERO, CONFIRM")
     end
 
     return GetGlobalString("ixCurrentEvent", "PATROL, PROTECT")

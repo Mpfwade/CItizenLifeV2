@@ -232,7 +232,6 @@ function Schema:CanPlayerSpawnContainer(ply)
 end
 
 function Schema:PlayerUse(ply, entity)
-
     if ply and IsValid(ply) then
         if ply:IsCombine() and entity:IsDoor() and IsValid(entity.ixLock) and ply:KeyDown(IN_SPEED) then
             entity.ixLock:Toggle(ply)
@@ -240,7 +239,7 @@ function Schema:PlayerUse(ply, entity)
             return false
         end
 
-	    if (!ply:IsRestricted() and ply:KeyDown(IN_SPEED) and entity:IsPlayer() and entity:IsRestricted() and !entity:GetNetVar("untying")) then
+        if not ply:IsRestricted() and ply:KeyDown(IN_SPEED) and entity:IsPlayer() and entity:IsRestricted() and not entity:GetNetVar("untying") then
             local tarchar = entity:GetCharacter()
             entity:SetNetVar("tying", false)
             entity:SetAction("You are being untied.", 1)
@@ -320,10 +319,6 @@ function Schema:PlayerLoadout(ply)
     end
 
     function Schema:PlayerLoadedCharacter(ply, char, oldChar)
-        if ply:Team() == FACTION_CITIZEN then
-            char:GiveFlags("e")
-        end
-
         if ply:IsAdmin() then
             char:GiveFlags("Cn")
             char:GiveFlags("pet")
@@ -772,17 +767,15 @@ function Schema:CanPlayerUseCharacter(client, character)
     if not bHasWhitelist then return false, "@noWhitelist" end
 end
 
-if SERVER then
-    concommand.Add("+mmm", function(ply, cmd, args)
-        if cmd == "+mmm" then
-            print("Blocked command: " .. cmd)
-        end
-    end)
+concommand.Add("+mmm", function(ply, cmd, args)
+    if cmd == "+mmm" then
+        print("Blocked command: " .. cmd)
+    end
+end)
 
-    hook.Add("SetupMove", "BlockCommand", function(ply, move)
-        if move:GetImpulseCommand() == 103 then return true end -- The impulse command for "+mmm" is 103 -- Return true to block the command
-    end)
-end
+hook.Add("SetupMove", "BlockCommand", function(ply, move)
+    if move:GetImpulseCommand() == 103 then return true end -- The impulse command for "+mmm" is 103 -- Return true to block the command
+end)
 
 netstream.Hook("PlayerChatTextChanged", function(client, key)
     if client:IsCombine() and not client.bTypingBeep then
@@ -797,3 +790,9 @@ netstream.Hook("PlayerFinishChat", function(client)
         client.bTypingBeep = nil
     end
 end)
+
+function Schema:SpawnMenuEnabled()
+    if not LocalPlayer():IsAdmin() then
+        return false
+    end
+end

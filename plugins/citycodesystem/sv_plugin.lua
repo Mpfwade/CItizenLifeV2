@@ -50,7 +50,7 @@ function PLUGIN:CityTurmoilStart()
 
     SetGlobalBool("ixCTStatus", true)
     PlayEventSound("music/stingers/hl1_stinger_song28.mp3")
-    PlayTimedEventSound(5, "dispatch/disp_anticitizen.wav")
+    PlayTimedEventSound(5, "npc/overwatch/cityvoice/f_protectionresponse_5_spkr.wav")
     PlayTimedEventSound(6, "music/destabilizing3.wav")
     PlayTimedEventSound(10, "ambient/levels/citadel/citadel_5sirens3.wav")
     PlayTimedEventSound(13, "ambient/levels/citadel/stalk_traindooropen.wav")
@@ -107,14 +107,6 @@ function PLUGIN:CityTurmoilStop()
 
     for _, v in pairs(ents.FindByName("citadel")) do
         v:Fire("SetAnimation", "idle")
-    end
-
-    local sounds = {"npc/overwatch/radiovoice/on3.wav", "npc/overwatch/radiovoice/attention.wav", "npc/overwatch/radiovoice/sociostabilizationrestored.wav", "npc/overwatch/radiovoice/off2.wav"}
-
-    for k, v in ipairs(player.GetAll()) do
-        if v:IsCombine() then
-            ix.util.EmitQueuedSounds(v, sounds, 0, 0.2, 150)
-        end
     end
 end
 

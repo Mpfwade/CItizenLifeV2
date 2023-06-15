@@ -2,19 +2,15 @@
 	Clientside Hooks
 ---------------------------------------------------------------------------]]
 --
-
-
 function Schema:ChatTextChanged(text)
-	if (LocalPlayer():IsCombine()) then
-		netstream.Start("PlayerChatTextChanged", text)
-	end
+    if LocalPlayer():IsCombine() then
+        netstream.Start("PlayerChatTextChanged", text)
+    end
 end
-
 
 function Schema:FinishChat()
-	netstream.Start("PlayerFinishChat")
+    netstream.Start("PlayerFinishChat")
 end
-
 
 function Schema:ShouldDrawCrosshair()
     return ix.option.Get("Crosshair")
@@ -97,4 +93,12 @@ netstream.Hook("Frequency", function(oldFrequency)
     Derma_StringRequest("Frequency", "What would you like to set the number to?", oldFrequency, function(text)
         ix.command.Send("SetFreq", text)
     end)
+end)
+
+local function RestrictSpawnMenu()
+    if not LocalPlayer():IsAdmin() then return false end
+end
+
+hook.Add("SpawnMenuOpen", "RestrictSpawnMenu", function()
+    if not LocalPlayer():IsAdmin() then return RestrictSpawnMenu() end
 end)

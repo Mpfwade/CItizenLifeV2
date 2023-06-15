@@ -183,6 +183,7 @@ function PANEL:Init()
         local ent = par.selectedEnt
         if not par.selected then return end
         RunConsoleCommand("say", "/viewdata "..ent:GetName().."")
+        surface.PlaySound("ui/buttonclick.wav")
     end
 
     local function nRecordRequest()
@@ -492,6 +493,7 @@ function PANEL:Init()
         local ent = par.selectedEnt
         if not IsValid(ent) then return end
         ent:SetNWBool("ixActiveBOL", true)
+        surface.PlaySound("ui/buttonclick.wav")
     end
 
     dock.setBOL = vgui.Create("DButton", dock)
@@ -538,6 +540,7 @@ function PANEL:Init()
         local ent = par.selectedEnt
         if not IsValid(ent) then return end
         ent:SetNWBool("ixActiveBOL", false)
+        surface.PlaySound("ui/buttonclick.wav")
     end
 
     self.close = vgui.Create( "DButton", self )
