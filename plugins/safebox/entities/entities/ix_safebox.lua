@@ -5,64 +5,71 @@ ENT.Spawnable = true
 ENT.AdminOnly = true
 ENT.bNoPersist = true
 
-if ( SERVER ) then
-	function ENT:Initialize()
-		self:SetModel("models/props_junk/cardboard_box002b.mdl")
-		self:PhysicsInit(SOLID_VPHYSICS)
-		self:SetSolid(SOLID_VPHYSICS)
-		self:SetUseType(SIMPLE_USE)
+if SERVER then
+    function ENT:Initialize()
+        self:SetModel("models/props_junk/cardboard_box002b.mdl")
+        self:PhysicsInit(SOLID_VPHYSICS)
+        self:SetSolid(SOLID_VPHYSICS)
+        self:SetUseType(SIMPLE_USE)
+        local physObj = self:GetPhysicsObject()
 
-		local physObj = self:GetPhysicsObject()
+        if IsValid(physObj) then
+            physObj:EnableMotion(true)
+            physObj:Wake()
+        end
+    end
 
-		if (IsValid(physObj)) then
-			physObj:EnableMotion(true)
-			physObj:Wake()
-		end
-	end
+    function ENT:SpawnFunction(ply, trace)
+        local angles = ply:GetAngles()
+        local entity = ents.Create("ix_safebox")
+        entity:SetPos(trace.HitPos)
+        entity:SetAngles(Angle(0, (entity:GetPos() - ply:GetPos()):Angle().y - 180, 0))
+        entity:Spawn()
+        entity:Activate()
 
-	function ENT:SpawnFunction(ply, trace)
-		local angles = ply:GetAngles()
-	
-		local entity = ents.Create("ix_safebox")
-		entity:SetPos(trace.HitPos)
-		entity:SetAngles(Angle(0, (entity:GetPos() - ply:GetPos()):Angle().y - 180, 0))
-		entity:Spawn()
-		entity:Activate()
-	
-		return entity
-	end
+        return entity
+    end
 
-	function ENT:Use(activator)
-		if (CurTime() < (activator.ixNextOpen or 0)) then
-			return
-		end
+    function ENT:Use(activator)
+        if CurTime() < (activator.ixNextOpen or 0) then return end
 
-		if ( activator:IsCombine() or activator:IsCA() or activator:Team() == FACTION_CWU ) then
-			activator:Notify("You are a Combine or CWU, you cannot use Citizen safeboxes!")
-			return
-		end
+        if activator:IsCombine() or activator:IsCA() or activator:Team() == FACTION_CWU then
+            activator:Notify("You are a Combine or CWU, you cannot use Citizen safeboxes!")
 
-		local openTime = ix.config.Get("safeboxOpenTime", 1)
+            return
+        end
 
-		ix.safebox.Restore(activator, function()
-			if (openTime > 0) then
-				activator:SetAction("@storageSearching", openTime)
-				activator:DoStaredAction(self, function()
-					if (IsValid(activator) and activator:Alive()) then
-						net.Start("ixSafeboxOpen")
-						net.Send(activator)
-					end
-				end, openTime, function()
-					if (IsValid(activator)) then
-						activator:SetAction()
-					end
-				end)
-			else
-				net.Start("ixSafeboxOpen")
-				net.Send(activator)
-			end
-		end)
+        local openTime = ix.config.Get("safeboxOpenTime", 1)
 
-		activator.ixNextOpen = CurTime() + 1
-	end
+        ix.safebox.Restore(activator, function()
+            if openTime > 0 then
+                activator:SetAction("@storageSearching", openTime)
+
+                activator:DoStaredAction(self, function()
+                    if IsValid(activator) and activator:Alive() then
+                        net.Start("ixSafeboxOpen")
+                        net.Send(activator)
+                    end
+                end, openTime, function()
+                    if IsValid(activator) then
+                        activator:SetAction()
+                    end
+                end)
+            else
+                net.Start("ixSafeboxOpen")
+                net.Send(activator)
+            end
+        end)
+
+        activator.ixNextOpen = CurTime() + 1
+    end
+
+    local restrictedItems = {
+        ["transfer_papers"] = true,
+        ["cid"] = true
+    }
+
+    function ENT:CanStoreItem(item)
+        return not restrictedItems[item:GetClass()]
+    end
 end
