@@ -93,18 +93,21 @@ if CLIENT then
     function PLUGIN:PreDrawHalos()
         if not ix.config.Get("enableHaloEffects", true) then return end -- Halo effects are disabled
         if not ix.option.Get("enableHaloEffects", true) then return end -- Halo effects are disabled
-        local trace = LocalPlayer():GetEyeTrace()
+        local ply = LocalPlayer()
+        local trace = ply:GetEyeTrace()
         local ent = trace.Entity
-        local doorTrace = LocalPlayer():GetEyeTrace().Entity
+        local doorTrace = ply:GetEyeTrace().Entity
 
-        if IsValid(doorTrace) and doorTrace:IsDoor() and doorTrace:GetPos():Distance(LocalPlayer():GetPos()) < 110 then
+        if IsValid(doorTrace) and doorTrace:IsDoor() and doorTrace:GetPos():Distance(ply:GetPos()) < 110 then
             halo.Add({doorTrace}, Color(255, 255, 255), 2, 2, 2, true, true)
-        elseif IsValid(ent) and ent:GetClass() == "ix_item" and ent:GetPos():Distance(LocalPlayer():GetPos()) < 95 then
+        elseif IsValid(ent) and ent:GetClass() == "ix_item" and ent:GetPos():Distance(ply:GetPos()) < 95 then
             halo.Add({ent}, Color(255, 255, 255), 2, 2, 2, true, true)
         end
     end
 
     function PLUGIN:RenderScreenspaceEffects()
+        local ply = LocalPlayer()
+
         if not (GetGlobalBool("ixAJStatus") == true) then
             if ix.option.Get("hudScreenEffect", true) then
                 DrawColorModify(colorModify)
@@ -113,7 +116,7 @@ if CLIENT then
             DrawColorModify(colorModifyStorm)
         end
 
-        if LocalPlayer():Team() == FACTION_VORTIGAUNT then
+        if ply:Team() == FACTION_VORTIGAUNT then
             DrawSobel(1)
         end
     end
@@ -267,7 +270,7 @@ if CLIENT then
     end
 
     function PLUGIN:CanDrawAmmoHUD(weapon)
-        if combatWeapons[weapon:GetClass()] and LocalPlayer():IsCombine() then return false end
+        if combatWeapons[weapon:GetClass()] and ply:IsCombine() then return false end
     end
 
     local function DrawEffects(ply, char)
@@ -312,7 +315,7 @@ if CLIENT then
             end
         end
 
-        if not LocalPlayer():IsCombine() then
+        if not ply:IsCombine() then
             if nextHint < CurTime() then
                 hint = ix.hints.stored[math.random(#ix.hints.stored)]
                 nextHint = CurTime() + math.random(60, 360)
