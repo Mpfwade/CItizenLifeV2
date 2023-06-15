@@ -111,7 +111,7 @@ ITEM.functions.Consume = {
                 character:SetData("Water", false)
     
                 timer.Simple(1.5, function()
-                    RunConsoleCommand("say", "Where am I? How did I get here?") -- Make the player say the text in chat
+                    ply:ConCommand("say \"Where am I? How did I get here?\"")
                 end)
             end)
         elseif character:GetData("Water", true) then

@@ -30,11 +30,6 @@ ix.command.Add("Tie", {
                 if IsValid(target.ixPlayer) then
 					ply:EmitSound("misc/cablecuff.wav")
 
-                    -- Skip DoStaredAction for ixPlayer, execute tying logic directly
-                    if SERVER then
-                        targetEntity:Freeze(true)
-                    end
-
                     targetEntity:SetRestricted(true)
                     targetEntity:SetNetVar("tying")
                     targetEntity:NotifyLocalized("fTiedUp")
@@ -52,9 +47,6 @@ ix.command.Add("Tie", {
                     ply:DoStaredAction(targetEntity, function()
 						ply:EmitSound("misc/cablecuff.wav")
 
-                        if SERVER then
-                            targetEntity:Freeze(true)
-                        end
                         targetEntity:SetRestricted(true)
                         targetEntity:SetNetVar("tying")
                         targetEntity:NotifyLocalized("fTiedUp")

@@ -270,6 +270,7 @@ if CLIENT then
     end
 
     function PLUGIN:CanDrawAmmoHUD(weapon)
+        local ply = LocalPlayer()
         if combatWeapons[weapon:GetClass()] and ply:IsCombine() then return false end
     end
 

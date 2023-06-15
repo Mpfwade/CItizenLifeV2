@@ -99,7 +99,7 @@ function PLUGIN:WarmthTick(client, character, delta)
     if newWarmth <= 40 and warmth > 0 then
         timer.Create("shiver", 35, 0, function()
             util.ScreenShake(client:GetPos(), 5, 5, 3, 500)
-			RunConsoleCommand("say", "/me starts to shiver aggressively") -- Make the player say the text in chat
+            ply:ConCommand("say \"/me starts to shiver aggressively\"")
         end)
     elseif newWarmth > 40 then
         if timer.Exists("shiver") then
