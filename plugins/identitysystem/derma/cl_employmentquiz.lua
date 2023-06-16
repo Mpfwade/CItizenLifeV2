@@ -1,6 +1,12 @@
 local PANEL = {}
 local PLUGIN = PLUGIN
 
+local applications = {} -- Define and initialize the 'applications' table
+
+local function StoreApplication(answerText)
+    table.insert(applications, answerText)
+end
+
 function PANEL:Init()
     self:SetSize(ScrW() / 4, 400)
     self:Center()
@@ -91,7 +97,50 @@ function PANEL:Init()
                     LoadQuestion()
                 else
                     if correctAnswers == #quizData then
-                        netstream.Start("SubmitCPPaper", true)
+                        local frame = vgui.Create("DFrame")
+                        frame:SetSize(400, 300)
+                        frame:Center()
+                        frame:SetTitle("Join Civil Protection")
+                        frame:SetVisible(true)
+                        frame:SetDraggable(false)
+                        frame:ShowCloseButton(true)
+                        frame:MakePopup()
+
+                        local questionLabel = vgui.Create("DLabel", frame)
+                        questionLabel:SetPos(10, 30)
+                        questionLabel:SetText("Why do you want to join Civil Protection?")
+                        questionLabel:SetSize(380, 20)
+
+                        local answerTextBox = vgui.Create("DTextEntry", frame)
+                        answerTextBox:SetPos(10, 50)
+                        answerTextBox:SetSize(380, 200)
+                        answerTextBox:SetMultiline(true)
+
+                        local remainingCharsLabel = vgui.Create("DLabel", frame)
+                        remainingCharsLabel:SetPos(10, 260)
+                        remainingCharsLabel:SetText("Characters Remaining: 1600")
+                        remainingCharsLabel:SetSize(380, 20)
+
+                        answerTextBox.OnChange = function(self)
+                            local text = self:GetValue()
+                            local remainingChars = 1600 - string.len(text)
+                            remainingCharsLabel:SetText("Characters Remaining: " .. remainingChars)
+                            if remainingChars < 0 then
+                                self:SetText(string.sub(text, 1, 1600))
+                            end
+                        end
+
+                        local submitButton = vgui.Create("DButton", frame)
+                        submitButton:SetPos(10, 280)
+                        submitButton:SetSize(380, 20)
+                        submitButton:SetText("Submit")
+
+                        submitButton.DoClick = function()
+                            local answerText = answerTextBox:GetValue()
+                            StoreApplication(answerText)
+                    
+                            frame:Close()
+                        end
                     end
 
                     self:Close()

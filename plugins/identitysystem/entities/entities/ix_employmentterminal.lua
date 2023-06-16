@@ -46,7 +46,7 @@ if SERVER then
             self:EmitSound("buttons/button14.wav", 100, 50)
             user:SelectWeapon("ix_ands")
             user:Freeze(true)
-            self.QuizCooldown = CurTime() + 900
+            self.QuizCooldown = CurTime() + 5
         elseif not inv:HasItem("cid") then
             user:ChatPrint("You need a CID to use this terminal.")
         elseif (self.QuizCooldown or 0) > CurTime() then
