@@ -52,10 +52,9 @@ if (SERVER) then
     netstream.Hook("SubmitCPPaper", function(client)
         if client:Team() == FACTION_CITIZEN then
             local character = client:GetCharacter()
-            local inventory = character:GetInventory()
-            if not character or not inventory then return end
-            inventory:Add("cp_papers", 1)
-            client:ConCommand("ix_act_Button")
+            if character then
+            character:SetData("submitted", true)
+            end
         end
     end)
 end
@@ -78,3 +77,7 @@ ix.command.Add("Apply", {
         end
     end
 })
+
+function PLUGIN:PlayerLoadedCharacter(client, char, currentChar)
+    char:SetData("submitted", false)
+end

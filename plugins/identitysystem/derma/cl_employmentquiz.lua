@@ -3,10 +3,6 @@ local PLUGIN = PLUGIN
 
 local applications = {} -- Define and initialize the 'applications' table
 
-local function StoreApplication(answerText)
-    table.insert(applications, answerText)
-end
-
 function PANEL:Init()
     self:SetSize(ScrW() / 4, 400)
     self:Center()
@@ -135,11 +131,12 @@ function PANEL:Init()
                         submitButton:SetSize(380, 20)
                         submitButton:SetText("Submit")
 
+                        local answerText = ""
+
                         submitButton.DoClick = function()
-                            local answerText = answerTextBox:GetValue()
-                            StoreApplication(answerText)
-                    
-                            frame:Close()
+                        answerText = answerTextBox:GetValue() -- Store the answer text
+                        netstream.Start("SubmitCPPaper")
+                        frame:Close()
                         end
                     end
 

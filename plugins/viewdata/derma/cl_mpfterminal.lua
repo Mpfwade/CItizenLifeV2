@@ -185,7 +185,6 @@ function PANEL:Init()
         surface.PlaySound("ui/buttonclick.wav")
     end
 
-    net.Receive("nRecordRequest", nRecordRequest)
     dock.notes = vgui.Create("DButton", dock)
     dock.notes:SetSize(w / 8, h / 18)
     dock.notes:SetPos(w / 5.5, h / 2.5)

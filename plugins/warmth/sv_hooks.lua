@@ -97,7 +97,7 @@ function PLUGIN:WarmthTick(client, character, delta)
     character:SetWarmth(newWarmth)
 
     if newWarmth <= 40 and warmth > 0 then
-        timer.Create("shiver", 35, 0, function()
+        timer.Create("shiver", 10, 0, function()
             util.ScreenShake(client:GetPos(), 5, 5, 3, 500)
             ply:ConCommand("say \"/me starts to shiver aggressively\"")
         end)

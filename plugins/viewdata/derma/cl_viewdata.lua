@@ -133,6 +133,7 @@ function PANEL:BuildButtons()
     self.buttonLayout:SetStretchHeight(true)
     self.buttonLayout:InvalidateLayout(true)
     self.buttonLayout:Add(self:AddStageButton("View Note", "Note"))
+    self.buttonLayout:Add(self:AddStageButton("View Application", "App"))
 end
 
 function PANEL:DrawCharacter(small)
