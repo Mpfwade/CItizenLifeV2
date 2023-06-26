@@ -75,6 +75,11 @@ function PANEL:SetStage(text)
             v:SetVisible(false)
         else
             v:SetVisible(true)
+
+            -- Add the following condition to build the application stage
+            if k == "Application" then
+                self:BuildApplication()
+            end
         end
     end
 end
@@ -133,7 +138,20 @@ function PANEL:BuildButtons()
     self.buttonLayout:SetStretchHeight(true)
     self.buttonLayout:InvalidateLayout(true)
     self.buttonLayout:Add(self:AddStageButton("View Note", "Note"))
-    self.buttonLayout:Add(self:AddStageButton("View Application", "App"))
+    self.buttonLayout:Add(self:AddStageButton("View Application", "Application"))
+end
+
+function PANEL:BuildApplication()
+    local application = self:AddStage("Application")
+    application:SetPaintBackground(false)
+    -- Customize the application stage according to your requirements
+    -- Example: Display the application text in a label
+    local applicationText = "This is the application text."
+    local applicationLabel = self:BuildLabel(applicationText, false, 5)
+    applicationLabel:SetParent(application)
+    applicationLabel:SetContentAlignment(7)
+    applicationLabel:DockMargin(16, 16, 16, 16)
+    applicationLabel:Dock(FILL)
 end
 
 function PANEL:DrawCharacter(small)
