@@ -131,13 +131,13 @@ function PANEL:Init()
                         submitButton:SetSize(380, 20)
                         submitButton:SetText("Submit")
 
-                        local answerText = ""
+                        local applicationText = ""
 
                         submitButton.DoClick = function()
-                        answerText = answerTextBox:GetValue() -- Store the answer text
-                        netstream.Start("SubmitCPPaper")
-                        frame:Close()
-                        end
+                            applicationText = answerTextBox:GetValue() -- Store the answer text
+                            netstream.Start("SubmitCPPaper")
+                            frame:Close()
+                        end                        
                     end
 
                     self:Close()
