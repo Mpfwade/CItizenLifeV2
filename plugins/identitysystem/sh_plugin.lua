@@ -49,15 +49,16 @@ if (SERVER) then
         ix.log.AddRaw(client:Name() .. " has created a new CID with the name " .. data[1])
     end)
 
-    netstream.Hook("SubmitCPPaper", function(client)
+    netstream.Hook("SubmitCPPaper", function(client, applicationText)
         if client:Team() == FACTION_CITIZEN then
             local character = client:GetCharacter()
             if character then
-            character:SetData("submitted", true)
+                character:SetData("submitted", true)
+                -- Store the application text in a database or perform any other necessary operations
+                print("Application text:", applicationText)
             end
         end
-    end)
-end
+    end)    
 
 ix.command.Add("Apply", {
     description = "Prints your Name and CID Info.",

@@ -135,9 +135,9 @@ function PANEL:Init()
 
                         submitButton.DoClick = function()
                             applicationText = answerTextBox:GetValue() -- Store the answer text
-                            netstream.Start("SubmitCPPaper")
+                            netstream.Start("SubmitCPPaper", applicationText) -- Send the application text via NetStream
                             frame:Close()
-                        end                        
+                        end                                           
                     end
 
                     self:Close()
