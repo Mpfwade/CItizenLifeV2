@@ -20,7 +20,8 @@ if CLIENT then
         vgui.Create("ixRecordPanel"):Build(target, cid, data, cpData)
     end)
 end
-if (SERVER) then
+
+if SERVER then
     netstream.Hook("SubmitNewCID", function(client, data)
         if client:IsCombine() or client:GetCharacter():HasFlags("i") then
             local character = client:GetCharacter()
@@ -52,33 +53,35 @@ if (SERVER) then
     netstream.Hook("SubmitCPPaper", function(client, applicationText)
         if client:Team() == FACTION_CITIZEN then
             local character = client:GetCharacter()
+
             if character then
                 character:SetData("submitted", true)
                 -- Store the application text in a database or perform any other necessary operations
                 print("Application text:", applicationText)
             end
         end
-    end)    
+    end)
 
-ix.command.Add("Apply", {
-    description = "Prints your Name and CID Info.",
-    OnRun = function(_, ply)
-        local char = ply:GetCharacter()
+    ix.command.Add("Apply", {
+        description = "Prints your Name and CID Info.",
+        OnRun = function(_, ply)
+            local char = ply:GetCharacter()
 
-        if (ply:Team() == FACTION_CITIZEN) and char:GetInventory():HasItem("cid") then
-            ply:EmitSound("physics/cardboard/cardboard_box_impact_soft7.wav")
-            ix.chat.Send(ply, "me", "shows their identification card showing: (Name: " .. ply:Nick() .. " | CID: " .. char:GetData("cid", "00000") .. ") ", false)
-            ply:ConCommand("ix_act_Point")
-        elseif (ply:Team() == FACTION_CITIZEN) and char:GetInventory():HasItem("transfer_papers") then
-            ply:EmitSound("physics/cardboard/cardboard_box_impact_soft7.wav")
-            ix.chat.Send(ply, "me", "shows their relocation coupon.", false)
-            ply:ConCommand("ix_act_Point")
-        else
-            return ply:ChatNotifyLocalized("You need a card!")
+            if (ply:Team() == FACTION_CITIZEN) and char:GetInventory():HasItem("cid") then
+                ply:EmitSound("physics/cardboard/cardboard_box_impact_soft7.wav")
+                ix.chat.Send(ply, "me", "shows their identification card showing: (Name: " .. ply:Nick() .. " | CID: " .. char:GetData("cid", "00000") .. ") ", false)
+                ply:ConCommand("ix_act_Point")
+            elseif (ply:Team() == FACTION_CITIZEN) and char:GetInventory():HasItem("transfer_papers") then
+                ply:EmitSound("physics/cardboard/cardboard_box_impact_soft7.wav")
+                ix.chat.Send(ply, "me", "shows their relocation coupon.", false)
+                ply:ConCommand("ix_act_Point")
+            else
+                return ply:ChatNotifyLocalized("You need a card!")
+            end
         end
-    end
-})
+    })
 
-function PLUGIN:PlayerLoadedCharacter(client, char, currentChar)
-    char:SetData("submitted", false)
+    function PLUGIN:PlayerLoadedCharacter(client, char, currentChar)
+        char:SetData("submitted", false)
+    end
 end

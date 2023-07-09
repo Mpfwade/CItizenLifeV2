@@ -1,7 +1,7 @@
 -- Item Statistics
 
 ITEM.name = "USP Match Pistol"
-ITEM.description = "A sidearm utilising 9mm Ammunition. (Uses Pistol Ammo)"
+ITEM.description = "A commonly used Civil Protection sidearm. (Uses Pistol Ammo)"
 ITEM.category = "Weapons"
 ITEM.bDropOnDeath = true
 

@@ -1,7 +1,7 @@
 -- Item Statistics
 
 ITEM.name = "Colt Python .357"
-ITEM.description = "A sidearm utilising .357 Caliber ammunition."
+ITEM.description = "A very powerful sidearm. (Uses .357 Ammo)"
 ITEM.category = "Weapons"
 ITEM.bDropOnDeath = true
 
