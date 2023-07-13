@@ -224,15 +224,11 @@ if CLIENT then
             for _, v in pairs(player.GetAll()) do
                 if v:Team() == FACTION_CCA and v:GetNetVar("squad") and ply:Team() == FACTION_CCA then
                     local unitText = "<:: UNIT: " .. string.upper(v:Nick())
-                    local healthText = v:Alive() and " | VITALS: " .. v:Health() or "<BIOSIGNAL LOST>"
                     draw.SimpleTextOutlined(unitText, font, 10, 210 + y, color_white, nil, nil, 1, color_black)
-                    draw.SimpleTextOutlined(healthText, font, 250, 210 + y, color_white, nil, nil, 1, color_black)
                     y = y + 16
                 elseif v:Team() == FACTION_OTA and ply:Team() == FACTION_OTA then
                     local unitText = "<:: UNIT: " .. string.upper(v:Nick())
-                    local healthText = v:Alive() and " | VITALS: " .. v:Health() or "<BIOSIGNAL LOST>"
                     draw.SimpleTextOutlined(unitText, font, 10, 210 + y, color_white, nil, nil, 1, color_black)
-                    draw.SimpleTextOutlined(healthText, font, 250, 210 + y, color_white, nil, nil, 1, color_black)
                     y = y + 16
                 end
             end
