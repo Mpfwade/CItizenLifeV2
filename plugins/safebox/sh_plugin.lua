@@ -53,3 +53,9 @@ if (CLIENT) then
 		end
 	end)
 end
+
+function PLUGIN:CanTransferItem(item, currentInv, oldInv)
+    if (currentInv:GetID() == "safebox" and item.uniqueID == "cid") then
+        return false -- Prevent placing this item in containers
+    end
+end

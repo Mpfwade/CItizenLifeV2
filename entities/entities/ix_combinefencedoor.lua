@@ -44,7 +44,7 @@ if SERVER then
     function ENT:Use(activator, caller)
         if IsValid(activator) and activator:IsPlayer() then
             if activator:Team() ~= FACTION_CCA and activator:Team() ~= FACTION_OTA then
-                activator:ChatPrint("You need to be a Combine to use this!")
+                activator:ChatPrint("You cannot use this door!")
                 return
             end
 

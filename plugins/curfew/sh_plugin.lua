@@ -55,8 +55,11 @@ function PLUGIN:GetEvent()
 
             timer.Create("InspectionTimer", inspectionEvent.duration, 1, function()
                 inspectionEvent.start(false)
-                SetGlobalString("ixCurrentEvent", "PATROL, PROTECT")
                 self.nextInspectionEvent = curTime + inspectionEvent.cooldown
+
+                if not self:IsEventActive() then
+                    SetGlobalString("ixCurrentEvent", "PATROL, PROTECT")
+                end
             end)
         end
     end
@@ -69,9 +72,12 @@ function PLUGIN:GetEvent()
 
             timer.Create("RationTimer", rationEvent.duration, 1, function()
                 rationEvent.start(false)
-                SetGlobalString("ixCurrentEvent", "PATROL, PROTECT")
                 self.nextRationEvent = curTime + rationEvent.cooldown
                 self.inspectionCounter = 0
+
+                if not self:IsEventActive() then
+                    SetGlobalString("ixCurrentEvent", "PATROL, PROTECT")
+                end
             end)
         end
     end
@@ -94,10 +100,13 @@ function PLUGIN:GetEvent()
         [3] = "FLINT, INSPECT, EXTIRPATE",
         [4] = "AMPUTATE, ZERO, CONFIRM"
     }
-    
-    SetGlobalString("ixCurrentEvent", events[ix.config.Get("cityCode")])    
 
-    return GetGlobalString("ixCurrentEvent", "PATROL, PROTECT")
+    local currentEvent = GetGlobalString("ixCurrentEvent", "PATROL, PROTECT")
+    if not self:IsEventActive() then
+        SetGlobalString("ixCurrentEvent", events[ix.config.Get("cityCode")])
+    end
+
+    return currentEvent
 end
 
 function PLUGIN:Think()

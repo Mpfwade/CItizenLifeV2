@@ -63,13 +63,4 @@ if SERVER then
 
         activator.ixNextOpen = CurTime() + 1
     end
-
-    local restrictedItems = {
-        ["transfer_papers"] = true,
-        ["cid"] = true
-    }
-
-    function ENT:CanStoreItem(item)
-        return not restrictedItems[item:GetClass()]
-    end
 end

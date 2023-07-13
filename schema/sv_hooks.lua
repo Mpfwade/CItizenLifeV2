@@ -792,7 +792,5 @@ netstream.Hook("PlayerFinishChat", function(client)
 end)
 
 function Schema:SpawnMenuEnabled()
-    if not LocalPlayer():IsAdmin() then
-        return false
-    end
+    return true
 end

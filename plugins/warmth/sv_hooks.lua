@@ -53,7 +53,10 @@ function PLUGIN:PlayerDeath(client)
 end
 
 function PLUGIN:WarmthTick(client, character, delta)
-    if not client:Alive() or client:GetMoveType() == MOVETYPE_NOCLIP or hook.Run("ShouldTickWarmth", client) == false or self:GetTemperature() > ix.config.Get("warmthMinTemp", 5) then return end
+    if not client:Alive() or client:GetMoveType() == MOVETYPE_NOCLIP or hook.Run("ShouldTickWarmth", client) == false or self:GetTemperature() > ix.config.Get("warmthMinTemp", 5) then
+        return
+    end
+
     local scale = 1
 
     if self:PlayerIsInside(client) then
@@ -90,17 +93,20 @@ function PLUGIN:WarmthTick(client, character, delta)
     local health = client:Health() 
     local warmth = character:GetWarmth()
     local newWarmth = math.Clamp(warmth - scale * (delta / ix.config.Get("warmthLossTime", 5)), 0, 100)
-    if not (client:Team() == FACTION_CITIZEN or client:Team() == FACTION_VORTIGAUNT) then
-        return false
-    end    
+    
+    if client:IsCombine() then
+        return
+    end
 
     character:SetWarmth(newWarmth)
 
     if newWarmth <= 40 and newWarmth > 0 then
-        timer.Create("shiver", 15, 0, function()
-            util.ScreenShake(client:GetPos(), 5, 5, 3, 500)
-            client:ConCommand("say \"/me starts to shiver aggressively\"")
-        end)
+        if not timer.Exists("shiver") then
+            timer.Create("shiver", 6, 0, function()
+                util.ScreenShake(client:GetPos(), 5, 5, 3, 500)
+                client:ConCommand("say \"/me starts to shiver aggressively\"")
+            end)
+        end
     elseif newWarmth > 40 then
         if timer.Exists("shiver") then
             timer.Remove("shiver")

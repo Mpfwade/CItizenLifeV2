@@ -49,6 +49,18 @@ if ( SERVER ) then
 	
 		return vendor
 	end
+
+	function ENT:Think()
+		if (self.nextTerminalCheck or 0) < CurTime() then
+			self:StopSound("ambient/atmosphere/indoor1.wav")
+			self:EmitSound("ambient/atmosphere/indoor1.wav", 55)
+			self.nextTerminalCheck = CurTime() + 10
+		end
+	end
+	
+	function ENT:OnRemove()
+		self:StopSound("ambient/atmosphere/indoor1.wav")
+	end
 	
 	function ENT:GetClosestButton(ply)
 		local data = {}

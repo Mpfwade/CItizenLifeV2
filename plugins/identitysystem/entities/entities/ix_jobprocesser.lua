@@ -65,10 +65,10 @@ if SERVER then
                                 hook.Run("PlayerLoadout", user)
                                 user:ResetBodygroups()
 
-                                for k, v in pairs(char:GetInventory():GetItems()) do
-                                    v:Remove()
+                                for _, item in pairs(inv:GetItems()) do
+                                    item:Remove()
                                 end
-
+        
                                 net.Start("StopJobAcceptedSound") -- Send a network message to stop the sound on the client
                                 net.Send(user)
 

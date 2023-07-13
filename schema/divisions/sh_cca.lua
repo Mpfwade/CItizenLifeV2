@@ -14,19 +14,10 @@ ix.ranks.cca[1] = {
 
         if not inventory:HasItem("stunstick") then
             if ply:GetNWBool("CPRespawn", true) == true then
-            ply:SetNWBool("CPRespawn", false)
-            inventory:Add("stunstick")
+                ply:SetNWBool("CPRespawn", false)
+                inventory:Add("stunstick")
+            end
         end
-    end
-
-        ply:SetSkin(0) -- Skin
-        ply:SetBodygroup(1, 0) -- Manhack
-        ply:SetBodygroup(2, 0) -- Mask
-        ply:SetBodygroup(3, 1) -- Radio
-        ply:SetBodygroup(4, 0) -- Cloak / Summka
-        ply:SetBodygroup(5, 0) -- Spine Radio
-        ply:SetBodygroup(6, 0) -- Tactical Shit
-        ply:SetBodygroup(7, 0) -- Neck
     end,
 }
 
@@ -44,21 +35,11 @@ ix.ranks.cca[2] = {
 
         if not inventory:HasItem("stunstick") or not inventory:HasItem("usp") then
             if ply:GetNWBool("CPRespawn", true) == true then
-            ply:SetNWBool("CPRespawn", false)
-
-            inventory:Add("stunstick")
-            inventory:Add("usp")
+                ply:SetNWBool("CPRespawn", false)
+                inventory:Add("stunstick")
+                inventory:Add("usp")
+            end
         end
-    end
-
-        ply:SetSkin(0) -- Skin
-        ply:SetBodygroup(1, 0) -- Manhack
-        ply:SetBodygroup(2, 0) -- Mask
-        ply:SetBodygroup(3, 1) -- Radio
-        ply:SetBodygroup(4, 2) -- Cloak / Summka
-        ply:SetBodygroup(5, 0) -- Spine Radio
-        ply:SetBodygroup(6, 0) -- Tactical Shit
-        ply:SetBodygroup(7, 0) -- Neck
     end,
 }
 
@@ -76,23 +57,12 @@ ix.ranks.cca[3] = {
 
         if not inventory:HasItem("stunstick") or not inventory:HasItem("usp") or not inventory:HasItem("smg") then
             if ply:GetNWBool("CPRespawn", true) == true then
-
-            ply:SetNWBool("CPRespawn", false)
-
-            inventory:Add("stunstick")
-            inventory:Add("usp")
-            inventory:Add("smg")
+                ply:SetNWBool("CPRespawn", false)
+                inventory:Add("stunstick")
+                inventory:Add("usp")
+                inventory:Add("smg")
+            end
         end
-    end
-
-        ply:SetSkin(0) -- Skin
-        ply:SetBodygroup(1, 0) -- Manhack
-        ply:SetBodygroup(2, 0) -- Mask
-        ply:SetBodygroup(3, 1) -- Radio
-        ply:SetBodygroup(4, 2) -- Cloak / Summka
-        ply:SetBodygroup(5, 0) -- Spine Radio
-        ply:SetBodygroup(6, 1) -- Tactical Shit
-        ply:SetBodygroup(7, 0) -- Neck
     end,
 }
 
@@ -110,23 +80,12 @@ ix.ranks.cca[4] = {
 
         if not inventory:HasItem("stunstick") or not inventory:HasItem("usp") or not inventory:HasItem("smg") then
             if ply:GetNWBool("CPRespawn", true) == true then
-
-            ply:SetNWBool("CPRespawn", false)
-
-            inventory:Add("stunstick")
-            inventory:Add("usp")
-            inventory:Add("smg")
+                ply:SetNWBool("CPRespawn", false)
+                inventory:Add("stunstick")
+                inventory:Add("usp")
+                inventory:Add("smg")
+            end
         end
-    end
-
-        ply:SetSkin(0) -- Skin
-        ply:SetBodygroup(1, 0) -- Manhack
-        ply:SetBodygroup(2, 0) -- Mask
-        ply:SetBodygroup(3, 1) -- Radio
-        ply:SetBodygroup(4, 2) -- Cloak / Summka
-        ply:SetBodygroup(5, 1) -- Spine Radio
-        ply:SetBodygroup(6, 1) -- Tactical Shit
-        ply:SetBodygroup(7, 0) -- Neck
     end,
 }
 
@@ -144,14 +103,4 @@ ix.divisions.cca[1] = {
     max = 6,
     xp = 0,
     class = CLASS_CCA_UNION,
-    loadout = function(ply)
-        ply:SetSkin(0) -- Skin
-        ply:SetBodygroup(1, 0) -- Manhack
-        ply:SetBodygroup(2, 0) -- Mask
-        ply:SetBodygroup(3, 0) -- Radio
-        ply:SetBodygroup(4, 0) -- Cloak / Summka
-        ply:SetBodygroup(5, 0) -- Spine Radio
-        ply:SetBodygroup(6, 0) -- Tactical Shit
-        ply:SetBodygroup(7, 0) -- Neck
-    end,
 }

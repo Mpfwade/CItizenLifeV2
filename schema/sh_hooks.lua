@@ -264,8 +264,6 @@ function Schema:PrePACEditorOpen(ply)
     end
 end
 
-
-
 function Schema:CanPlayerJoinClass()
     return false
 end
@@ -275,11 +273,10 @@ function Schema:CanDrive()
 end
 
 function Schema:OnCharacterCreated(ply, char)
-	char:SetData("ixKnownName", char:GetName())
+    char:SetData("ixKnownName", char:GetName())
 
-	return true
+    return true
 end
-
 
 function Schema:EntityTakeDamage(target, dmginfo)
     if target:IsPlayer() then
@@ -301,11 +298,7 @@ function Schema:CanPlayerUseBusiness(ply, uniqueID)
     local itemTable = ix.item.list[uniqueID]
 
     if itemTable then
-        if (ply.ixCWUClass == 3) and (itemTable.category == "Consumeables") then
-            ply.noBusinessAllow = true
-
-            return true
-        elseif (ply.ixCWUClass == 4) and (itemTable.category == "Medical Items") then
+        if (ply.ixCWUClass == 3) and (itemTable.category == "Consumeables") or (itemTable.category == "Medical Items") then
             ply.noBusinessAllow = true
 
             return true
