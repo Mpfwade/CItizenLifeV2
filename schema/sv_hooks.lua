@@ -790,7 +790,3 @@ netstream.Hook("PlayerFinishChat", function(client)
         client.bTypingBeep = nil
     end
 end)
-
-function Schema:SpawnMenuEnabled()
-    return true
-end
