@@ -114,7 +114,7 @@ ix.command.Add("DoorBuy", {
 					[client] = DOOR_OWNER
 				}
 
-				PLUGIN:CallOnDoorChildren(entity, function(child)
+				Schema:CallOnDoorChildren(entity, function(child)
 					child:SetDTEntity(0, client)
 				end)
 
@@ -124,7 +124,7 @@ ix.command.Add("DoorBuy", {
 
 				-- Take their money and notify them.
 				character:TakeMoney(price)
-				hook.Run("OnPlayerPurchaseDoor", client, entity, true, PLUGIN.CallOnDoorChildren)
+				hook.Run("OnPlayerPurchaseDoor", client, entity, true, Schema.CallOnDoorChildren)
 
 				ix.log.Add(client, "buydoor")
 				return "@dPurchased", ix.currency.Get(price)
