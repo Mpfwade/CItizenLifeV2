@@ -1,11 +1,11 @@
 AddCSLuaFile()
 
-if CLIENT then
-    SWEP.PrintName = "Stunstick"
-    SWEP.Slot = 1
-    SWEP.SlotPos = 2
-    SWEP.DrawAmmo = false
-    SWEP.DrawCrosshair = false
+if (CLIENT) then
+	SWEP.PrintName = "Stunstick"
+	SWEP.Slot = 1
+	SWEP.SlotPos = 2
+	SWEP.DrawAmmo = false
+	SWEP.DrawCrosshair = false
 end
 
 SWEP.Category = "IX:HL2RP"
@@ -13,153 +13,179 @@ SWEP.Author = "Chessnut"
 SWEP.Instructions = "Primary Fire: Stun.\nALT + Primary Fire: Toggle stun.\nSecondary Fire: Push/Knock."
 SWEP.Purpose = "Hitting things and knocking on doors."
 SWEP.Drop = false
+
 SWEP.HoldType = "melee"
+
 SWEP.Spawnable = true
 SWEP.AdminOnly = true
-SWEP.ViewModelFOV = 60
+
+SWEP.ViewModelFOV = 50
 SWEP.ViewModelFlip = false
-SWEP.AnimPrefix = "melee"
+SWEP.AnimPrefix	 = "melee"
+
 SWEP.ViewTranslation = 4
+
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
 SWEP.Primary.Automatic = false
 SWEP.Primary.Ammo = ""
-SWEP.Primary.Damage = 20
+SWEP.Primary.Damage = 7.5
 SWEP.Primary.Delay = 0.7
+
 SWEP.Secondary.ClipSize = -1
 SWEP.Secondary.DefaultClip = 0
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = ""
-SWEP.ViewModel = "models/weapons/c_stunstick.mdl"
+
+SWEP.ViewModel = "models/litenetwork/weapons/c_stunstick.mdl"
 SWEP.WorldModel = "models/weapons/w_stunbaton.mdl"
+
 SWEP.UseHands = true
 SWEP.LowerAngles = Angle(15, -10, -20)
+
 SWEP.FireWhenLowered = true
 
 function SWEP:SetupDataTables()
-    self:NetworkVar("Bool", 0, "Activated")
+	self:NetworkVar("Bool", 0, "Activated")
 end
 
 function SWEP:Precache()
-    util.PrecacheSound("physics/wood/wood_crate_impact_hard3.wav")
+	util.PrecacheSound("physics/wood/wood_crate_impact_hard3.wav")
 end
 
 function SWEP:Initialize()
-    self:SetHoldType(self.HoldType)
+	self:SetHoldType(self.HoldType)
 end
 
 function SWEP:OnRaised()
-    self.lastRaiseTime = CurTime()
+	self.lastRaiseTime = CurTime()
 end
 
 function SWEP:OnLowered()
-    self:SetActivated(false)
+	self:SetActivated(false)
 end
 
 function SWEP:Holster(nextWep)
-    self:OnLowered()
+	self:OnLowered()
 
-    return true
+	return true
 end
 
 local STUNSTICK_GLOW_MATERIAL = Material("effects/stunstick")
 local STUNSTICK_GLOW_MATERIAL2 = Material("effects/blueflare1")
 local STUNSTICK_GLOW_MATERIAL_NOZ = Material("sprites/light_glow02_add_noz")
+
 local color_glow = Color(128, 128, 128)
 
 function SWEP:DrawWorldModel()
-    self:DrawModel()
+	self:DrawModel()
 
-    if self:GetActivated() then
-        local size = math.Rand(4.0, 6.0)
-        local glow = math.Rand(0.6, 0.8) * 255
-        local color = Color(glow, glow, glow)
-        local attachment = self:GetAttachment(1)
+	if (self:GetActivated()) then
+		local size = math.Rand(4.0, 6.0)
+		local glow = math.Rand(0.6, 0.8) * 255
+		local color = Color(glow, glow, glow)
+		local attachment = self:GetAttachment(1)
 
-        if attachment then
-            local position = attachment.Pos
-            render.SetMaterial(STUNSTICK_GLOW_MATERIAL2)
-            render.DrawSprite(position, size * 2, size * 2, color)
-            render.SetMaterial(STUNSTICK_GLOW_MATERIAL)
-            render.DrawSprite(position, size, size + 3, color_glow)
-        end
-    end
+		if (attachment) then
+			local position = attachment.Pos
+
+			render.SetMaterial(STUNSTICK_GLOW_MATERIAL2)
+			render.DrawSprite(position, size * 2, size * 2, color)
+
+			render.SetMaterial(STUNSTICK_GLOW_MATERIAL)
+			render.DrawSprite(position, size, size + 3, color_glow)
+		end
+	end
 end
 
 local NUM_BEAM_ATTACHEMENTS = 9
-local BEAM_ATTACH_CORE_NAME = "sparkrear"
+local BEAM_ATTACH_CORE_NAME	= "sparkrear"
 
 function SWEP:PostDrawViewModel()
-    if not self:GetActivated() then return end
-    local viewModel = LocalPlayer():GetViewModel()
-    if not IsValid(viewModel) then return end
-    cam.Start3D(EyePos(), EyeAngles())
-    local size = math.Rand(3.0, 3.5)
-    local color = Color(255, 255, 255, 50 + math.sin(RealTime() * 2) * 20)
-    STUNSTICK_GLOW_MATERIAL_NOZ:SetFloat("$alpha", color.a / 255)
-    render.SetMaterial(STUNSTICK_GLOW_MATERIAL_NOZ)
-    local attachment = viewModel:GetAttachment(viewModel:LookupAttachment(BEAM_ATTACH_CORE_NAME))
+	if (!self:GetActivated()) then
+		return
+	end
 
-    if attachment then
-        render.DrawSprite(attachment.Pos, size * 10, size * 15, color)
-    end
+	local viewModel = LocalPlayer():GetViewModel()
 
-    for i = 1, NUM_BEAM_ATTACHEMENTS do
-        attachment = viewModel:GetAttachment(viewModel:LookupAttachment("spark" .. i .. "a"))
-        size = math.Rand(7.0, 10.0)
+	if (!IsValid(viewModel)) then
+		return
+	end
 
-        if attachment and attachment.Pos then
-            render.DrawSprite(attachment.Pos, size, size, color)
-        end
+	cam.Start3D(EyePos(), EyeAngles())
+		local size = math.Rand(3.0, 3.5)
+		local color = Color(255, 255, 255, 50 + math.sin(RealTime() * 2)*20)
 
-        attachment = viewModel:GetAttachment(viewModel:LookupAttachment("spark" .. i .. "b"))
-        size = math.Rand(7.0, 10.0)
+		STUNSTICK_GLOW_MATERIAL_NOZ:SetFloat("$alpha", color.a / 255)
 
-        if attachment and attachment.Pos then
-            render.DrawSprite(attachment.Pos, size, size, color)
-        end
-    end
+		render.SetMaterial(STUNSTICK_GLOW_MATERIAL_NOZ)
 
-    cam.End3D()
+		local attachment = viewModel:GetAttachment(viewModel:LookupAttachment(BEAM_ATTACH_CORE_NAME))
+
+		if (attachment) then
+			render.DrawSprite(attachment.Pos, size * 10, size * 15, color)
+		end
+
+		for i = 1, NUM_BEAM_ATTACHEMENTS do
+			attachment = viewModel:GetAttachment(viewModel:LookupAttachment("spark"..i.."a"))
+			size = math.Rand(7.0, 10.0)
+
+			if (attachment and attachment.Pos) then
+				render.DrawSprite(attachment.Pos, size, size, color)
+			end
+
+			attachment = viewModel:GetAttachment(viewModel:LookupAttachment("spark"..i.."b"))
+			size = math.Rand(7.0, 10.0)
+
+			if (attachment and attachment.Pos) then
+				render.DrawSprite(attachment.Pos, size, size, color)
+			end
+		end
+	cam.End3D()
 end
 
 function SWEP:PrimaryAttack()
-    self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
-    if not self:GetOwner():IsWepRaised() then return end
+	self:SetNextPrimaryFire(CurTime() + self.Primary.Delay)
 
-    if self:GetOwner():KeyDown(IN_WALK) then
-        if SERVER then
-            self:SetActivated(not self:GetActivated())
-            local state = self:GetActivated()
+	if (!self.Owner:IsWepRaised()) then
+		return
+	end
 
-            if state then
-                self:GetOwner():EmitSound("Weapon_StunStick.Activate")
+	if (self.Owner:KeyDown(IN_WALK)) then
+		if ( SERVER ) then
+			self:SetActivated(!self:GetActivated())
 
-                if CurTime() < self.lastRaiseTime + 1.5 then
-                    self:GetOwner():AddCombineDisplayMessage("Preparing civil judgement administration protocols...")
-                end
-            else
-                self:GetOwner():EmitSound("Weapon_StunStick.Deactivate")
-            end
+			local state = self:GetActivated()
 
-            local model = string.lower(self:GetOwner():GetModel())
+			if (state) then
+				self.Owner:EmitSound("Weapon_StunStick.Activate")
 
-            if ix.anim.GetModelClass(model) == "metrocop" then
-                self:GetOwner():ForceSequence(state and "activatebaton" or "deactivatebaton", nil, nil, true)
-            end
-        end
+				if (CurTime() < self.lastRaiseTime + 1.5) then
+					self.Owner:AddCombineDisplayMessage("Preparing civil judgement administration protocols...")
+				end
+			else
+				self.Owner:EmitSound("Weapon_StunStick.Deactivate")
+			end
 
-        return
-    end
+			local model = string.lower(self.Owner:GetModel())
 
-    self:EmitSound("Weapon_StunStick.Swing")
-    self:SendWeaponAnim(ACT_VM_HITCENTER)
-    local damage = self.Primary.Damage
+			if (ix.anim.GetModelClass(model) == "metrocop") then
+				self.Owner:ForceSequence(state and "activatebaton" or "deactivatebaton", nil, nil, true)
+			end
+		end
 
-    if self:GetActivated() then
-        damage = 5
-    end
+		return
+	end
 
+	self:EmitSound("Weapon_StunStick.Swing")
+	self:SendWeaponAnim(ACT_VM_HITCENTER)
+
+	local damage = self.Primary.Damage
+
+	if (self:GetActivated()) then
+		damage = 5
+	end
+    
     self:GetOwner():SetAnimation(PLAYER_ATTACK1)
     self:GetOwner():ViewPunch(Angle(1, 0, 0.125))
     self:GetOwner():LagCompensation(true)
@@ -171,104 +197,107 @@ function SWEP:PrimaryAttack()
     data.maxs = Vector(6, 6, -10) -- Adjusted hitbox size (lowered further)
     local trace = util.TraceHull(data)
 
-    if SERVER and trace.Hit then
-        if self:GetActivated() then
-            local effect = EffectData()
-            effect:SetStart(trace.HitPos)
-            effect:SetNormal(trace.HitNormal)
-            effect:SetOrigin(trace.HitPos)
-            util.Effect("StunstickImpact", effect, true, true)
-        end
+	self.Owner:LagCompensation(false)
 
-        self:GetOwner():EmitSound("Weapon_StunStick.Melee_HitWorld")
-        local entity = trace.Entity
+	if (SERVER and trace.Hit) then
+		if (self:GetActivated()) then
+			local effect = EffectData()
+				effect:SetStart(trace.HitPos)
+				effect:SetNormal(trace.HitNormal)
+				effect:SetOrigin(trace.HitPos)
+			util.Effect("StunstickImpact", effect, true, true)
+		end
 
-        if IsValid(entity) then
-            if entity:IsPlayer() then
-                entity.ixStuns = (entity.ixStuns or 0) + 1
+		self.Owner:EmitSound("Weapon_StunStick.Melee_HitWorld")
 
-                if entity.ixStuns >= math.random(2, 5) then
-                    entity.ixStuns = 0
-                    entity:ShouldSetRagdolled(true)
-                    entity:SetNWBool("Ragdolled", true)
-                    ix.chat.Send(entity, "me", "'s body crumbles to the ground.")
+		local entity = trace.Entity
 
-                    if entity:Team() == FACTION_CITIZEN then
-                        entity:EmitSound("npc/vort/foot_hit.wav")
-                    elseif entity:Team() == FACTION_CCA then
-                        entity:EmitSound("npc/metropolice/knockout2.wav")
-                    elseif entity:Team() == FACTION_OTA then
-                        entity:EmitSound("npc/combine_soldier/pain2.wav")
-                    end
+		if (IsValid(entity)) then
+			if (entity:IsPlayer()) then
+				if (self:GetActivated()) then
+					entity.ixStuns = (entity.ixStuns or 0) + 1
 
-                    entity:SetAction("You Are Unconscious...", 35, function()
-                        entity:SetNWBool("Ragdolled", false)
-                        entity:ShouldSetRagdolled(false)
-                    end)
-                end
-            entity:ViewPunch(Angle(-20, math.random(-15, 15), math.random(-10, 10)))
-            end
-        elseif entity:IsRagdoll() then
-            damage = self:GetActivated() and 2 or 10
-        end
+					timer.Simple(10, function()
+						entity.ixStuns = math.max(entity.ixStuns - 1, 0)
+					end)
+				end
 
-        local damageInfo = DamageInfo()
-        damageInfo:SetAttacker(self:GetOwner())
-        damageInfo:SetInflictor(self)
-        damageInfo:SetDamage(damage)
-        damageInfo:SetDamageType(DMG_CLUB)
-        damageInfo:SetDamagePosition(trace.HitPos)
-        damageInfo:SetDamageForce(self:GetOwner():GetAimVector() * 10000)
-        entity:DispatchTraceAttack(damageInfo, data.start, data.endpos)
-    end
+				entity:ViewPunch(Angle(-20, math.random(-15, 15), math.random(-10, 10)))
+
+				if (self:GetActivated() and entity.ixStuns > 3) then
+					entity:SetRagdolled(true, 20)
+					entity.ixStuns = 0
+
+					return
+				end
+			elseif (entity:IsRagdoll()) then
+				damage = self:GetActivated() and 2 or 10
+			end
+
+			local damageInfo = DamageInfo()
+				damageInfo:SetAttacker(self.Owner)
+				damageInfo:SetInflictor(self)
+				damageInfo:SetDamage(damage)
+				damageInfo:SetDamageType(DMG_CLUB)
+				damageInfo:SetDamagePosition(trace.HitPos)
+				damageInfo:SetDamageForce(self.Owner:GetAimVector() * 10000)
+			entity:DispatchTraceAttack(damageInfo, data.start, data.endpos)
+		end
+	end
 end
 
 function SWEP:SecondaryAttack()
-    self:GetOwner():LagCompensation(true)
-    local data = {}
-    data.start = self:GetOwner():GetShootPos()
-    data.endpos = data.start + self:GetOwner():GetAimVector() * 72
-    data.filter = self:GetOwner()
-    data.mins = Vector(-8, -8, -30)
-    data.maxs = Vector(8, 8, 10)
-    local trace = util.TraceHull(data)
-    local entity = trace.Entity
-    self:GetOwner():LagCompensation(false)
+	self.Owner:LagCompensation(true)
+		local data = {}
+			data.start = self.Owner:GetShootPos()
+			data.endpos = data.start + self.Owner:GetAimVector()*72
+			data.filter = self.Owner
+			data.mins = Vector(-8, -8, -30)
+			data.maxs = Vector(8, 8, 10)
+		local trace = util.TraceHull(data)
+		local entity = trace.Entity
+	self.Owner:LagCompensation(false)
 
-    if SERVER and IsValid(entity) then
-        local bPushed = false
+	if (SERVER and IsValid(entity)) then
+		local bPushed = false
 
-        if entity:IsDoor() then
-            if hook.Run("PlayerCanKnockOnDoor", self:GetOwner(), entity) == false then return end
-            self:GetOwner():ViewPunch(Angle(-1.3, 1.8, 0))
-            self:GetOwner():EmitSound("physics/wood/wood_crate_impact_hard3.wav")
-            self:GetOwner():SetAnimation(PLAYER_ATTACK1)
-            self:SetNextSecondaryFire(CurTime() + 0.4)
-            self:SetNextPrimaryFire(CurTime() + 1)
-        elseif entity:IsPlayer() then
-            local direction = self:GetOwner():GetAimVector() * (300 + (self:GetOwner():GetCharacter():GetAttribute("str", 0) * 3))
-            direction.z = 0
-            entity:SetVelocity(direction)
-            bPushed = true
-        else
-            local physObj = entity:GetPhysicsObject()
+		if (entity:IsDoor()) then
+			if (hook.Run("PlayerCanKnockOnDoor", self.Owner, entity) == false) then
+				return
+			end
 
-            if IsValid(physObj) then
-                physObj:SetVelocity(self:GetOwner():GetAimVector() * 180)
-            end
+			self.Owner:ViewPunch(Angle(-1.3, 1.8, 0))
+			self.Owner:EmitSound("physics/wood/wood_crate_impact_hard3.wav")
+			self.Owner:SetAnimation(PLAYER_ATTACK1)
 
-            bPushed = true
-        end
+			self:SetNextSecondaryFire(CurTime() + 0.4)
+			self:SetNextPrimaryFire(CurTime() + 1)
+		elseif (entity:IsPlayer()) then
+			local direction = self.Owner:GetAimVector() * (300 + (self.Owner:GetCharacter():GetAttribute("str", 0) * 3))
+				direction.z = 0
+			entity:SetVelocity(direction)
 
-        if bPushed then
-            self:SetNextSecondaryFire(CurTime() + 1.5)
-            self:SetNextPrimaryFire(CurTime() + 1.5)
-            self:GetOwner():EmitSound("Weapon_Crossbow.BoltHitBody")
-            local model = string.lower(self:GetOwner():GetModel())
+			bPushed = true
+		else
+			local physObj = entity:GetPhysicsObject()
 
-            if ix.anim.GetModelClass(model) == "metrocop" then
-                self:GetOwner():ForceSequence("pushplayer")
-            end
-        end
-    end
+			if (IsValid(physObj)) then
+				physObj:SetVelocity(self.Owner:GetAimVector() * 180)
+			end
+
+			bPushed = true
+		end
+
+		if (bPushed) then
+			self:SetNextSecondaryFire(CurTime() + 1.5)
+			self:SetNextPrimaryFire(CurTime() + 1.5)
+			self.Owner:EmitSound("Weapon_Crossbow.BoltHitBody")
+
+			local model = string.lower(self.Owner:GetModel())
+
+			if (ix.anim.GetModelClass(model) == "metrocop") then
+				self.Owner:ForceSequence("pushplayer")
+			end
+		end
+	end
 end

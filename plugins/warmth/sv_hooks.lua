@@ -95,12 +95,12 @@ function PLUGIN:WarmthTick(client, character, delta)
     local newWarmth = math.Clamp(warmth - scale * (delta / ix.config.Get("warmthLossTime", 5)), 0, 100)
     
     if client:IsCombine() then
-        return
+        newWarmth = 100
     end
 
     character:SetWarmth(newWarmth)
 
-    if newWarmth <= 40 and newWarmth > 0 then
+    if newWarmth <= 40 and newWarmth > 0 and not client:IsCombine() then
         if not timer.Exists("shiver") then
             timer.Create("shiver", 6, 0, function()
                 util.ScreenShake(client:GetPos(), 5, 5, 3, 500)
