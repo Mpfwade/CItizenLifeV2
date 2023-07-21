@@ -32,7 +32,7 @@ function PLUGIN:EntityTakeDamage(target, dmginfo)
         attacker:SetData("quota", quotaamount + 1)
 
         if quotaamount + 1 >= quotamax then
-            attacker:AddCombineDisplayMessage("Beating quota complete.", true)
+            Schema:AddCombineDisplayMessage("Beating quota complete.", true)
             local character = attacker:GetCharacter()
             character:SetData("quota", 0)
 
@@ -43,7 +43,7 @@ function PLUGIN:EntityTakeDamage(target, dmginfo)
 
             timer.Create("ResetQuotaTimer", 900, 1, function()
                 attacker:SetData("quota", 0)
-                attacker:AddCombineDisplayMessage("Your beating Quota has been reset.", true)
+                Schema:AddCombineDisplayMessage("Your beating Quota has been reset.", true)
             end)
         end
     end

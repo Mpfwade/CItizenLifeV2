@@ -141,9 +141,12 @@ net.Receive("ixCombineTerminalCharge", function(len, ply)
 
             if target:Team() == FACTION_CITIZEN and chargesTime > 239 then
                 ix.chat.Send(ply, "dispatchradio", "Attention, " .. target:Nick() .. " has served their time. Amputate them immediately.")
+                target:SetBodygroup(1, 0)
+                target:SetBodygroup(2, 0)
             elseif target:Team() == FACTION_CITIZEN and chargesTime < 240 then
                 ix.chat.Send(ply, "dispatchradio", "Attention, " .. target:Nick() .. " has served their sentence. Release them immediately.")
-                target:SetBodygroup(2, 1)
+                target:SetBodygroup(1, 0)
+                target:SetBodygroup(2, 0)
             end
 
             if target:Team() == FACTION_VORTIGAUNT then

@@ -86,7 +86,7 @@ function PLUGIN:OnFoundPlayer(entity, client)
             end
         end)
 
-        if giveBOL == true and client:GetNWBool("ixActiveBOL", true) == false then
+        if giveBOL == true and client:GetNWBool("ixActiveBOL", false) then
             client:SetNWBool("ixActiveBOL", true)
         end
 

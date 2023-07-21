@@ -82,7 +82,7 @@ if SERVER then
                     local soundIndex = 1
                     local soundPath = soundTable[soundIndex]
                     local soundDuration = SoundDuration(soundPath) + additionalDuration
-                    self:EmitSound(soundPath, 60, 100, 1, CHAN_STATIC, 0, 59)
+                    self:EmitSound(soundPath, 75, 100, 1, CHAN_STATIC, 0, 59)
     
                     -- Create a timer to play the remaining sounds with DSP effect
                     local soundCount = #soundTable
@@ -92,7 +92,7 @@ if SERVER then
                             soundIndex = soundIndex % soundCount + 1
                             soundPath = soundTable[soundIndex]
                             soundDuration = SoundDuration(soundPath) + additionalDuration
-                            self:EmitSound(soundPath, 60, 100, 1, CHAN_STATIC, 0, 59)
+                            self:EmitSound(soundPath, 75, 100, 1, CHAN_STATIC, 0, 59)
                         end
                     end)
                 end
